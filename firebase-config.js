@@ -2,16 +2,17 @@
 
 export const firebaseConfig = {
 
-  apiKey: "AIzaSyBQYxe01lPOiOeJ-BQkZObsiZ03_gKpbls",
+  apiKey: "AIzaSyAYLsthZlMbQQ_2N_pfUd1JDOWXH7CMtpg",
 
-  authDomain: "reactinpromel.firebaseapp.com",
+  authDomain: "inpromel-2d552.firebaseapp.com",
 
-  projectId: "reactinpromel",
+  projectId: "inpromel-2d552",
 
-  storageBucket: "reactinpromel.appspot.com",
+  storageBucket: "inpromel-2d552.appspot.com",
 
-  messagingSenderId: "353720261710",
+  messagingSenderId: "433151729035",
 
-  appId: "1:353720261710:web:c7a158f6b1b2ec3963771f"
+  appId: "1:433151729035:web:af8c281dd0811777b2638e"
 
 };
+
