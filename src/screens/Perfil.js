@@ -7,15 +7,16 @@ import {
   Image,
   Alert,
   TouchableOpacity,
-  Modal,
+  Pressable
 } from 'react-native';
+import Modal from 'react-native-modal'
 import { AuthContext } from '../context/context';
 import { ScrollView } from 'react-native-gesture-handler';
 import NetInfo from '@react-native-community/netinfo';
 import { connect } from 'react-redux';
 
 
-const Perfil = ({showPerfilModal, setShowPerfilModal, setIsFocusedPerfil, deleteSession}) => {
+const Perfil = ({showPerfilModal, setShowPerfilModal}) => {
   const { signOut } = useContext(AuthContext);
   const [name, setName] = useState('');
   const [online, setOnline] = useState(true);
@@ -57,47 +58,62 @@ const Perfil = ({showPerfilModal, setShowPerfilModal, setIsFocusedPerfil, delete
   },[])
 
   return (
-  <View>
     <View style={styles.centeredView}>
-      <Modal visible={showPerfilModal}
-             transparent={false} 
-             onDismiss={() => setShowPerfilModal(false)}>
-        <ScrollView>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <TouchableOpacity onPress={()=>{setShowPerfilModal(false);setIsFocusedPerfil(false)}}>
-              <Image style={styles.cerrarModal} source={require("../../assets/icons/cerrar.png")}/>
-            </TouchableOpacity>
-            <Text style={styles.title}>Perfil</Text>
-            <TouchableOpacity onPress={cerrarSesion}>
-              <Image  style={styles.cerrarSesion}source={require('../../assets/icons/cerrar_sesion.png')}/>
-            </TouchableOpacity>
-
+      <Modal
+        hasBackdrop={true}
+        animationType="fade"
+        transparent={true}
+        visible={showPerfilModal}
+        onRequestClose={() => {
+          setShowPerfilModal(!showPerfilModal);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <View style={styles.modalHeader}>
+              <TouchableOpacity onPress={()=>{setShowPerfilModal(false)}}>
+                <Image style={styles.cerrarModal} source={require("../../assets/icons/cerrar.png")}/>
+              </TouchableOpacity>
+              <Image style={styles.imagenHeader} source={require("../../assets/LogoInpromel.png")}/>
+              <TouchableOpacity onPress={cerrarSesion}>
+                <Image  style={styles.cerrarSesion}source={require('../../assets/icons/cerrar_sesion.png')}/>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.modalBody}>
+              <Text style={styles.modalText}>Hello World!</Text>
+            </View>
           </View>
-            <Text style={styles.text}>{name}</Text>
-            <Text style={styles.list}>Lista de Predio</Text>
-          </ScrollView>
+        </View>
       </Modal>
     </View>
-  </View>
   );
 };
 
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-    borderRadius:5,
+    marginTop: '15%',
+    margin: '10%',
   },
 
-  title: {
-    fontSize: 24,
-    marginTop:8,
-    marginLeft:'auto',
-    marginRight:'auto',
-    
+  modalView: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 60,
+    elevation: 5,
   },
+  
+  modalHeader:{
+     flexDirection: 'row', 
+     justifyContent: 'space-between',
+     height:52,
+     padding:10,
+  },  
   cerrarModal:{
     width:24, 
     height:24,
@@ -106,6 +122,11 @@ const styles = StyleSheet.create({
     left:0,
     marginTop:15,
     marginLeft:15,
+  },
+  imagenHeader:{
+    width:150, 
+    height: 40,
+    marginTop:5
   },
   cerrarSesion:{
     width:24, 
@@ -116,7 +137,16 @@ const styles = StyleSheet.create({
     marginTop:15,
     marginRight:15,
   },
+  modalBody:{
+    padding:10,
+    height:'60%',
+    marginTop:20,
+  }
+
 });
+
+
+
 
 const mapStateToProps = state => state;
 const mapDispatchToProps = dispatch => ({

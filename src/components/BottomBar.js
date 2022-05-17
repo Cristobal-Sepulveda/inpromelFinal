@@ -10,12 +10,10 @@ import Perfil from '../screens/Perfil'
 import { connect } from 'react-redux';
 
 
-const BottomBar = ({redux}) => {
+const BottomBar = ({showPerfilModal, setShowPerfilModal, redux}) => {
   const [isFocusedHome, setIsFocusedHome] = useState(true);
   const [isFocusedMap, setIsFocusedMap] = useState(false);
   const [isFocusedTareas, setIsFocusedTareas] = useState(false);
-  const [isFocusedPerfil, setIsFocusedPerfil] = useState(false);
-  const [showPerfilModal, setShowPerfilModal] = useState(false);
   const bottomBarOptions = ['Home', 'Mapa', 'Tareas','Perfil'];
 
   const BottomBarItem = ({ image, text, onPress }) => {
@@ -33,6 +31,7 @@ const BottomBar = ({redux}) => {
 
 
   return (
+    <>
     <View>
       <View style={styles.bottombar}>
         {bottomBarOptions.map((route, index) => {
@@ -98,8 +97,9 @@ const BottomBar = ({redux}) => {
 
       </View>
 
-      <Perfil showPerfilModal={showPerfilModal} setShowPerfilModal={setShowPerfilModal} setIsFocusedPerfil={setIsFocusedPerfil}/>
+      
     </View>
+    </>
   )
 };
 
