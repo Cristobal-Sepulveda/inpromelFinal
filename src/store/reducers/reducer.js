@@ -16,7 +16,7 @@ const reducer = (state = initialState, action) => {
         session: [],
       };
 
-    case Types.DELETE_ALL:
+    case Types.WIPE_REDUX:
       return initialState;
     
       default:

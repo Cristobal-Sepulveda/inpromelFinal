@@ -11,7 +11,7 @@ import {
   insert_session,
 }from '../model'
 
-const Login = ({ insertSession, deleteAll }) => {
+const Login = ({ redux, insertSession, wipeRedux }) => {
     const [mail, setMail] = useState('');
     const [contraseña, setContraseña] = useState('');
     const {signIn} = useContext(AuthContext);
@@ -124,7 +124,9 @@ const styles = StyleSheet.create({
     }
 });
 
-const mapStateToProps = state => state;
+const mapStateToProps = state => {
+  return{redux : state};
+}
 
 const mapDispatchToProps = dispatch => ({
   insertSession: token =>
@@ -134,9 +136,9 @@ const mapDispatchToProps = dispatch => ({
         token,
       },
     }),
-  deleteAll: () =>
+  wipeRedux: () =>
     dispatch({
-      type: Types.DELETE_ALL,
+      type: Types.WIPE_REDUX,
       payload: {},
     }),
 });
