@@ -1,66 +1,34 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {View, Text, StyleSheet, Dimensions, TouchableOpacity, Image, Alert} from 'react-native';
+import {View, Button, Text, StyleSheet, Dimensions, TouchableOpacity, Image, Alert} from 'react-native';
 import Modal from 'react-native-modal';
 import BottomBar from '../components/BottomBar';
 import { AuthContext } from '../context/context';
 import { connect } from 'react-redux';
-
-
+import Perfil from './Perfil';
+import Mapa from './Mapa';
+import { getLocationPermissions, getCurrentLocation } from '../utils/location';
+import {delay} from '../utils/funciones';
 
 
 const Home = ({redux, wipeRedux}) => {
     const [showPerfilModal, setShowPerfilModal] = useState(false);
-    const { signOut } = useContext(AuthContext);
+    const [showHome, setShowHome]= useState(true);
 
-    const cerrarSesion = () => {
-        Alert.alert('Aviso', 'Está por salir de su sesión, ¿Desea continuar?', [
-          {
-            text: 'Cancelar',
-            style: 'cancel',
-            onPress: () => {
-              
-            },
-          },
-          {
-            text: 'Continuar',
-            onPress: async () => {
-              await signOut();
-            },
-          },
-        ]);
-    };
     return(
         <>
             {/* Contenido de la Screen */}
             <View style={styles.body}>
-                <Text style={{alignSelf:'center', position:'absolute', top:'50%'}}>HomeScreen</Text>
+                {showHome?(
+                  <Text style={{alignSelf:'center', position:'absolute', top:'50%'}}>HomeScreen</Text>
+                ):(
+                  <Mapa coords={coords}/>
+                )}
+                
             </View>
             {/* BottomBar */}
-            <BottomBar showPerfilModal={showPerfilModal} setShowPerfilModal={setShowPerfilModal}/>
-            {/* Modal */}
-            <View style={styles.centeredView}>
-                <Modal
-                    hasBackdrop={true}
-                    isVisible={showPerfilModal}
-                    animationIn={"fadeIn"}
-                    animationOut={"fadeOut"}>
-                    <View style={styles.modalView}>
-                        <View style={styles.modalHeader}>
-                            <TouchableOpacity onPress={()=>{setShowPerfilModal(false)}}>
-                                <Image style={styles.cerrarModal} source={require("../../assets/icons/cerrar.png")}/>
-                            </TouchableOpacity>
-                            <Image style={styles.imagenHeader} source={require("../../assets/LogoInpromel.png")}/>
-                            <TouchableOpacity onPress={cerrarSesion}>
-                                <Image  style={styles.cerrarSesion}source={require('../../assets/icons/cerrar_sesion.png')}/>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.modalBody}>
-                            <Text style={styles.modalText}>Hello World!</Text>
-                        </View>
-                    </View>
-                </Modal>
-            </View>
-            
+            <BottomBar showPerfilModal={showPerfilModal} setShowPerfilModal={setShowPerfilModal} setShowHome={setShowHome} />
+            {/* Modal PERFIL*/}
+            <Perfil showPerfilModal={showPerfilModal} setShowPerfilModal={setShowPerfilModal}/>
         </>
     );
 }
@@ -69,32 +37,24 @@ const styles = StyleSheet.create({
     body:{
         flexDirection:'column',
         backgroundColor:"#4285f4",
-        minHeight: Math.round(Dimensions.get('window').height)-20
+        minHeight: '92%'
     },
     centeredView: {
         flex: 1,
-        marginTop: '15%',
-        margin: '10%',
+        marginHorizontal: '10%',
       },
     
       modalView: {
         backgroundColor: 'white',
         borderRadius: 10,
-        shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 10,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 60,
-        elevation: 5,
+        elevation: 10,
+        padding:10,
       },
       
       modalHeader:{
          flexDirection: 'row', 
          justifyContent: 'space-between',
          height:52,
-         padding:10,
       },  
       cerrarModal:{
         width:24, 
@@ -120,7 +80,6 @@ const styles = StyleSheet.create({
         marginRight:15,
       },
       modalBody:{
-        padding:10,
         height:'60%',
         marginTop:20,
     }
@@ -139,4 +98,4 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const connectComponent = connect(mapStateToProps, mapDispatchToProps);
-export default connectComponent(Login);
+export default connectComponent(Home);

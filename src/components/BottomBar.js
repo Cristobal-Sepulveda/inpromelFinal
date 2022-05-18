@@ -10,7 +10,7 @@ import Perfil from '../screens/Perfil'
 import { connect } from 'react-redux';
 
 
-const BottomBar = ({showPerfilModal, setShowPerfilModal, redux}) => {
+const BottomBar = ({showPerfilModal, setShowPerfilModal, setShowHome, redux}) => {
   const [isFocusedHome, setIsFocusedHome] = useState(true);
   const [isFocusedMap, setIsFocusedMap] = useState(false);
   const [isFocusedTareas, setIsFocusedTareas] = useState(false);
@@ -23,7 +23,6 @@ const BottomBar = ({showPerfilModal, setShowPerfilModal, redux}) => {
                           onPress={() => onPress(text)}>
             <Image style={{ width: 22, height: 22,  }} source={image} />
         </TouchableOpacity>
-        <Text style={{ fontSize: 12, textAlign:'center' }}>{text}</Text>
       </>
     );
   };
@@ -64,11 +63,13 @@ const BottomBar = ({showPerfilModal, setShowPerfilModal, redux}) => {
               setIsFocusedMap(false);
               setIsFocusedTareas(false);
               setShowPerfilModal(false);
+              setShowHome(true);
             } else if (route === 'Mapa'){
               setIsFocusedHome(false);
               setIsFocusedMap(true);
               setIsFocusedTareas(false);
               setShowPerfilModal(false);
+              setShowHome(false);
             } else if (route === 'Tareas'){
               setIsFocusedHome(false);
               setIsFocusedMap(false);
@@ -84,12 +85,13 @@ const BottomBar = ({showPerfilModal, setShowPerfilModal, redux}) => {
           
           return (
             <>
-            <View key={index} style={styles.body}>
+            <View key={index}>
               <BottomBarItem
                 image={imageSource()}
                 text={route}
                 onPress={onPress}
               />
+              <Text style={{ fontSize: 12, textAlign:'center' }}>{route}</Text>
             </View>
             </>
           );
@@ -109,8 +111,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f6f6f6',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    padding: 10,
-    height: 67,
     width:'100%',
     zIndex: 1000,
     

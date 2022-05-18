@@ -3,15 +3,12 @@ import {
   View,
   Text,
   StyleSheet,
-  ActivityIndicator,
   Image,
   Alert,
   TouchableOpacity,
-  Pressable
 } from 'react-native';
 import Modal from 'react-native-modal'
 import { AuthContext } from '../context/context';
-import { ScrollView } from 'react-native-gesture-handler';
 import NetInfo from '@react-native-community/netinfo';
 import { connect } from 'react-redux';
 
@@ -61,13 +58,10 @@ const Perfil = ({showPerfilModal, setShowPerfilModal}) => {
     <View style={styles.centeredView}>
       <Modal
         hasBackdrop={true}
-        animationType="fade"
-        transparent={true}
-        visible={showPerfilModal}
-        onRequestClose={() => {
-          setShowPerfilModal(!showPerfilModal);
-        }}>
-        <View style={styles.centeredView}>
+        isVisible={showPerfilModal}
+        animationIn={"fadeIn"}
+        animationOut={"fadeOut"}
+        backdropTransitionOutTiming={0} >
           <View style={styles.modalView}>
             <View style={styles.modalHeader}>
               <TouchableOpacity onPress={()=>{setShowPerfilModal(false)}}>
@@ -82,7 +76,6 @@ const Perfil = ({showPerfilModal, setShowPerfilModal}) => {
               <Text style={styles.modalText}>Hello World!</Text>
             </View>
           </View>
-        </View>
       </Modal>
     </View>
   );
@@ -98,15 +91,8 @@ const styles = StyleSheet.create({
   modalView: {
     backgroundColor: 'white',
     borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 10,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 60,
-    elevation: 5,
   },
+
   
   modalHeader:{
      flexDirection: 'row', 

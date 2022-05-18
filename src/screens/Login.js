@@ -84,20 +84,21 @@ const Login = ({ redux, insertSession, wipeRedux }) => {
 
 const styles = StyleSheet.create({
     container:{
-      minHeight: Math.round(Dimensions.get('window').height)
+      height: '100%',
+      width:'100%'
     },
     fondoDeLogin: {
       flex:0,
       width: '100%',
       height: '100%',
     },
-    logo: {
-      width: 382,
+    logo: {   
+      width:'80%',
       height: 95,
       position: 'absolute',
-      zIndex: 1,
-      top: '13%',
       alignSelf: 'center',
+      resizeMode:'contain',
+      top: '13%',
     },
     titulo:{
       fontWeight:'bold',

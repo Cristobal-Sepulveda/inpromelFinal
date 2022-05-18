@@ -21,10 +21,24 @@
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
+      "config":{
+        "googleMaps": {
+          "apiKey": "AIzaSyDro88s9bE5HuSqwS6y9ExX5xU1prpUYXA"
+        }
+      },
+      "package": "com.impromel.impromelApp",
+      "permissions": [
+        "READ_PHONE_STATE",
+        "READ_INTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "com.google.android.c2dm.permission.RECEIVE",
+        "com.android.launcher.permission.INSTALL_SHORTCUT",
+        "com.htc.launcher.permission.UPDATE_SHORTCUT"
+      ]
+
     },
     "web": {
       "favicon": "./assets/favicon.png"

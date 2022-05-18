@@ -15,7 +15,15 @@ const reducer = (state = initialState, action) => {
         ...state,
         session: [],
       };
-
+    case Types.INSERT_LOCATION:
+      return {
+        ...state,
+        location: [action.payload.location],
+      };
+    
+    case Types.SELECT_LOCATION:
+      return state.location;
+      
     case Types.WIPE_REDUX:
       return initialState;
     
