@@ -13,6 +13,12 @@ import {delay} from '../utils/funciones';
 const Home = ({redux, wipeRedux}) => {
     const [showPerfilModal, setShowPerfilModal] = useState(false);
     const [showHome, setShowHome]= useState(true);
+    const [coords, setCoords]= useState({
+      latitude: redux.location[0].latitude,
+      longitude: redux.location[0].longitude,
+      latitudeDelta: 0.0001,
+      longitudeDelta: 0.00421,
+    });
 
     return(
         <>

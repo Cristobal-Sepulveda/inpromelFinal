@@ -113,7 +113,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     width:'100%',
     zIndex: 1000,
-    
   },
   snackBar: {
     bottom: 80,
