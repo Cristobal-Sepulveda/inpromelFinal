@@ -8,32 +8,68 @@ import {
 } from 'react-native';
 import Perfil from '../screens/Perfil'
 import { connect } from 'react-redux';
-
+import BottomSheet from 'reanimated-bottom-sheet';
+import { clear } from 'react-native/Libraries/LogBox/Data/LogBoxData';
+import Tareas from '../screens/Tareas'
 
 const BottomBar = ({showPerfilModal, setShowPerfilModal, setShowHome, redux}) => {
   const [isFocusedHome, setIsFocusedHome] = useState(true);
   const [isFocusedMap, setIsFocusedMap] = useState(false);
   const [isFocusedTareas, setIsFocusedTareas] = useState(false);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(true);
   const bottomBarOptions = ['Home', 'Mapa', 'Tareas','Perfil'];
+  const tareas = React.useRef(null);
 
-  const BottomBarItem = ({ image, text, onPress }) => {
-    return (
-      <>
-        <TouchableOpacity style={{ alignItems: 'center',  borderRadius: 10,paddingVertical:4, width:50}}
-                          onPress={() => onPress(text)}>
-            <Image style={{ width: 22, height: 22,  }} source={image} />
-        </TouchableOpacity>
-      </>
-    );
-  };
+
+  const renderContentTareas = () => {
+      return (
+        <View style = {styles.bodyBottomSheet}>
+          <Tareas/>
+        </View>
+      );
+    
+  }
+
   // backgroundColor:'#90baff'
 
+  /** USEEFFECT CON UTILIDAD PARA FUTURA FUNCIONALIDAD */
+  useEffect (() => { 
+    const temp= async () => {
 
+    
+    };
+    const clear = () => {
+
+    };
+
+    if(isBottomSheetOpen){
+      temp();
+    } else {
+      clear();
+    }
+  },[isBottomSheetOpen])
+
+
+  /** LAYOUT */
   return (
     <>
     <View>
+      {/* AQUI SE DIBUJA TODO EL BOTTOMBAR */}      
       <View style={styles.bottombar}>
+
         {bottomBarOptions.map((route, index) => {
+          
+          const BottomBarItem = ({ image, text, onPress }) => {
+            return (
+              <>
+                <TouchableOpacity style={{ alignItems: 'center',  borderRadius: 10,paddingVertical:4, width:50}}
+                                  onPress={() => onPress(text)}>
+                    <Image style={{ width: 22, height: 22,  }} source={image} />
+                </TouchableOpacity>
+              </>
+            );
+          };
+
           const imageSource = () => {
             if (route === 'Home' && isFocusedHome) {
               return require('../../assets/icons/home_black.png');
@@ -58,29 +94,41 @@ const BottomBar = ({showPerfilModal, setShowPerfilModal, setShowHome, redux}) =>
           };
 
           const onPress = () => {
+
+
             if (route === 'Home'){
               setIsFocusedHome(true);
               setIsFocusedMap(false);
               setIsFocusedTareas(false);
               setShowPerfilModal(false);
               setShowHome(true);
+
+
             } else if (route === 'Mapa'){
               setIsFocusedHome(false);
               setIsFocusedMap(true);
               setIsFocusedTareas(false);
               setShowPerfilModal(false);
               setShowHome(false);
+
+
             } else if (route === 'Tareas'){
               setIsFocusedHome(false);
               setIsFocusedMap(false);
               setIsFocusedTareas(true);
               setShowPerfilModal(false);
+              tareas.current.snapTo(0);
+
+
             } else if (route === 'Perfil') {
               setIsFocusedHome(false);
               setIsFocusedMap(false);
               setIsFocusedTareas(false);
               setShowPerfilModal(true);
             }
+
+
+            
           };
           
           return (
@@ -98,6 +146,27 @@ const BottomBar = ({showPerfilModal, setShowPerfilModal, setShowHome, redux}) =>
         })}
 
       </View>
+      
+      {/* AQUI SE DIBUJA EL BOTTOMSHEET: TAREAS*/}
+      <BottomSheet 
+        ref={tareas}
+        callbackThreshold={0.1}
+        initialSnap={2}
+        snapPoints={[380, '80%', 0]}
+        borderRadius={10}
+        renderContent={renderContentTareas}
+        onOpenStart={() => {
+          setIsBottomSheetOpen(true);
+        }}
+        onCloseStart={() => {
+        }}
+        onOpenEnd={() => {
+        }}
+        onCloseEnd={() => {
+          
+          setIsBottomSheetOpen(false);
+        }}
+      />
 
       
     </View>
@@ -121,8 +190,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#696969',
     borderRadius: 30,
   },
-  bodyClimasense: {
-    backgroundColor: 'white',
+  bodyBottomSheet: {
+    backgroundColor: '#f6f6f6',
     paddingHorizontal: 8,
     paddingVertical: 12,
     height: '100%',

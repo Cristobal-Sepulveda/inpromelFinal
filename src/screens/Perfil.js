@@ -57,6 +57,7 @@ const Perfil = ({showPerfilModal, setShowPerfilModal}) => {
   return (
     <View style={styles.centeredView}>
       <Modal
+        coverScreen={true}
         hasBackdrop={true}
         isVisible={showPerfilModal}
         animationIn={"fadeIn"}
