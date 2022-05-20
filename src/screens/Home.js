@@ -25,9 +25,9 @@ const Home = ({redux, wipeRedux}) => {
             {/* Contenido de la Screen */}
             <View style={styles.body}>
                 {showHome?(
-                  <Text style={{alignSelf:'center', position:'absolute', top:'50%'}}>HomeScreen</Text>
+                  <Mapa coords={coords}/>                  
                 ):(
-                  <Mapa coords={coords}/>
+                  <Text style={{alignSelf:'center', position:'absolute', top:'50%'}}>HomeScreen</Text>
                 )}
                 
             </View>

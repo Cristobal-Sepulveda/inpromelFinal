@@ -17,14 +17,16 @@ const BottomBar = ({showPerfilModal, setShowPerfilModal, setShowHome, redux}) =>
   const [isFocusedMap, setIsFocusedMap] = useState(false);
   const [isFocusedTareas, setIsFocusedTareas] = useState(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(true);
-  const bottomBarOptions = ['Home', 'Mapa', 'Tareas','Perfil'];
+  const [isBottomSheetFullOpen, setIsBottomSheetFullOpen]= useState(false);
+
+  const bottomBarOptions = ['Home', 'Tareas','Perfil'];
   const tareas = React.useRef(null);
 
 
   const renderContentTareas = () => {
       return (
         <View style = {styles.bodyBottomSheet}>
-          <Tareas/>
+          <Tareas isBottomSheetFullOpen={isBottomSheetFullOpen}/>
         </View>
       );
     
@@ -158,12 +160,15 @@ const BottomBar = ({showPerfilModal, setShowPerfilModal, setShowHome, redux}) =>
         onOpenStart={() => {
           setIsBottomSheetOpen(true);
         }}
-        onCloseStart={() => {
-        }}
         onOpenEnd={() => {
+          setIsBottomSheetFullOpen(true);
         }}
+        onCloseStart={() => {
+          setIsBottomSheetFullOpen(false);
+        }}
+        
         onCloseEnd={() => {
-          
+
           setIsBottomSheetOpen(false);
         }}
       />
