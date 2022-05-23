@@ -4,3 +4,4 @@ export const delay = async timeout => {
       setTimeout(resolve, timeout);
     });
 };
+
