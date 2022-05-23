@@ -12,6 +12,7 @@ import {delay} from '../utils/funciones';
 
 const Home = ({redux, wipeRedux}) => {
     const [showPerfilModal, setShowPerfilModal] = useState(false);
+    const [isFocusedHome, setIsFocusedHome] = useState(true);
     const [showHome, setShowHome]= useState(true);
     const [coords, setCoords]= useState({
       latitude: redux.location[0].latitude,
@@ -20,36 +21,68 @@ const Home = ({redux, wipeRedux}) => {
       longitudeDelta: 0.00421,
     });
 
+    const fabButtonPressed = () => {
+      setShowHome(!showHome);
+    };
+    const imageSource = () => {
+      if(showHome){
+        return require('../../assets/icons/plus.png');
+      } else {
+        return require('../../assets/icons/flechaIzquierda.png');
+      }
+    }
+
     return(
         <>
             {/* Contenido de la Screen */}
             <View style={styles.body}>
                 {showHome?(
-                  <Mapa coords={coords}/>                  
+                  <Mapa coords={coords}/>            
                 ):(
                   <Text style={{alignSelf:'center', position:'absolute', top:'50%'}}>HomeScreen</Text>
                 )}
+                  <TouchableOpacity style={styles.fabButton} onPress={()=> {fabButtonPressed() }}>
+                    <Image source={imageSource()}/>
+                  </TouchableOpacity>      
                 
             </View>
             {/* BottomBar */}
-            <BottomBar showPerfilModal={showPerfilModal} setShowPerfilModal={setShowPerfilModal} setShowHome={setShowHome} />
+
+            <BottomBar showPerfilModal={showPerfilModal} 
+                       setShowPerfilModal={setShowPerfilModal} 
+                       setShowHome={setShowHome}
+                       isFocusedHome={isFocusedHome}
+                       setIsFocusedHome={setIsFocusedHome}/>
             {/* Modal PERFIL*/}
-            <Perfil showPerfilModal={showPerfilModal} setShowPerfilModal={setShowPerfilModal}/>
+            <Perfil showPerfilModal={showPerfilModal} 
+                    setShowPerfilModal={setShowPerfilModal}
+                    setIsFocusedHome={setIsFocusedHome}/>
         </>
     );
 }
 
 const styles = StyleSheet.create({
-    body:{
-        flexDirection:'column',
-        backgroundColor:"#4285f4",
-        minHeight: '92%'
-    },
-    centeredView: {
+  body:{
+    flexDirection:'column',
+    backgroundColor:"#fff",
+    minHeight: '92%'
+  },
+  centeredView: {
         flex: 1,
         marginHorizontal: '10%',
       },
-    
+  fabButton:{
+    flex:1,
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 30,
+    bottom: 30,
+    backgroundColor:"#4285f4",
+    borderRadius:50,
+  },
       modalView: {
         backgroundColor: 'white',
         borderRadius: 10,

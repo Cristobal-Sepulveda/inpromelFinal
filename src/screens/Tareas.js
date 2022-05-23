@@ -28,7 +28,7 @@ const Tareas = ({isBottomSheetFullOpen}) => {
                 </View>
 
                     <Text style={{alignSelf:'center', marginTop:20}}>HELLO WORLD</Text>
-                    <Text>Modulo 1</Text>
+                    <Text>Modulo 2</Text>
                 </>
             ):(
                 <>

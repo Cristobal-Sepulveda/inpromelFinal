@@ -12,8 +12,7 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import { clear } from 'react-native/Libraries/LogBox/Data/LogBoxData';
 import Tareas from '../screens/Tareas'
 
-const BottomBar = ({showPerfilModal, setShowPerfilModal, setShowHome, redux}) => {
-  const [isFocusedHome, setIsFocusedHome] = useState(true);
+const BottomBar = ({showPerfilModal, setShowPerfilModal, setShowHome, isFocusedHome, setIsFocusedHome, redux}) => {
   const [isFocusedMap, setIsFocusedMap] = useState(false);
   const [isFocusedTareas, setIsFocusedTareas] = useState(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(true);
@@ -104,6 +103,7 @@ const BottomBar = ({showPerfilModal, setShowPerfilModal, setShowHome, redux}) =>
               setIsFocusedTareas(false);
               setShowPerfilModal(false);
               setShowHome(true);
+              tareas.current.snapTo(2);
 
 
             } else if (route === 'Mapa'){
@@ -127,6 +127,7 @@ const BottomBar = ({showPerfilModal, setShowPerfilModal, setShowHome, redux}) =>
               setIsFocusedMap(false);
               setIsFocusedTareas(false);
               setShowPerfilModal(true);
+              tareas.current.snapTo(2);
             }
 
 
@@ -168,8 +169,9 @@ const BottomBar = ({showPerfilModal, setShowPerfilModal, setShowHome, redux}) =>
         }}
         
         onCloseEnd={() => {
-
           setIsBottomSheetOpen(false);
+          setIsFocusedTareas(false);
+          setIsFocusedHome(true);
         }}
       />
 

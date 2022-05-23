@@ -26,6 +26,10 @@ const RootNavigation = () => {
           signOut: async () => {
             setUsuarioLogeado(false);
             await drop_session();
+            setSplashScreen(true);
+            await delay(2000);
+            setSplashScreen(false);
+
           },
 
         }),

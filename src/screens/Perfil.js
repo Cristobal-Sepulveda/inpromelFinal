@@ -13,12 +13,13 @@ import NetInfo from '@react-native-community/netinfo';
 import { connect } from 'react-redux';
 
 
-const Perfil = ({showPerfilModal, setShowPerfilModal}) => {
+const Perfil = ({ showPerfilModal, setShowPerfilModal, setIsFocusedHome}) => {
   const { signOut } = useContext(AuthContext);
   const [name, setName] = useState('');
   const [online, setOnline] = useState(true);
 
   const userIsOnline = () => {
+
     NetInfo.addEventListener(state => {
       if (state.isConnected && state.details.cellularGeneration === '3g' ||
           state.details.cellularGeneration === '4g' ||
@@ -65,7 +66,7 @@ const Perfil = ({showPerfilModal, setShowPerfilModal}) => {
         backdropTransitionOutTiming={0} >
           <View style={styles.modalView}>
             <View style={styles.modalHeader}>
-              <TouchableOpacity onPress={()=>{setShowPerfilModal(false)}}>
+              <TouchableOpacity onPress={()=>{setShowPerfilModal(false); setIsFocusedHome(true)}}>
                 <Image style={styles.cerrarModal} source={require("../../assets/icons/cerrar.png")}/>
               </TouchableOpacity>
               <Image style={styles.imagenHeader} source={require("../../assets/LogoInpromel.png")}/>
