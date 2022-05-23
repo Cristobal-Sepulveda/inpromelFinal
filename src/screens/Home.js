@@ -1,23 +1,17 @@
 import React, {useState, useEffect, useContext, useRef} from 'react';
-import {View, Button, Text, StyleSheet, Dimensions, TouchableOpacity, Image, Alert} from 'react-native';
+import {View, Button, Text, StyleSheet, FlatList, SafeAreaView, TouchableOpacity, Image, Alert} from 'react-native';
 import BottomBar from '../components/BottomBar';
 import { connect } from 'react-redux';
 import Perfil from './Perfil';
 import Mapa from './Mapa';
-import * as Device from 'expo-device';
-import * as Notifications from 'expo-notifications';
+import ListadoDePendientes from './ListadoDePendientes';
 
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
-});
+
 
 const Home = ({redux, wipeRedux}) => {
     const [showPerfilModal, setShowPerfilModal] = useState(false);
+
     const [isFocusedHome, setIsFocusedHome] = useState(true);
     const [showHome, setShowHome]= useState(true);
     const [coords, setCoords]= useState({
@@ -26,45 +20,13 @@ const Home = ({redux, wipeRedux}) => {
       latitudeDelta: 0.0001,
       longitudeDelta: 0.00421,
     });
-    const [expoPushToken, setExpoPushToken] = useState('');
-    const [notification, setNotification] = useState(false);
-    const notificationListener = useRef();
-    const responseListener = useRef();
 
-    const registerForPushNotificationsAsync = async() => {
-      let token;
-      if (Device.isDevice) {
-        const { status: existingStatus } = await Notifications.getPermissionsAsync();
-        let finalStatus = existingStatus;
-        if (existingStatus !== 'granted') {
-          const { status } = await Notifications.requestPermissionsAsync();
-          finalStatus = status;
-        }
-        if (finalStatus !== 'granted') {
-          alert('Failed to get push token for push notification!');
-          return;
-        }
-        token = (await Notifications.getExpoPushTokenAsync()).data;
-        console.log(token);
-      } else {
-        alert('Must use physical device for Push Notifications');
-      }
-    
-      if (Platform.OS === 'android') {
-        Notifications.setNotificationChannelAsync('default', {
-          name: 'default',
-          importance: Notifications.AndroidImportance.MAX,
-          vibrationPattern: [0, 250, 250, 250],
-          lightColor: '#FF231F7C',
-        });
-      }
-    
-      return token;
-    }
+
     const fabButtonPressed = () => {
       setShowHome(!showHome);
     };
     
+    /** Esta función le da el source a la imagen del fabButton, segun sea el caso */
     const imageSource = () => {
       if(showHome){
         return require('../../assets/icons/plus.png');
@@ -73,41 +35,6 @@ const Home = ({redux, wipeRedux}) => {
       }
     }
 
-    const sendNotification = (token) => {
-      fetch('https://exp.host/--/api/v2/push/send', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Accept-encoding': 'gzip, deflate',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          to: token,
-          title: 'InpromelApp',
-          body: 'Task task task task',
-          data: { data: 'goes here' },
-          _displayInForeground: true,
-        }),
-      });
-    }
-    
-    useEffect(() => {
-      registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
-  
-      notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-        setNotification(notification);
-      });
-  
-      responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-        console.log(response);
-      });
-  
-      return () => {
-        Notifications.removeNotificationSubscription(notificationListener.current);
-        Notifications.removeNotificationSubscription(responseListener.current);
-      };
-    }, []);
-
     return(
         <>
             {/* Contenido de la Screen */}
@@ -115,10 +42,7 @@ const Home = ({redux, wipeRedux}) => {
                 {showHome?(
                   <Mapa coords={coords}/>            
                 ):(
-                  <View style={{flexDirection:"row", justifyContent:"space-between", marginTop:"80%", width:"90%", marginStart:"auto", marginEnd:"auto"}}>
-                    <Text>HomeScreen</Text>
-                    <Button title="send notification" onPress={()=> sendNotification(expoPushToken)}/>
-                  </View>
+                  <ListadoDePendientes />
                 )}
                   <TouchableOpacity style={styles.fabButton} onPress={()=> {fabButtonPressed() }}>
                     <Image source={imageSource()}/>
@@ -132,10 +56,12 @@ const Home = ({redux, wipeRedux}) => {
                        setShowHome={setShowHome}
                        isFocusedHome={isFocusedHome}
                        setIsFocusedHome={setIsFocusedHome}/>
+
             {/* Modal PERFIL*/}
             <Perfil showPerfilModal={showPerfilModal} 
                     setShowPerfilModal={setShowPerfilModal}
                     setIsFocusedHome={setIsFocusedHome}/>
+
         </>
     );
 }
