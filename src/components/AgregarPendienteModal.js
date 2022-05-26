@@ -5,21 +5,21 @@ import CustomDatePicker from './CustomDatePicker';
 import CustomTextImput from './CustomTextImput';
 import CustomCheckBox from './CustomCheckBox';
 import BotonesEnviarPedidoYVolver from './BotonesEnviarPedidoYVolver';
+import { RadioButton } from 'react-native-paper';
+import CustomRadioBox from './CustomRadioBox';
 
-
-const AgregarPendienteModal = ({showAgregarPendienteModal, setShowAgregarPendienteModal}) => {
+const AgregarPendienteModal = ({setFlatListItems, showAgregarPendienteModal, setShowAgregarPendienteModal}) => {
     const [titulo, setTitulo] = useState("");
     const [tareaARealizar, setTareaARealizar] = useState("");
-    const [topicoUnoChecked, setTopicoUnoChecked] = useState(false);
-    const [topicoDosChecked, setTopicoDosChecked] = useState(false);
-    const [topicoTresChecked, setTopicoTresChecked] = useState(false);
+    const [topicoChecked, setTopicoChecked] = useState("");
     const [inputBoxText, setInputBoxText] = useState("");
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
 
     const guardarPendiente = () => {
-
+      setFlatListItems("1");
+      setShowAgregarPendienteModal(false);
     }
 
     return(
@@ -44,19 +44,22 @@ const AgregarPendienteModal = ({showAgregarPendienteModal, setShowAgregarPendien
               <Text style={{textAlign:'center', marginBottom:8}}>Agregar Pendiente</Text>
               <View style={{flexDirection:'row'}}>
                 <View style={{width:'50%'}}>
-                  <Text style={{height: 40,backgroundColor:'blue', color:'white', textAlignVertical:'center', textAlign:'center'}}>Ingrese Título: </Text>
-                  <Text style={{height: 40,backgroundColor:'blue', color:'white', textAlignVertical:'center', textAlign:'center', marginTop:24}}>Ingrese Fecha Límite: </Text>
-                  <Text style={{height: 40,backgroundColor:'blue', color:'white', textAlignVertical:'center', textAlign:'center', marginTop:24}}>Asunto: </Text>
-                  <Text style={{height: 40,backgroundColor:'blue', color:'white', textAlignVertical:'center', textAlign:'center', marginTop:60}}>Tarea a realizar: </Text>
+                  <Text style={{height: 40,backgroundColor:'blue', color:'white', textAlignVertical:'center', textAlign:'center'}}>Ingrese Título </Text>
+                  <Text style={{height: 40,backgroundColor:'blue', color:'white', textAlignVertical:'center', textAlign:'center', marginTop:24}}>Ingrese Fecha Límite </Text>
+                  <Text style={{height: 40,backgroundColor:'blue', color:'white', textAlignVertical:'center', textAlign:'center', marginTop:24}}>Seleccione Tópico</Text>
+                  <Text style={{height: 40,backgroundColor:'blue', color:'white', textAlignVertical:'center', textAlign:'center', marginTop:'50%'}}>Ingrese Tarea</Text>
                 </View>
                 <View style={{width:'50%'}}>
                   <TextInput style={styles.textInput} placeholder="Título" keyboardType="default" onChangeText={setTitulo} />   
                   <CustomDatePicker date={date} mode={mode} show={show} setShow={setShow} setMode={setMode}/> 
+
+                  {/* radioButtons */}
                   <View style={{justifyContent:'space-between',marginTop:24,marginStart:10}}>
-                    <CustomCheckBox label="Tópico 1" topicoChecked={topicoUnoChecked} setTopicoChecked={setTopicoUnoChecked}/>
-                    <CustomCheckBox label="Tópico 2" topicoChecked={topicoDosChecked} setTopicoChecked={setTopicoDosChecked}/>
-                    <CustomCheckBox label="Tópico 3" topicoChecked={topicoTresChecked} setTopicoChecked={setTopicoTresChecked}/>
+                    <CustomRadioBox topicoName={"Tópico 1"} topicoChecked={topicoChecked} setTopicoChecked={setTopicoChecked}/>
+                    <CustomRadioBox topicoName={"Tópico 2"} topicoChecked={topicoChecked} setTopicoChecked={setTopicoChecked}/>
+                    <CustomRadioBox topicoName={"Tópico 3"} topicoChecked={topicoChecked} setTopicoChecked={setTopicoChecked}/>
                 </View>
+
                 <TextInput style={{...styles.textInput, marginTop:16, height:200}} multiline={true} placeholder="Tarea a realizar" keyboardType="default" onChangeText={setTareaARealizar} />   
 
                 </View>

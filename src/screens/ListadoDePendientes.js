@@ -36,10 +36,7 @@ const ListadoDePendientes = ({}) => {
     return(
         <>
             <View style={{ marginTop:'20%', width:"90%", marginStart:"auto", marginEnd:"auto"}}>
-                <Text style={{textAlign:'center', fontSize:28, fontWeight:'400'}}>Listado de Pendientes</Text>
-                <TouchableOpacity style={{backgroundColor: "#4285f4", marginTop:24, marginBottom:24, padding:9}} onPress={()=>{setShowAgregarPendienteModal(true)}}>
-                    <Text style= {{textAlign:'center', color:'white'}}>Agregar Pendiente</Text>
-                </TouchableOpacity>
+                <Text style={{textAlign:'center', fontSize:28, fontWeight:'400', marginBottom:24}}>Listado de Pendientes</Text>
                 <FlatList data={flatListItems}
                           renderItem={renderItem}
                           keyExtractor={(item) => JSON.parse(item).key}
@@ -60,9 +57,13 @@ const ListadoDePendientes = ({}) => {
                           }
                 />
         </View>
+        <TouchableOpacity style={styles.fabButton2} onPress={()=>{setShowAgregarPendienteModal(true)}}>
+            <Image source={require("../../assets/icons/plus.png")}/>
+        </TouchableOpacity>
         {/* Modal AgregarPendiente*/}
         <AgregarPendienteModal showAgregarPendienteModal={showAgregarPendienteModal}
-                              setShowAgregarPendienteModal={setShowAgregarPendienteModal}/>
+                              setShowAgregarPendienteModal={setShowAgregarPendienteModal}
+                              setFlatListItems={setFlatListItems}/>
         </>
 
             
@@ -70,7 +71,18 @@ const ListadoDePendientes = ({}) => {
 };
 
 const styles = StyleSheet.create({
-
+    fabButton2:{
+        flex:1,
+        position: 'absolute',
+        width: 50,
+        height: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        right: 30,
+        bottom: 100,
+        backgroundColor:"#4285f4",
+        borderRadius:50,
+      },
 });
 
 export default ListadoDePendientes

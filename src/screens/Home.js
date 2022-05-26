@@ -42,7 +42,11 @@ const Home = ({redux, wipeRedux}) => {
                 {showHome?(
                   <Mapa coords={coords}/>            
                 ):(
-                  <ListadoDePendientes />
+                  <>
+                    <ListadoDePendientes />
+
+                  </>
+                  
                 )}
                   <TouchableOpacity style={styles.fabButton} onPress={()=> {fabButtonPressed() }}>
                     <Image source={imageSource()}/>
@@ -88,6 +92,7 @@ const styles = StyleSheet.create({
     backgroundColor:"#4285f4",
     borderRadius:50,
   },
+
       modalView: {
         backgroundColor: 'white',
         borderRadius: 10,
