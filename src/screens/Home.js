@@ -38,6 +38,7 @@ const Home = ({redux, wipeRedux}) => {
     return(
         <>
             {/* Contenido de la Screen */}
+            <View style={styles.container}>
             <View style={styles.body}>
                 {showHome?(
                   <Mapa coords={coords}/>            
@@ -55,7 +56,8 @@ const Home = ({redux, wipeRedux}) => {
             </View>
             {/* BottomBar */}
 
-            <BottomBar showPerfilModal={showPerfilModal} 
+            <BottomBar style={styles.bottomBar}
+                       showPerfilModal={showPerfilModal} 
                        setShowPerfilModal={setShowPerfilModal} 
                        setShowHome={setShowHome}
                        isFocusedHome={isFocusedHome}
@@ -65,16 +67,21 @@ const Home = ({redux, wipeRedux}) => {
             <Perfil showPerfilModal={showPerfilModal} 
                     setShowPerfilModal={setShowPerfilModal}
                     setIsFocusedHome={setIsFocusedHome}/>
-
+            </View>
         </>
     );
 }
 
 const styles = StyleSheet.create({
+  container:{
+    height:'100%',
+  },
+
   body:{
-    flexDirection:'column',
-    backgroundColor:"#fff",
-    minHeight: '92%'
+    height:'92%'
+  },
+  bottomBar:{
+    height:'8%',
   },
   centeredView: {
     flex: 1,

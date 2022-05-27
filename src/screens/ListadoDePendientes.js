@@ -4,8 +4,10 @@ import AgregarPendienteModal
  from '../components/AgregarPendienteModal';
 const ListadoDePendientes = ({}) => {
     const [flatListItems, setFlatListItems] = useState([]);
-    const[isRefreshing, setIsRefreshing] = useState(true);
+    const [isRefreshing, setIsRefreshing] = useState(true);
     const [showAgregarPendienteModal, setShowAgregarPendienteModal] = useState(false);
+
+
     const renderItem = ({ item }) =>{
         return (<View style={styles.item}>
                   <Text>{item}</Text>

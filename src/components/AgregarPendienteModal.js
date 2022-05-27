@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, TextInput, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {Alert, View, Text, TextInput, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import Modal from 'react-native-modal';
 import CustomDatePicker from './CustomDatePicker';
 import CustomTextImput from './CustomTextImput';
@@ -10,15 +10,26 @@ import CustomRadioBox from './CustomRadioBox';
 
 const AgregarPendienteModal = ({setFlatListItems, showAgregarPendienteModal, setShowAgregarPendienteModal}) => {
     const [titulo, setTitulo] = useState("");
-    const [tareaARealizar, setTareaARealizar] = useState("");
     const [topicoChecked, setTopicoChecked] = useState("");
-    const [inputBoxText, setInputBoxText] = useState("");
     const [date, setDate] = useState(new Date());
+    const [tareaARealizar, setTareaARealizar] = useState("");
+    const [inputBoxText, setInputBoxText] = useState("");
+    
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
 
+    /** Esta funcion es enviada al componente BotonesEnviarPedidoYVolver 
+     *  y lo que hace es checkear que todos los campos hayan sido
+     *  llenados antes de cerrar el Modal */
     const guardarPendiente = () => {
-      setFlatListItems("1");
+      // Primera condicionante de salida
+      if(titulo === "" || topicoChecked === "" || date === "" || tareaARealizar === ""){
+        Alert.alert("Debes llenar todos los datos antes de guardar el pendiente");
+        return;
+      }
+
+      // Dado que se cumplen las condiciones, la funcion es ejecutada
+      setFlatListItems(prevData => [...prevData, {titulo, topicoChecked, date, tareaARealizar}]);
       setShowAgregarPendienteModal(false);
     }
 
@@ -33,6 +44,7 @@ const AgregarPendienteModal = ({setFlatListItems, showAgregarPendienteModal, set
           backdropTransitionOutTiming={0} >
             <View style={styles.modalView}>
               
+              {/* Header del Modal */}
               <View style={styles.modalHeader}>
                 <TouchableOpacity onPress={()=>{setShowAgregarPendienteModal(false)}}>
                   <Image style={styles.cerrarModal} source={require("../../assets/icons/cerrar.png")}/>
@@ -41,34 +53,43 @@ const AgregarPendienteModal = ({setFlatListItems, showAgregarPendienteModal, set
                 <View/>
               </View>
 
+              {/* Body del Modal */}
               <Text style={{textAlign:'center', marginBottom:8}}>Agregar Pendiente</Text>
+              {/* Columnas */}
               <View style={{flexDirection:'row'}}>
-                <View style={{width:'50%'}}>
-                  <Text style={{height: 40,backgroundColor:'blue', color:'white', textAlignVertical:'center', textAlign:'center'}}>Ingrese Título </Text>
-                  <Text style={{height: 40,backgroundColor:'blue', color:'white', textAlignVertical:'center', textAlign:'center', marginTop:24}}>Ingrese Fecha Límite </Text>
-                  <Text style={{height: 40,backgroundColor:'blue', color:'white', textAlignVertical:'center', textAlign:'center', marginTop:24}}>Seleccione Tópico</Text>
-                  <Text style={{height: 40,backgroundColor:'blue', color:'white', textAlignVertical:'center', textAlign:'center', marginTop:'50%'}}>Ingrese Tarea</Text>
-                </View>
-                <View style={{width:'50%'}}>
-                  <TextInput style={styles.textInput} placeholder="Título" keyboardType="default" onChangeText={setTitulo} />   
-                  <CustomDatePicker date={date} mode={mode} show={show} setShow={setShow} setMode={setMode}/> 
 
+                {/* Columna 1 */}
+                <View style={{width:'50%'}}>
+                  <Text style={{height: 40,backgroundColor:'#071b75', color:'white', textAlignVertical:'center', textAlign:'center'}}>Ingrese Título </Text>
+                  <Text style={{height: 40,backgroundColor:'#071b75', color:'white', textAlignVertical:'center', textAlign:'center', marginTop:'14%'}}>Seleccione Fecha Límite </Text>
+                  
+
+                </View>
+
+                {/* Columna 2 */}
+                <View style={{width:'50%'}}>
+                  <TextInput style={{...styles.textInput, marginStart:8}} placeholder="Título" keyboardType="default" onChangeText={setTitulo} />
+                  {/* datePicker */}
+                  <CustomDatePicker date={date} mode={mode} show={show} setDate={setDate} setShow={setShow} setMode={setMode}/> 
                   {/* radioButtons */}
-                  <View style={{justifyContent:'space-between',marginTop:24,marginStart:10}}>
+                  
+                </View>
+                  
+              </View>
+              <Text style={{height: 40,backgroundColor:'#071b75', color:'white', textAlignVertical:'center', textAlign:'center', marginTop:'6%'}}>Seleccione Tópico</Text>
+              <View style={{justifyContent:'space-between',marginTop:'3%', flexDirection:'row'}}>
                     <CustomRadioBox topicoName={"Tópico 1"} topicoChecked={topicoChecked} setTopicoChecked={setTopicoChecked}/>
                     <CustomRadioBox topicoName={"Tópico 2"} topicoChecked={topicoChecked} setTopicoChecked={setTopicoChecked}/>
                     <CustomRadioBox topicoName={"Tópico 3"} topicoChecked={topicoChecked} setTopicoChecked={setTopicoChecked}/>
-                </View>
-
-                <TextInput style={{...styles.textInput, marginTop:16, height:200}} multiline={true} placeholder="Tarea a realizar" keyboardType="default" onChangeText={setTareaARealizar} />   
-
-                </View>
               </View>
-              
+              <Text style={{height: 40,backgroundColor:'#071b75', color:'white', textAlignVertical:'center', textAlign:'center', marginTop:'3%'}}>Ingrese Tarea</Text>
+              <TextInput style={{...styles.textInput, marginTop:16, height:'25%'}} multiline={true} placeholder="Tarea a realizar" keyboardType="default" onChangeText={setTareaARealizar} />   
 
+              {/* FootBar del Modal */}
               <BotonesEnviarPedidoYVolver guardarPendiente={guardarPendiente} 
                                           showAgregarPendienteModal={showAgregarPendienteModal} 
-                                          setShowAgregarPendienteModal={setShowAgregarPendienteModal}/>
+                                          setShowAgregarPendienteModal={setShowAgregarPendienteModal}
+                                          />
             </View>
 
         </Modal>
@@ -79,7 +100,6 @@ const AgregarPendienteModal = ({setFlatListItems, showAgregarPendienteModal, set
 const styles = StyleSheet.create({
   textInput:{
     height: 40,
-    marginStart:8,
     borderWidth: 1,
     borderRadius: 10,
     padding: 8

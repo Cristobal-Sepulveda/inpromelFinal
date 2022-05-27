@@ -9,7 +9,7 @@ const CustomRadioBox = ({topicoChecked, setTopicoChecked, topicoName}) => {
             <RadioButton  value={topicoName}
                           status={topicoChecked === topicoName ? 'checked' : 'unchecked'}
                           onPress={() => {setTopicoChecked(topicoName)}}
-                          color= '#2196F3'/>
+                          color= '#4285f4'/>
             <Text style={styles.textLabel}>{topicoName}</Text>
         </View>
     );

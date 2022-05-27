@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { Button,View, Text, TextInput, Keyboard, Image, StyleSheet, Dimensions, Alert} from 'react-native';
+import { TouchableOpacity,View, Text, TextInput, Keyboard, Image, StyleSheet, Dimensions, Alert} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { AuthContext } from '../context/context';
 import {useFonts, Roboto_500Medium} from '@expo-google-fonts/roboto';
@@ -72,9 +72,13 @@ const Login = ({ redux, insertSession, wipeRedux }) => {
                        onChangeText={(text) => setContraseña(text)}
                        secureTextEntry={true}/>
 
-            <View style={{flexDirection:"row", justifyContent:"space-between", marginTop:"6%", width:"90%", marginStart:"auto", marginEnd:"auto"}}>
-              <Button onPress = {limpiarCeldas} title="Limpiar campos"/>
-              <Button onPress = {() => login()} title="Iniciar sesión"/>
+            <View style={{flexDirection:"row", justifyContent:"space-between", marginTop:"6%", width:"100%", marginStart:"auto", marginEnd:"auto"}}>
+              <TouchableOpacity style={{...styles.buttons, marginStart:'5%'}} onPress = {limpiarCeldas}>
+                <Text style={styles.buttonsText}>Limpiar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{...styles.buttons, marginEnd:'5%'}} onPress = {() => login()}>
+                <Text style={styles.buttonsText}>Iniciar sesión</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -87,6 +91,18 @@ const styles = StyleSheet.create({
       height: '100%',
       width:'100%'
     },
+    buttons:{
+      backgroundColor:"#4285f4",
+      width: '40%',
+      height: 40,
+      borderRadius:5,
+    },
+    buttonsText:{
+      color:'white',
+      textAlign:'center',
+      fontSize:16,
+      marginTop:9
+    }, 
     fondoDeLogin: {
       flex:0,
       width: '100%',

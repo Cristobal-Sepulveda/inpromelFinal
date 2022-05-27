@@ -86,7 +86,7 @@ const Tareas = ({isBottomSheetFullOpen}) => {
 
     /** Layout */
     return(
-        <View>
+        <View style={{marginTop:20}}>
 
             {isBottomSheetFullOpen?(
                 <>
