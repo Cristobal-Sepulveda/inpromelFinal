@@ -1,1 +1,2 @@
-export * from './session';
+export * from "./session";
+export * from "./pendientes";
