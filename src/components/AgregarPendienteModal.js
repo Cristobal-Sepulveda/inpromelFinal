@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   View,
@@ -10,12 +10,13 @@ import {
 } from "react-native";
 import Modal from "react-native-modal";
 import CustomDatePicker from "./CustomDatePicker";
-import BotonesEnviarPedidoYVolver from "./BotonesEnviarPedidoYVolver";
 import CustomRadioBox from "./CustomRadioBox";
-import { insert_pendiente } from "../model/pendientes";
+import { insert_pendiente, select_pendientes } from "../model/pendientes";
+import { connect } from "react-redux";
+import * as Types from "../store/actions/types";
 
 const AgregarPendienteModal = ({
-  setFlatListItems,
+  insertPendiente,
   showAgregarPendienteModal,
   setShowAgregarPendienteModal,
 }) => {
@@ -23,15 +24,13 @@ const AgregarPendienteModal = ({
   const [date, setDate] = useState(new Date());
   const [topicoChecked, setTopicoChecked] = useState("");
   const [tareaARealizar, setTareaARealizar] = useState("");
-  const [inputBoxText, setInputBoxText] = useState("");
-
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
 
   /** Esta funcion es enviada al componente BotonesEnviarPedidoYVolver
    *  y lo que hace es checkear que todos los campos hayan sido
    *  llenados antes de cerrar el Modal */
-  const guardarPendiente = () => {
+  const guardarPendiente = async () => {
     // Primera condicionante de salida
     if (
       titulo === "" ||
@@ -42,19 +41,15 @@ const AgregarPendienteModal = ({
       Alert.alert("Debes llenar todos los datos antes de guardar el pendiente");
       return;
     }
-
+    console.log(titulo);
     /* Dado que se cumplen las condiciones, la funcion es ejecutada */
-    insert_pendiente(titulo, date, topicoChecked, tareaARealizar);
-
-    // setFlatListItems((prevData) => [
-    //   ...prevData,
-    //   {
-    //     titulo: titulo,
-    //     topicoChecked: topicoChecked,
-    //     date: date,
-    //     tareaARealizar: tareaARealizar,
-    //   },
-    // ]);
+    insert_pendiente({
+      titulo: titulo,
+      date: date,
+      topico: topicoChecked,
+      tarea: tareaARealizar,
+    });
+    insertPendiente(titulo, date, topicoChecked, tareaARealizar);
     setShowAgregarPendienteModal(false);
   };
 
@@ -103,12 +98,6 @@ const AgregarPendienteModal = ({
                   color: "white",
                   textAlignVertical: "center",
                   textAlign: "center",
-                }}
-              >
-                Ingrese Título{" "}
-              </Text>
-              <Text
-                style={{
                   height: 40,
                   backgroundColor: "#071b75",
                   color: "white",
@@ -161,17 +150,17 @@ const AgregarPendienteModal = ({
             }}
           >
             <CustomRadioBox
-              topicoName={"Tópico 1"}
+              topicoName={"Urgente"}
               topicoChecked={topicoChecked}
               setTopicoChecked={setTopicoChecked}
             />
             <CustomRadioBox
-              topicoName={"Tópico 2"}
+              topicoName={"Planificada"}
               topicoChecked={topicoChecked}
               setTopicoChecked={setTopicoChecked}
             />
             <CustomRadioBox
-              topicoName={"Tópico 3"}
+              topicoName={"No Urgente"}
               topicoChecked={topicoChecked}
               setTopicoChecked={setTopicoChecked}
             />
@@ -197,11 +186,30 @@ const AgregarPendienteModal = ({
           />
 
           {/* FootBar del Modal */}
-          <BotonesEnviarPedidoYVolver
-            guardarPendiente={guardarPendiente}
-            showAgregarPendienteModal={showAgregarPendienteModal}
-            setShowAgregarPendienteModal={setShowAgregarPendienteModal}
-          />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 24,
+            }}
+          >
+            <TouchableOpacity
+              style={{ ...styles.button, marginStart: 30, width: 140 }}
+              onPress={() => {
+                guardarPendiente();
+              }}
+            >
+              <Text style={styles.textStyle}>Guardar Pendiente</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ ...styles.button, marginEnd: 30 }}
+              onPress={() => {
+                setShowAgregarPendienteModal(!showAgregarPendienteModal);
+              }}
+            >
+              <Text style={styles.textStyle}>Volver</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     </View>
@@ -209,6 +217,17 @@ const AgregarPendienteModal = ({
 };
 
 const styles = StyleSheet.create({
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    backgroundColor: "#4285f4",
+    width: 109,
+  },
+  textStyle: {
+    color: "white",
+    textAlign: "center",
+  },
   textInput: {
     height: 40,
     borderWidth: 1,
@@ -252,4 +271,17 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AgregarPendienteModal;
+const mapStateToProps = (state) => {
+  return state;
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  insertPendiente: (titulo, fecha, topico, tarea) =>
+    dispatch({
+      type: Types.INSERT_PENDIENTE,
+      payload: { titulo, fecha, topico, tarea },
+    }),
+});
+
+const connectComponent = connect(mapStateToProps, mapDispatchToProps);
+export default connectComponent(AgregarPendienteModal);

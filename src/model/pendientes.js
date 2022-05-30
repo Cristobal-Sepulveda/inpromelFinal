@@ -2,7 +2,7 @@ import { queryPromise } from "./query";
 
 const create_qry = `CREATE TABLE IF NOT EXISTS 
                         pendientes(
-                            id_pendiente INTEGER PRIMARY KEY NOT NULL,
+                            id_pendiente INTEGER PRIMARY KEY AUTOINCREMENT,
                             titulo TEXT,
                             fecha TEXT,
                             topico TEXT,
@@ -14,6 +14,9 @@ export const create_pendientes_table = () => queryPromise(create_qry, []);
 
 const drop_qry = "DELETE FROM pendientes;";
 export const drop_pendientes = () => queryPromise(drop_qry, []);
+
+const delete_qry = "DELETE FROM pendientes WHERE id_pendiente = ?;";
+export const delete_pendiente = () => queryPromise(delete_qry, []);
 
 const insert_qry =
   "INSERT INTO pendientes  (titulo, fecha, topico, tarea) VALUES (?, ?, ?, ?);";
