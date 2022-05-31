@@ -31,6 +31,10 @@ export const insert_pendiente = (pendientes) =>
 const select_qry = "SELECT * FROM pendientes;";
 export const select_pendientes = () => queryPromise(select_qry, []);
 
+const select_qry2 = "SELECT * FROM pendientes WHERE topico = ?;";
+export const select_pendientes_categoria = (topico) =>
+  queryPromise(select_qry2, [topico]);
+
 const edit_qry =
   "UPDATE pendientes SET id_pendiente = ?, titulo= ?, fecha = ?, topico = ?, tarea = ? WHERE id_pendiente = ? ;";
 export const editar_pendiente = (pendientes) =>

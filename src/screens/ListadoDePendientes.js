@@ -9,12 +9,25 @@ import {
   Text,
   SafeAreaView,
 } from "react-native";
+import { Snackbar } from "react-native-paper";
 import AgregarPendienteModal from "../components/AgregarPendienteModal";
 import { connect, useSelector } from "react-redux";
 import * as Types from "../store/actions/types";
-import { select_pendientes } from "../model/pendientes";
+import {
+  select_pendientes,
+  drop_pendientes,
+  select_pendientes_categoria,
+} from "../model/pendientes";
 
-const ListadoDePendientes = ({ redux, insertPendiente }) => {
+const ListadoDePendientes = ({
+  redux,
+  selectPendientes,
+  insertPendiente,
+  deletePendiente,
+  deletePendientes,
+  setShowHome,
+  showHome,
+}) => {
   const [flatListItems, setFlatListItems] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(true);
   const [showAgregarPendienteModal, setShowAgregarPendienteModal] =
@@ -24,12 +37,52 @@ const ListadoDePendientes = ({ redux, insertPendiente }) => {
     for (let i = 0; i < state.pendientes.length; i++) {
       auxArray.push(JSON.stringify(state.pendientes[i]));
     }
+    console.log("HOLAAAA");
     return auxArray;
   });
 
+  const volverAHome = () => {
+    deletePendientes();
+    setShowHome(!showHome);
+  };
+
+  const verTodos = async () => {
+    setFlatListItems([]);
+    const pendientesEnDb = await select_pendientes();
+    const aux = pendientesEnDb.rows._array;
+    console.log(aux);
+    for (let i = 0; i < aux.length; i++) {
+      insertPendiente(aux[i].titulo, aux[i].fecha, aux[i].topico, aux[i].tarea);
+    }
+  };
+
+  const eliminarPendientes = async () => {
+    setFlatListItems([]);
+    deletePendientes();
+    await drop_pendientes();
+  };
+
+  const porCategorias = async (categoria) => {
+    const pendientesElegidos = await select_pendientes_categoria("Urgente");
+    const aux = pendientesElegidos.rows._array;
+    console.log(aux);
+    setFlatListItems([]);
+    deletePendientes();
+    for (let i = 0; i < aux.length; i++) {
+      console.log("@@");
+      insertPendiente(aux[i].titulo, aux[i].fecha, aux[i].topico, aux[i].tarea);
+    }
+  };
+
   const cargarPendientesDesdeDB = async () => {
-    const pedidos = await select_pendientes();
-    console.log(pedidos.rows._array);
+    const aux = await select_pendientes();
+    const pendientes = aux.rows._array;
+    for (let i = 0; i < pendientes.length; i++) {
+      setFlatListItems((prevData) => [
+        ...prevData,
+        JSON.stringify(pendientes[i]),
+      ]);
+    }
   };
 
   const renderItem = ({ item }) => {
@@ -62,6 +115,10 @@ const ListadoDePendientes = ({ redux, insertPendiente }) => {
 
         {/* Columna 2 */}
         <View style={{ width: "80%" }}>
+          <View style={{ flexDirection: "row" }}>
+            <Text>Id_pendiente: </Text>
+            <Text>{aux.id_pendiente}</Text>
+          </View>
           <View style={{ flexDirection: "row" }}>
             <Text>Titulo: </Text>
             <Text>{aux.titulo}</Text>
@@ -111,6 +168,7 @@ const ListadoDePendientes = ({ redux, insertPendiente }) => {
       pendientesList.length &&
       !flatListItems.includes(pendientesList[pendientesList.length - 1])
     ) {
+      console.log("entre");
       if (
         flatListItems.length === 0 &&
         pendientesList.length > 0 &&
@@ -128,7 +186,10 @@ const ListadoDePendientes = ({ redux, insertPendiente }) => {
     }
   }, [pendientesList]);
 
+  useEffect(() => {}, [flatListItems]);
+
   useEffect(() => {
+    setFlatListItems([]);
     cargarPendientesDesdeDB();
   }, []);
 
@@ -204,13 +265,87 @@ const ListadoDePendientes = ({ redux, insertPendiente }) => {
               }}
             />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              cargarPendientesDesdeDB();
+        </View>
+
+        {/* Pendientes y botones */}
+        <View style={{ backgroundColor: "#BF0413" }}>
+          <Text style={{ marginTop: 8, textAlign: "center", color: "white" }}>
+            PENDIENTES
+          </Text>
+          <View
+            style={{
+              marginTop: 10,
+              borderBottomColor: "white",
+              borderBottomWidth: 1,
+            }}
+          />
+
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 10,
             }}
           >
-            <Text>Hola</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#4285f4",
+                width: "20%",
+                marginStart: "10%",
+              }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  textAlign: "center",
+                  marginTop: 8,
+                }}
+                onPress={() => {
+                  verTodos();
+                }}
+              >
+                Ver Todos
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ backgroundColor: "#4285f4", width: "20%" }}
+              onPress={() => {
+                eliminarPendientes();
+              }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  textAlign: "center",
+                  textAlignVertical: "center",
+                }}
+              >
+                Eliminar Todo
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#4285f4",
+                width: "20%",
+                marginEnd: "10%",
+              }}
+              onPress={() => {
+                porCategorias();
+              }}
+            >
+              <Text style={{ color: "white", textAlign: "center" }}>
+                Por categorias
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              marginTop: 10,
+              marginBottom: 20,
+              borderBottomColor: "white",
+              borderBottomWidth: 1,
+            }}
+          />
         </View>
 
         {/* BODY CON FLATLIST */}
@@ -222,22 +357,7 @@ const ListadoDePendientes = ({ redux, insertPendiente }) => {
             numColumns={1}
             backgroundColor="#BF0413"
             refreshing={isRefreshing}
-            contentContainerStyle={{ paddingBottom: 10 }}
-            //onRefresh={syncFlatList}
-            ListHeaderComponent={
-              <View style={{ marginTop: 8, marginBottom: 8 }}>
-                <Text style={{ textAlign: "center", color: "white" }}>
-                  PENDIENTES
-                </Text>
-                <View
-                  style={{
-                    marginTop: 8,
-                    borderBottomColor: "white",
-                    borderBottomWidth: 1,
-                  }}
-                />
-              </View>
-            }
+            contentContainerStyle={{ paddingBottom: 180 }}
             ListEmptyComponent={
               <View
                 style={{
@@ -263,16 +383,18 @@ const ListadoDePendientes = ({ redux, insertPendiente }) => {
                     color: "white",
                     fontSize: 25,
                     marginTop: "8%",
+                    marginEnd: "4%",
                   }}
                 >
-                  No tienes ningun Pendiente
+                  No tienes pendientes
                 </Text>
               </View>
             }
           />
         </SafeAreaView>
       </View>
-      {/* FAB BUTTON */}
+
+      {/* FAB BUTTONS */}
       <TouchableOpacity
         style={styles.fabButton2}
         onPress={() => {
@@ -280,6 +402,14 @@ const ListadoDePendientes = ({ redux, insertPendiente }) => {
         }}
       >
         <Image source={require("../../assets/icons/plus.png")} />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.fabButton}
+        onPress={() => {
+          volverAHome();
+        }}
+      >
+        <Image source={require("../../assets/icons/flechaIzquierda.png")} />
       </TouchableOpacity>
 
       {/* Modal AgregarPendiente*/}
@@ -293,11 +423,23 @@ const ListadoDePendientes = ({ redux, insertPendiente }) => {
 };
 
 const styles = StyleSheet.create({
+  fabButton: {
+    flex: 1,
+    position: "absolute",
+    width: 50,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    right: 30,
+    bottom: 30,
+    backgroundColor: "#4285f4",
+    borderRadius: 50,
+  },
   pendientePriority: {
     width: "40%",
-    height: "40%",
+    height: 25,
     alignSelf: "center",
-    marginTop: "25%",
+    top: "31%",
     borderRadius: 30,
   },
   margenInferior: {
@@ -330,10 +472,25 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
+  selectPendientes: () =>
+    dispatch({
+      type: Types.SELECT_PENDIENTES,
+      payload: {},
+    }),
   insertPendiente: (titulo, fecha, topico, tarea) =>
     dispatch({
       type: Types.INSERT_PENDIENTE,
       payload: { titulo, fecha, topico, tarea },
+    }),
+  deletePendientes: () =>
+    dispatch({
+      type: Types.DELETE_PENDIENTES,
+      payload: {},
+    }),
+  deletePendiente: () =>
+    dispatch({
+      type: Types.DELETE_PENDIENTE,
+      payload: { id_pendiente },
     }),
 });
 

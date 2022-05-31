@@ -41,6 +41,9 @@ const reducer = (state = initialState, action) => {
     case Types.DELETE_PENDIENTE:
       return state.pendientes.filter((item) => item !== action.payload);
 
+    case Types.DELETE_PENDIENTES:
+      return { ...state, pendientes: [] };
+
     // WIPE ALL
     case Types.WIPE_REDUX:
       return initialState;

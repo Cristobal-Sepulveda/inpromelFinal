@@ -30,6 +30,23 @@ const AgregarPendienteModal = ({
   /** Esta funcion es enviada al componente BotonesEnviarPedidoYVolver
    *  y lo que hace es checkear que todos los campos hayan sido
    *  llenados antes de cerrar el Modal */
+  const guardarEnReduxYDB = async () => {
+    insert_pendiente({
+      titulo: titulo,
+      fecha: date.toString().slice(4, 15),
+      topico: topicoChecked,
+      tarea: tareaARealizar,
+    });
+    insertPendiente(titulo, date, topicoChecked, tareaARealizar);
+  };
+
+  const limpiandoModal = () => {
+    setTitulo("");
+    setDate(new Date());
+    setTopicoChecked("");
+    setTareaARealizar("");
+  };
+
   const guardarPendiente = async () => {
     // Primera condicionante de salida
     if (
@@ -41,15 +58,8 @@ const AgregarPendienteModal = ({
       Alert.alert("Debes llenar todos los datos antes de guardar el pendiente");
       return;
     }
-    console.log(titulo);
-    /* Dado que se cumplen las condiciones, la funcion es ejecutada */
-    insert_pendiente({
-      titulo: titulo,
-      date: date,
-      topico: topicoChecked,
-      tarea: tareaARealizar,
-    });
-    insertPendiente(titulo, date, topicoChecked, tareaARealizar);
+    guardarEnReduxYDB();
+    limpiandoModal();
     setShowAgregarPendienteModal(false);
   };
 

@@ -72,15 +72,6 @@ const Home = ({ redux, wipeRedux }) => {
     }
   };
 
-  /** Esta función le da el source a la imagen del fabButton, segun sea el caso */
-  const imageSource = () => {
-    if (showHome) {
-      return require("../../assets/icons/plus.png");
-    } else {
-      return require("../../assets/icons/flechaIzquierda.png");
-    }
-  };
-
   return (
     <>
       {/* Contenido de la Screen */}
@@ -99,20 +90,23 @@ const Home = ({ redux, wipeRedux }) => {
                   source={require("../../assets/icons/userLocation.png")}
                 />
               </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.fabButton}
+                onPress={() => {
+                  fabButtonPressed();
+                }}
+              >
+                <Image source={require("../../assets/icons/plus.png")} />
+              </TouchableOpacity>
             </>
           ) : (
             <>
-              <ListadoDePendientes />
+              <ListadoDePendientes
+                setShowHome={setShowHome}
+                showHome={showHome}
+              />
             </>
           )}
-          <TouchableOpacity
-            style={styles.fabButton}
-            onPress={() => {
-              fabButtonPressed();
-            }}
-          >
-            <Image source={imageSource()} />
-          </TouchableOpacity>
         </View>
         {/* BottomBar */}
 
