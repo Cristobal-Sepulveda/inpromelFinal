@@ -114,7 +114,7 @@ const ListadoDePendientes = ({
         )}
 
         {/* Columna 2 */}
-        <View style={{ width: "80%" }}>
+        <View style={{ width: "30%", marginTop: "4%", marginStart: "7%" }}>
           <View style={{ flexDirection: "row" }}>
             <Text>Id_pendiente: </Text>
             <Text>{aux.id_pendiente}</Text>
@@ -135,6 +135,19 @@ const ListadoDePendientes = ({
             </Text>
           </View>
         </View>
+
+        {/* Columna 3 */}
+        <TouchableOpacity>
+          <Image
+            style={{
+              marginStart: "53%",
+              marginTop: "19%",
+              width: "25%",
+              height: "33%",
+            }}
+            source={require("../../assets/icons/lupa.png")}
+          />
+        </TouchableOpacity>
       </View>
     );
   };
