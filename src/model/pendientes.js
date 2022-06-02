@@ -16,7 +16,8 @@ const drop_qry = "DELETE FROM pendientes;";
 export const drop_pendientes = () => queryPromise(drop_qry, []);
 
 const delete_qry = "DELETE FROM pendientes WHERE id_pendiente = ?;";
-export const delete_pendiente = () => queryPromise(delete_qry, []);
+export const delete_pendiente = (id_pendiente) =>
+  queryPromise(delete_qry, [id_pendiente]);
 
 const insert_qry =
   "INSERT INTO pendientes  (titulo, fecha, topico, tarea) VALUES (?, ?, ?, ?);";
@@ -36,6 +37,6 @@ export const select_pendientes_categoria = (topico) =>
   queryPromise(select_qry2, [topico]);
 
 const edit_qry =
-  "UPDATE pendientes SET id_pendiente = ?, titulo= ?, fecha = ?, topico = ?, tarea = ? WHERE id_pendiente = ? ;";
-export const editar_pendiente = (pendientes) =>
-  queryPromise(edit_qry, [pendientes.id_pendiente]);
+  "UPDATE pendientes SET titulo= ?, fecha = ?, topico = ?, tarea = ? WHERE id_pendiente = ? ;";
+export const editar_pendiente = (titulo, fecha, topico, tarea, id_pendiente) =>
+  queryPromise(edit_qry, [titulo, fecha, topico, tarea, id_pendiente]);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Alert,
   StyleSheet,
@@ -9,7 +9,7 @@ import {
   Text,
   SafeAreaView,
 } from "react-native";
-import { Snackbar } from "react-native-paper";
+import { RadioButton, Snackbar } from "react-native-paper";
 import AgregarPendienteModal from "../components/AgregarPendienteModal";
 import { connect, useSelector } from "react-redux";
 import * as Types from "../store/actions/types";
@@ -18,6 +18,8 @@ import {
   drop_pendientes,
   select_pendientes_categoria,
 } from "../model/pendientes";
+import BottomSheet from "reanimated-bottom-sheet";
+import DetallePendienteModal from "../components/DetallePendiente";
 
 const ListadoDePendientes = ({
   redux,
@@ -30,8 +32,13 @@ const ListadoDePendientes = ({
 }) => {
   const [flatListItems, setFlatListItems] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(true);
+  const [detallePendiente, setDetallePendiente] = useState([]);
   const [showAgregarPendienteModal, setShowAgregarPendienteModal] =
     useState(false);
+  const [showDetallePendienteModal, setShowDetallePendienteModal] =
+    useState(false);
+  const [topicoChecked, setTopicoChecked] = useState();
+  const categorias = useRef(null);
   const pendientesList = useSelector((state) => {
     const auxArray = [];
     for (let i = 0; i < state.pendientes.length; i++) {
@@ -41,18 +48,40 @@ const ListadoDePendientes = ({
     return auxArray;
   });
 
-  const volverAHome = () => {
-    deletePendientes();
-    setShowHome(!showHome);
-  };
+  useEffect(() => {
+    if (
+      pendientesList.length &&
+      !flatListItems.includes(pendientesList[pendientesList.length - 1])
+    ) {
+      console.log("entre");
+      if (
+        flatListItems.length === 0 &&
+        pendientesList.length > 0 &&
+        !flatListItems.includes(pendientesList[pendientesList.length - 1])
+      ) {
+        for (let i = 0; i < pendientesList.length; i++) {
+          setFlatListItems((prevData) => [...prevData, pendientesList[i]]);
+        }
+      } else {
+        setFlatListItems((prevData) => [
+          ...prevData,
+          pendientesList[pendientesList.length - 1],
+        ]);
+      }
+    }
+  }, [pendientesList]);
+
+  useEffect(() => {
+    setFlatListItems([]);
+    cargarPendientesDesdeDB();
+  }, []);
 
   const verTodos = async () => {
-    setFlatListItems([]);
     const pendientesEnDb = await select_pendientes();
     const aux = pendientesEnDb.rows._array;
-    console.log(aux);
+    setFlatListItems([]);
     for (let i = 0; i < aux.length; i++) {
-      insertPendiente(aux[i].titulo, aux[i].fecha, aux[i].topico, aux[i].tarea);
+      setFlatListItems((prevData) => [...prevData, JSON.stringify(aux[i])]);
     }
   };
 
@@ -63,15 +92,18 @@ const ListadoDePendientes = ({
   };
 
   const porCategorias = async (categoria) => {
-    const pendientesElegidos = await select_pendientes_categoria("Urgente");
-    const aux = pendientesElegidos.rows._array;
-    console.log(aux);
+    const aux = await select_pendientes();
+    const pendientes = aux.rows._array;
     setFlatListItems([]);
-    deletePendientes();
-    for (let i = 0; i < aux.length; i++) {
-      console.log("@@");
-      insertPendiente(aux[i].titulo, aux[i].fecha, aux[i].topico, aux[i].tarea);
+    for (let i = 0; i < pendientes.length; i++) {
+      if (pendientes[i].topico === categoria) {
+        setFlatListItems((prevData) => [
+          ...prevData,
+          JSON.stringify(pendientes[i]),
+        ]);
+      }
     }
+    categorias.current.snapTo(0);
   };
 
   const cargarPendientesDesdeDB = async () => {
@@ -85,71 +117,9 @@ const ListadoDePendientes = ({
     }
   };
 
-  const renderItem = ({ item }) => {
-    const aux = JSON.parse(item);
-    const tarea = aux.tarea.slice(0, 10);
-    return (
-      <View style={styles.itemContainer}>
-        {/* COLUMNA 1 */}
-        {aux.topico === "Urgente" ? (
-          <View style={{ width: "20%" }}>
-            <View
-              style={{ ...styles.pendientePriority, backgroundColor: "red" }}
-            />
-          </View>
-        ) : aux.topico === "Planificada" ? (
-          <View style={{ width: "20%" }}>
-            <View
-              style={{ ...styles.pendientePriority, backgroundColor: "yellow" }}
-            />
-          </View>
-        ) : aux.topico === "No Urgente" ? (
-          <View style={{ width: "20%" }}>
-            <View
-              style={{ ...styles.pendientePriority, backgroundColor: "green" }}
-            />
-          </View>
-        ) : (
-          <></>
-        )}
-
-        {/* Columna 2 */}
-        <View style={{ width: "30%", marginTop: "4%", marginStart: "7%" }}>
-          <View style={{ flexDirection: "row" }}>
-            <Text>Id_pendiente: </Text>
-            <Text>{aux.id_pendiente}</Text>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <Text>Titulo: </Text>
-            <Text>{aux.titulo}</Text>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <Text>Fecha: </Text>
-            <Text>{aux.fecha}</Text>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <Text>Tarea a realizar: </Text>
-            <Text>
-              {tarea}
-              {"..."}
-            </Text>
-          </View>
-        </View>
-
-        {/* Columna 3 */}
-        <TouchableOpacity>
-          <Image
-            style={{
-              marginStart: "53%",
-              marginTop: "19%",
-              width: "25%",
-              height: "33%",
-            }}
-            source={require("../../assets/icons/lupa.png")}
-          />
-        </TouchableOpacity>
-      </View>
-    );
+  const volverAHome = () => {
+    deletePendientes();
+    setShowHome(!showHome);
   };
 
   //funcion iniciada al hacer sync en la flatList...
@@ -176,35 +146,134 @@ const ListadoDePendientes = ({
     );
   };
 
-  useEffect(() => {
-    if (
-      pendientesList.length &&
-      !flatListItems.includes(pendientesList[pendientesList.length - 1])
-    ) {
-      console.log("entre");
-      if (
-        flatListItems.length === 0 &&
-        pendientesList.length > 0 &&
-        !flatListItems.includes(pendientesList[pendientesList.length - 1])
-      ) {
-        for (let i = 0; i < pendientesList.length; i++) {
-          setFlatListItems((prevData) => [...prevData, pendientesList[i]]);
-        }
-      } else {
-        setFlatListItems((prevData) => [
-          ...prevData,
-          pendientesList[pendientesList.length - 1],
-        ]);
-      }
-    }
-  }, [pendientesList]);
+  const renderContentCategorias = () => {
+    return (
+      <View style={styles.bodyBottomSheet}>
+        {/* Header */}
+        <View style={styles.lineSheets} />
 
-  useEffect(() => {}, [flatListItems]);
+        <Text style={{ marginTop: "5%", alignSelf: "center", fontSize: 20 }}>
+          Elija Categoría
+        </Text>
+        {/* Body Content */}
 
-  useEffect(() => {
-    setFlatListItems([]);
-    cargarPendientesDesdeDB();
-  }, []);
+        <View style={{ marginStart: "5%", marginTop: "10%" }}>
+          <View style={{ flexDirection: "row", alignContent: "center" }}>
+            <RadioButton
+              value={"Urgente"}
+              status={topicoChecked === "Urgente" ? "checked" : "unchecked"}
+              onPress={() => {
+                setTopicoChecked("Urgente");
+              }}
+              color="#4285f4"
+            />
+            <Text style={styles.textLabel}>{"Urgente"}</Text>
+          </View>
+          <View style={{ flexDirection: "row", alignContent: "center" }}>
+            <RadioButton
+              value={"Planificada"}
+              status={topicoChecked === "Planificada" ? "checked" : "unchecked"}
+              onPress={() => {
+                setTopicoChecked("Planificada");
+              }}
+              color="#4285f4"
+            />
+            <Text style={styles.textLabel}>{"Planificada"}</Text>
+          </View>
+          <View style={{ flexDirection: "row", alignContent: "center" }}>
+            <RadioButton
+              value={"No Urgente"}
+              status={topicoChecked === "No Urgente" ? "checked" : "unchecked"}
+              onPress={() => {
+                setTopicoChecked("No Urgente");
+              }}
+              color="#4285f4"
+            />
+            <Text style={styles.textLabel}>{"No Urgente"}</Text>
+          </View>
+        </View>
+        {/* FootBar */}
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#4285f4",
+            width: "20%",
+            height: 40,
+            alignSelf: "center",
+            marginTop: "6%",
+          }}
+          onPress={() => {
+            porCategorias(topicoChecked);
+          }}
+        >
+          <Text style={{ color: "white", marginTop: 10, textAlign: "center" }}>
+            Filtrar
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  const renderItem = ({ item }) => {
+    const aux = JSON.parse(item);
+    return (
+      <View style={styles.itemContainer}>
+        {/* COLUMNA 1 */}
+        {aux.topico === "Urgente" ? (
+          <View style={{ width: "20%" }}>
+            <View
+              style={{ ...styles.pendientePriority, backgroundColor: "red" }}
+            />
+          </View>
+        ) : aux.topico === "Planificada" ? (
+          <View style={{ width: "20%" }}>
+            <View
+              style={{ ...styles.pendientePriority, backgroundColor: "yellow" }}
+            />
+          </View>
+        ) : aux.topico === "No Urgente" ? (
+          <View style={{ width: "20%" }}>
+            <View
+              style={{ ...styles.pendientePriority, backgroundColor: "green" }}
+            />
+          </View>
+        ) : (
+          <></>
+        )}
+
+        {/* Columna 2 */}
+        <View style={{ width: "30%" }}>
+          <View style={{ flexDirection: "row" }}>
+            <Text>Titulo: </Text>
+            <Text>{aux.titulo}</Text>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <Text>Fecha: </Text>
+            <Text>{JSON.stringify(aux.fecha).slice(1, 11)}</Text>
+          </View>
+        </View>
+
+        {/* Columna 3 */}
+        <View>
+          <TouchableOpacity
+            onPress={() => {
+              setDetallePendiente(aux);
+              setShowDetallePendienteModal(true);
+            }}
+          >
+            <Image
+              style={{
+                marginStart: "50%",
+                marginTop: "2%",
+                width: 35,
+                height: 35,
+              }}
+              source={require("../../assets/icons/lupa.png")}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
 
   return (
     <>
@@ -279,7 +348,6 @@ const ListadoDePendientes = ({
             />
           </TouchableOpacity>
         </View>
-
         {/* Pendientes y botones */}
         <View style={{ backgroundColor: "#BF0413" }}>
           <Text style={{ marginTop: 8, textAlign: "center", color: "white" }}>
@@ -343,7 +411,7 @@ const ListadoDePendientes = ({
                 marginEnd: "10%",
               }}
               onPress={() => {
-                porCategorias();
+                categorias.current.snapTo(1);
               }}
             >
               <Text style={{ color: "white", textAlign: "center" }}>
@@ -351,6 +419,7 @@ const ListadoDePendientes = ({
               </Text>
             </TouchableOpacity>
           </View>
+
           <View
             style={{
               marginTop: 10,
@@ -431,11 +500,48 @@ const ListadoDePendientes = ({
         setShowAgregarPendienteModal={setShowAgregarPendienteModal}
         setFlatListItems={setFlatListItems}
       />
+      {/* Modal DetallePendiente */}
+      <DetallePendienteModal
+        showDetallePendienteModal={showDetallePendienteModal}
+        setShowDetallePendienteModal={setShowDetallePendienteModal}
+        detallePendiente={detallePendiente}
+        setDetallePendiente={setDetallePendiente}
+        flatListItems={flatListItems}
+        setFlatListItems={setFlatListItems}
+      />
+
+      {/* BottomSheet Por Categorias */}
+      <BottomSheet
+        ref={categorias}
+        callbackThreshold={0.1}
+        initialSnap={0}
+        snapPoints={[0, "40%"]}
+        borderRadius={10}
+        renderContent={renderContentCategorias}
+      />
     </>
   );
 };
 
 const styles = StyleSheet.create({
+  textLabel: {
+    marginTop: "1.2%",
+    fontSize: 20,
+    marginStart: "1%",
+  },
+  lineSheets: {
+    borderTopColor: "#E5E5E5",
+    borderTopWidth: 6,
+    borderRadius: 5,
+    width: "25%",
+    alignSelf: "center",
+  },
+  bodyBottomSheet: {
+    backgroundColor: "#f6f6f6",
+    paddingHorizontal: 8,
+    paddingVertical: 12,
+    height: "100%",
+  },
   fabButton: {
     flex: 1,
     position: "absolute",
@@ -477,6 +583,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     backgroundColor: "#fff",
     flexDirection: "row",
+    paddingVertical: 15,
   },
 });
 

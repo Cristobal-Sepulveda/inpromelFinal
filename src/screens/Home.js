@@ -108,8 +108,8 @@ const Home = ({ redux, wipeRedux }) => {
             </>
           )}
         </View>
-        {/* BottomBar */}
 
+        {/* BottomBar */}
         <BottomBar
           style={styles.bottomBar}
           showPerfilModal={showPerfilModal}

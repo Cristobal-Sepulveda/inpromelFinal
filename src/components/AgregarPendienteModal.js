@@ -22,6 +22,7 @@ const AgregarPendienteModal = ({
 }) => {
   const [titulo, setTitulo] = useState("");
   const [date, setDate] = useState(new Date());
+  const [datePicked, setDatePicked] = useState(false);
   const [topicoChecked, setTopicoChecked] = useState("");
   const [tareaARealizar, setTareaARealizar] = useState("");
   const [mode, setMode] = useState("date");
@@ -94,7 +95,7 @@ const AgregarPendienteModal = ({
           </View>
 
           {/* Body del Modal */}
-          <Text style={{ textAlign: "center", marginBottom: 8 }}>
+          <Text style={{ textAlign: "center", fontSize: 20, marginBottom: 8 }}>
             Agregar Pendiente
           </Text>
           {/* Columnas */}
@@ -136,6 +137,9 @@ const AgregarPendienteModal = ({
                 setDate={setDate}
                 setShow={setShow}
                 setMode={setMode}
+                onPress={() => {
+                  setDatePicked(true);
+                }}
               />
               {/* radioButtons */}
             </View>
