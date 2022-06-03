@@ -19,6 +19,13 @@ const Perfil = ({ showPerfilModal, setShowPerfilModal, setIsFocusedHome }) => {
   const { signOut } = useContext(AuthContext);
   const [name, setName] = useState("");
   const [online, setOnline] = useState(true);
+  const deviceWidth = Dimensions.get("window").width;
+  const deviceHeight =
+    Platform.OS === "ios"
+      ? Dimensions.get("window").height
+      : require("react-native-extra-dimensions-android").get(
+          "REAL_WINDOW_HEIGHT"
+        );
 
   const userIsOnline = () => {
     NetInfo.addEventListener((state) => {
@@ -61,10 +68,10 @@ const Perfil = ({ showPerfilModal, setShowPerfilModal, setIsFocusedHome }) => {
 
   return (
     <Modal
-      style={{ zIndex: 1000 }}
-      coverScreen={true}
       hasBackdrop={true}
       isVisible={showPerfilModal}
+      deviceWidth={deviceWidth}
+      deviceHeight={deviceHeight}
       animationIn={"fadeIn"}
       animationOut={"fadeOut"}
       backdropTransitionOutTiming={0}
