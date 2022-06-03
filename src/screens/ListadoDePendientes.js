@@ -19,7 +19,7 @@ import {
   select_pendientes_categoria,
 } from "../model/pendientes";
 import BottomSheet from "reanimated-bottom-sheet";
-import DetallePendienteModal from "../components/DetallePendiente";
+import DetallePendienteModal from "../components/DetallePendienteModal";
 
 const ListadoDePendientes = ({
   redux,
@@ -44,7 +44,6 @@ const ListadoDePendientes = ({
     for (let i = 0; i < state.pendientes.length; i++) {
       auxArray.push(JSON.stringify(state.pendientes[i]));
     }
-    console.log("HOLAAAA");
     return auxArray;
   });
 
@@ -248,7 +247,11 @@ const ListadoDePendientes = ({
           </View>
           <View style={{ flexDirection: "row" }}>
             <Text>Fecha: </Text>
-            <Text>{JSON.stringify(aux.fecha).slice(1, 11)}</Text>
+            {JSON.stringify(aux.fecha).slice(1, 12)[10] === "T" ? (
+              <Text>{JSON.stringify(aux.fecha).slice(1, 11)}</Text>
+            ) : (
+              <Text>{JSON.stringify(aux.fecha).slice(1, 12)}</Text>
+            )}
           </View>
         </View>
 

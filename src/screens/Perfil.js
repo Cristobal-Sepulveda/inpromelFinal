@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -6,25 +6,27 @@ import {
   Image,
   Alert,
   TouchableOpacity,
-} from 'react-native';
-import Modal from 'react-native-modal'
-import { AuthContext } from '../context/context';
-import NetInfo from '@react-native-community/netinfo';
-import { connect } from 'react-redux';
+  Dimensions,
+} from "react-native";
+import Modal from "react-native-modal";
+import { AuthContext } from "../context/context";
+import NetInfo from "@react-native-community/netinfo";
+import { connect } from "react-redux";
+import { select_session } from "../model";
+import { Touchable } from "react-native-web";
 
-
-const Perfil = ({ showPerfilModal, setShowPerfilModal, setIsFocusedHome}) => {
+const Perfil = ({ showPerfilModal, setShowPerfilModal, setIsFocusedHome }) => {
   const { signOut } = useContext(AuthContext);
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [online, setOnline] = useState(true);
 
   const userIsOnline = () => {
-
-    NetInfo.addEventListener(state => {
-      if (state.isConnected && state.details.cellularGeneration === '3g' ||
-          state.details.cellularGeneration === '4g' ||
-          state.details.cellularGeneration === '5g' ||
-          state.type === 'wifi'
+    NetInfo.addEventListener((state) => {
+      if (
+        (state.isConnected && state.details.cellularGeneration === "3g") ||
+        state.details.cellularGeneration === "4g" ||
+        state.details.cellularGeneration === "5g" ||
+        state.type === "wifi"
       ) {
         setOnline(true);
       } else {
@@ -34,111 +36,202 @@ const Perfil = ({ showPerfilModal, setShowPerfilModal, setIsFocusedHome}) => {
   };
 
   const cerrarSesion = () => {
-    Alert.alert('Aviso', 'Está por salir de su sesión, ¿Desea continuar?', [
+    Alert.alert("Aviso", "Está por salir de su sesión, ¿Desea continuar?", [
       {
-        text: 'Cancelar',
-        style: 'cancel',
-        onPress: () => {
-          
-        },
+        text: "Cancelar",
+        style: "cancel",
+        onPress: () => {},
       },
       {
-        text: 'Continuar',
+        text: "Continuar",
         onPress: async () => {
           await signOut();
         },
       },
     ]);
   };
-
+  const obtenerUsuario = async () => {
+    const aux = await select_session();
+    setName(aux.rows._array[0].name);
+  };
   useEffect(() => {
+    obtenerUsuario();
     userIsOnline();
-  },[])
+  }, []);
 
   return (
-    <View style={styles.centeredView}>
-      <Modal
-        coverScreen={true}
-        hasBackdrop={true}
-        isVisible={showPerfilModal}
-        animationIn={"fadeIn"}
-        animationOut={"fadeOut"}
-        backdropTransitionOutTiming={0} >
-          <View style={styles.modalView}>
-            <View style={styles.modalHeader}>
-              <TouchableOpacity onPress={()=>{setShowPerfilModal(false); setIsFocusedHome(true)}}>
-                <Image style={styles.cerrarModal} source={require("../../assets/icons/cerrar.png")}/>
-              </TouchableOpacity>
-              <Image style={styles.imagenHeader} source={require("../../assets/LogoInpromel.png")}/>
-              <TouchableOpacity onPress={cerrarSesion}>
-                <Image  style={styles.cerrarSesion}source={require('../../assets/icons/cerrar_sesion.png')}/>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.modalBody}>
-              <Text style={styles.modalText}>Hello World!</Text>
+    <Modal
+      style={{ zIndex: 1000 }}
+      coverScreen={true}
+      hasBackdrop={true}
+      isVisible={showPerfilModal}
+      animationIn={"fadeIn"}
+      animationOut={"fadeOut"}
+      backdropTransitionOutTiming={0}
+      onBackdropPress={() => {
+        setShowPerfilModal(!showPerfilModal);
+      }}
+    >
+      <View style={styles.modalView}>
+        <View style={styles.modalHeader}>
+          <TouchableOpacity
+            onPress={() => {
+              setShowPerfilModal(false);
+              setIsFocusedHome(true);
+            }}
+          >
+            <Image
+              style={styles.cerrarModal}
+              source={require("../../assets/icons/cerrar.png")}
+            />
+          </TouchableOpacity>
+          <Image
+            style={styles.imagenHeader}
+            source={require("../../assets/LogoInpromel.png")}
+          />
+          <TouchableOpacity onPress={cerrarSesion}>
+            <Image
+              style={styles.cerrarSesion}
+              source={require("../../assets/icons/cerrar_sesion.png")}
+            />
+          </TouchableOpacity>
+        </View>
+        {/* BODY */}
+        <View style={styles.modalBody}>
+          {/* BODY PARTE 1 */}
+          <View style={{ flexDirection: "row", marginStart: "4%" }}>
+            <View
+              style={{
+                height: 40,
+                width: 40,
+                backgroundColor: "#4285f4",
+                borderRadius: 40,
+              }}
+            />
+            <View style={{ marginStart: "3%" }}>
+              <Text style={{ fontSize: 15 }}>
+                Nombre Nombre Apellido Apellido
+              </Text>
+              <Text style={{ fontSize: 13 }}>{name}</Text>
             </View>
           </View>
-      </Modal>
-    </View>
+          <TouchableOpacity
+            style={{
+              borderWidth: 1,
+              borderColor: "lightgrey",
+              alignSelf: "center",
+              marginVertical: 10,
+              borderRadius: 20,
+            }}
+          >
+            <Text style={{ padding: 10 }}>
+              Administra tu Cuenta de Inpromel
+            </Text>
+          </TouchableOpacity>
+        </View>
+        {/* SEPARADOR */}
+        <View
+          style={{
+            borderBottomColor: "grey",
+            borderBottomWidth: 1,
+          }}
+        />
+        {/* BODY PARTE 2 */}
+        <View style={{ marginVertical: 25, marginStart: "9%" }}>
+          <TouchableOpacity style={{ flexDirection: "row", marginBottom: 20 }}>
+            <Image source={require("../../assets/icons/agregarCuenta.png")} />
+            <Text style={{ marginStart: "5%" }}>Agregar otra cuenta</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{ flexDirection: "row" }}>
+            <Image
+              source={require("../../assets/icons/administrarCuenta.png")}
+            />
+            <Text style={{ marginStart: "5%" }}>
+              Administrar cuentas en este dispositivo
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            borderBottomColor: "grey",
+            borderBottomWidth: 1,
+          }}
+        />
+        <View
+          style={{
+            flexDirection: "row",
+            width: "100%",
+            justifyContent: "space-between",
+            marginVertical: 15,
+          }}
+        >
+          <TouchableOpacity style={{ marginStart: "6%" }}>
+            <Text style={{ fontSize: 13 }}>Politica de Privacidad</Text>
+          </TouchableOpacity>
+          <View
+            style={{
+              width: 5,
+              height: 5,
+              backgroundColor: "grey",
+              borderRadius: 30,
+              alignSelf: "center",
+              marginHorizontal: "5%",
+            }}
+          />
+          <TouchableOpacity style={{ marginEnd: "6%" }}>
+            <Text style={{ fontSize: 13 }}>Condiciones del Servicio</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    marginTop: '15%',
-    margin: '10%',
-  },
-
   modalView: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 10,
+    marginBottom: "50%",
   },
 
-  
-  modalHeader:{
-     flexDirection: 'row', 
-     justifyContent: 'space-between',
-     height:52,
-     padding:10,
-  },  
-  cerrarModal:{
-    width:24, 
-    height:24,
-    position:'absolute',
-    top:0,
-    left:0,
-    marginTop:15,
-    marginLeft:15,
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    height: 52,
+    padding: 10,
   },
-  imagenHeader:{
-    width:150, 
+  cerrarModal: {
+    width: 24,
+    height: 24,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    marginTop: 15,
+    marginLeft: 15,
+  },
+  imagenHeader: {
+    width: 150,
     height: 40,
-    marginTop:5
+    marginTop: 5,
   },
-  cerrarSesion:{
-    width:24, 
-    height:24,
-    position:'absolute',
-    top:0,
-    right:0,
-    marginTop:15,
-    marginRight:15,
+  cerrarSesion: {
+    width: 24,
+    height: 24,
+    position: "absolute",
+    top: 0,
+    right: 0,
+    marginTop: 15,
+    marginRight: 15,
   },
-  modalBody:{
-    padding:10,
-    height:'60%',
-    marginTop:20,
-  }
-
+  modalBody: {
+    padding: 10,
+    marginTop: 25,
+  },
 });
 
-
-
-
-const mapStateToProps = state => state;
-const mapDispatchToProps = dispatch => ({
-  deleteSession: token =>
+const mapStateToProps = (state) => state;
+const mapDispatchToProps = (dispatch) => ({
+  deleteSession: (token) =>
     dispatch({
       type: Types.DELETE_SESSION,
       payload: {

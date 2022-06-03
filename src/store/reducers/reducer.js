@@ -17,6 +17,8 @@ const reducer = (state = initialState, action) => {
         ...state,
         session: [],
       };
+    case Types.SELECT_SESSION:
+      return state.session;
 
     // LOCATION
     case Types.INSERT_LOCATION:

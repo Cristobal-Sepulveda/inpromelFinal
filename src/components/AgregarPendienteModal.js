@@ -22,7 +22,6 @@ const AgregarPendienteModal = ({
 }) => {
   const [titulo, setTitulo] = useState("");
   const [date, setDate] = useState(new Date());
-  const [datePicked, setDatePicked] = useState(false);
   const [topicoChecked, setTopicoChecked] = useState("");
   const [tareaARealizar, setTareaARealizar] = useState("");
   const [mode, setMode] = useState("date");
@@ -50,12 +49,7 @@ const AgregarPendienteModal = ({
 
   const guardarPendiente = async () => {
     // Primera condicionante de salida
-    if (
-      titulo === "" ||
-      topicoChecked === "" ||
-      date === "" ||
-      tareaARealizar === ""
-    ) {
+    if (titulo === "" || topicoChecked === "" || tareaARealizar === "") {
       Alert.alert("Debes llenar todos los datos antes de guardar el pendiente");
       return;
     }
@@ -73,6 +67,9 @@ const AgregarPendienteModal = ({
         animationIn={"fadeIn"}
         animationOut={"fadeOut"}
         backdropTransitionOutTiming={0}
+        onBackdropPress={() => {
+          setShowAgregarPendienteModal(!showAgregarPendienteModal);
+        }}
       >
         <View style={styles.modalView}>
           {/* Header del Modal */}
@@ -95,109 +92,91 @@ const AgregarPendienteModal = ({
           </View>
 
           {/* Body del Modal */}
-          <Text style={{ textAlign: "center", fontSize: 20, marginBottom: 8 }}>
+          <Text
+            style={{ textAlign: "center", fontSize: 20, marginVertical: 10 }}
+          >
             Agregar Pendiente
           </Text>
-          {/* Columnas */}
-          <View style={{ flexDirection: "row" }}>
-            {/* Columna 1 */}
-            <View style={{ width: "50%" }}>
-              <Text
-                style={{
-                  height: 40,
-                  backgroundColor: "#071b75",
-                  color: "white",
-                  textAlignVertical: "center",
-                  textAlign: "center",
-                  height: 40,
-                  backgroundColor: "#071b75",
-                  color: "white",
-                  textAlignVertical: "center",
-                  textAlign: "center",
-                  marginTop: "14%",
-                }}
-              >
-                Seleccione Fecha Límite{" "}
-              </Text>
-            </View>
-
-            {/* Columna 2 */}
-            <View style={{ width: "50%" }}>
-              <TextInput
-                style={{ ...styles.textInput, marginStart: 8 }}
-                placeholder="Título"
-                keyboardType="default"
-                onChangeText={setTitulo}
+          <View style={{ width: "100%" }}>
+            <TextInput
+              style={{
+                ...styles.textInput,
+                marginTop: 2,
+                height: 50,
+              }}
+              placeholder="Ingrese título del pendiente"
+              keyboardType="default"
+              onChangeText={setTitulo}
+            />
+            {/* datePicker */}
+            <CustomDatePicker
+              date={date}
+              mode={mode}
+              show={show}
+              setDate={setDate}
+              setShow={setShow}
+              setMode={setMode}
+            />
+            <Text
+              style={{
+                height: 40,
+                backgroundColor: "#071b75",
+                color: "white",
+                textAlignVertical: "center",
+                textAlign: "center",
+                marginTop: "6%",
+              }}
+            >
+              Seleccione Tópico
+            </Text>
+            <View
+              style={{
+                justifyContent: "space-between",
+                marginTop: "3%",
+                flexDirection: "row",
+              }}
+            >
+              <CustomRadioBox
+                topicoName={"Urgente"}
+                topicoChecked={topicoChecked}
+                setTopicoChecked={setTopicoChecked}
               />
-              {/* datePicker */}
-              <CustomDatePicker
-                date={date}
-                mode={mode}
-                show={show}
-                setDate={setDate}
-                setShow={setShow}
-                setMode={setMode}
-                onPress={() => {
-                  setDatePicked(true);
-                }}
+              <CustomRadioBox
+                topicoName={"Planificada"}
+                topicoChecked={topicoChecked}
+                setTopicoChecked={setTopicoChecked}
               />
-              {/* radioButtons */}
+              <CustomRadioBox
+                topicoName={"No Urgente"}
+                topicoChecked={topicoChecked}
+                setTopicoChecked={setTopicoChecked}
+              />
             </View>
-          </View>
-          <Text
-            style={{
-              height: 40,
-              backgroundColor: "#071b75",
-              color: "white",
-              textAlignVertical: "center",
-              textAlign: "center",
-              marginTop: "6%",
-            }}
-          >
-            Seleccione Tópico
-          </Text>
-          <View
-            style={{
-              justifyContent: "space-between",
-              marginTop: "3%",
-              flexDirection: "row",
-            }}
-          >
-            <CustomRadioBox
-              topicoName={"Urgente"}
-              topicoChecked={topicoChecked}
-              setTopicoChecked={setTopicoChecked}
-            />
-            <CustomRadioBox
-              topicoName={"Planificada"}
-              topicoChecked={topicoChecked}
-              setTopicoChecked={setTopicoChecked}
-            />
-            <CustomRadioBox
-              topicoName={"No Urgente"}
-              topicoChecked={topicoChecked}
-              setTopicoChecked={setTopicoChecked}
+            <Text
+              style={{
+                height: 40,
+                backgroundColor: "#071b75",
+                color: "white",
+                textAlignVertical: "center",
+                textAlign: "center",
+                marginTop: "3%",
+              }}
+            >
+              Ingrese Tarea
+            </Text>
+            <TextInput
+              style={{
+                ...styles.textInput,
+                marginTop: 16,
+                marginBottom: 1,
+                height: "25%",
+              }}
+              multiline={true}
+              placeholder="Tarea a realizar"
+              keyboardType="default"
+              onChangeText={setTareaARealizar}
             />
           </View>
-          <Text
-            style={{
-              height: 40,
-              backgroundColor: "#071b75",
-              color: "white",
-              textAlignVertical: "center",
-              textAlign: "center",
-              marginTop: "3%",
-            }}
-          >
-            Ingrese Tarea
-          </Text>
-          <TextInput
-            style={{ ...styles.textInput, marginTop: 16, height: "25%" }}
-            multiline={true}
-            placeholder="Tarea a realizar"
-            keyboardType="default"
-            onChangeText={setTareaARealizar}
-          />
 
           {/* FootBar del Modal */}
           <View

@@ -97,6 +97,10 @@ const DetallePendienteModal = ({
         animationIn={"fadeIn"}
         animationOut={"fadeOut"}
         backdropTransitionOutTiming={0}
+        avoidKeyboard={true}
+        onBackdropPress={() => {
+          setShowDetallePendienteModal(!showDetallePendienteModal);
+        }}
       >
         <View style={styles.modalView}>
           {/* Header del Modal */}
@@ -120,134 +124,84 @@ const DetallePendienteModal = ({
           {/* Body de Modal */}
           <View
             style={{
-              alignSelf: "center",
               width: "100%",
             }}
           >
             <Text
-              style={{ textAlign: "center", fontSize: 20, marginBottom: 8 }}
+              style={{ textAlign: "center", fontSize: 20, marginVertical: 10 }}
             >
               Detalles Del Pendiente
             </Text>
             <View
               style={{
-                flexDirection: "row",
-                height: "10%",
                 marginVertical: 10,
-                justifyContent: "center",
+                borderBottomColor: "black",
+                borderBottomWidth: 1,
               }}
-            >
-              <Text style={styles.label}>Titulo</Text>
-              <Text style={styles.labelContent}>{detallePendiente.titulo}</Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                height: "10%",
-                marginVertical: 10,
-                justifyContent: "center",
-              }}
-            >
-              <Text style={styles.label}>Fecha</Text>
-              <Text style={styles.labelContent}>{detallePendiente.fecha}</Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                height: "10%",
-                marginVertical: 10,
-                justifyContent: "center",
-              }}
-            >
-              <Text style={styles.label}>Topico</Text>
-              <Text style={styles.labelContent}>{detallePendiente.topico}</Text>
-            </View>
-            <Text style={styles.label}>Tarea</Text>
-            <TextInput
-              style={styles.textInput}
-              placeholder={detallePendiente.tarea}
-              keyboardType="default"
-              onChangeText={setTareaAGuardar}
             />
+            <Text style={styles.label}>Titulo: {detallePendiente.titulo}</Text>
+            <Text style={styles.label}>Fecha: {detallePendiente.fecha}</Text>
+            <Text style={styles.label}>Topico: {detallePendiente.topico}</Text>
+            <View
+              style={{
+                marginVertical: 10,
+                borderBottomColor: "black",
+                borderBottomWidth: 1,
+              }}
+            />
+            <View style={{ flexDirection: "row" }}>
+              <Text
+                style={{
+                  ...styles.label,
+                  textAlign: "center",
+                  marginVertical: 10,
+                }}
+              >
+                Tarea:
+              </Text>
+              <TextInput
+                style={styles.textInput}
+                placeholder={detallePendiente.tarea}
+                placeholderTextColor="black"
+                keyboardType="default"
+                onChangeText={setTareaAGuardar}
+              />
+            </View>
           </View>
           {/* Footer */}
           <View
             style={{
               flexDirection: "row",
-              width: "100%",
               justifyContent: "space-between",
-              position: "absolute",
-              bottom: "5%",
-              left: "3%",
+              marginTop: 24,
             }}
           >
             {/* Volver */}
             <TouchableOpacity
-              style={{
-                backgroundColor: "#4285f4",
-                height: 40,
-                width: "20%",
-                marginStart: "5%",
-                borderRadius: 5,
-              }}
+              style={styles.button}
               onPress={() => {
                 setShowDetallePendienteModal(!showDetallePendienteModal);
               }}
             >
-              <Text
-                style={{
-                  color: "white",
-                  textAlign: "center",
-                  marginTop: 8,
-                }}
-              >
-                Volver
-              </Text>
+              <Text style={styles.buttonTextStyle}>Volver</Text>
             </TouchableOpacity>
             {/* Editar */}
             <TouchableOpacity
-              style={{
-                backgroundColor: "#4285f4",
-                height: 40,
-                width: "20%",
-                borderRadius: 5,
-              }}
+              style={styles.button}
               onPress={() => {
                 alertaEditar();
               }}
             >
-              <Text
-                style={{
-                  color: "white",
-                  textAlign: "center",
-                  marginTop: 8,
-                }}
-              >
-                Editar
-              </Text>
+              <Text style={styles.buttonTextStyle}>Editar</Text>
             </TouchableOpacity>
             {/* Borrar */}
             <TouchableOpacity
-              style={{
-                backgroundColor: "#4285f4",
-                height: 40,
-                width: "20%",
-                marginEnd: "5%",
-                borderRadius: 5,
-              }}
+              style={styles.button}
               onPress={() => {
                 alertaBorrar();
               }}
             >
-              <Text
-                style={{
-                  color: "white",
-                  textAlign: "center",
-                  marginTop: 8,
-                }}
-              >
-                Borrar
-              </Text>
+              <Text style={styles.buttonTextStyle}>Borrar</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -257,12 +211,23 @@ const DetallePendienteModal = ({
 };
 
 const styles = StyleSheet.create({
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    backgroundColor: "#4285f4",
+    width: 109,
+  },
+  buttonTextStyle: {
+    color: "white",
+    textAlign: "center",
+  },
   modalView: {
     backgroundColor: "white",
     borderRadius: 10,
     elevation: 10,
     padding: 10,
-    height: "80%",
+    height: "65%",
   },
   modalHeader: {
     flexDirection: "row",
@@ -284,19 +249,12 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   label: {
-    color: "white",
-    fontSize: 25,
-    textAlign: "center",
-    textAlignVertical: "center",
-    backgroundColor: "#071b75",
+    fontSize: 18,
   },
-  labelContent: {
-    backgroundColor: "#fff",
-    fontSize: 20,
-    textAlign: "center",
-  },
+
   textInput: {
-    height: 40,
+    height: 100,
+    width: "70%",
     borderWidth: 1,
     borderRadius: 10,
     padding: 8,

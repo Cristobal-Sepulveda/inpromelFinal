@@ -1,6 +1,7 @@
 /** SESSION */
-export const INSERT_SESSION = "insert-session";
-export const DELETE_SESSION = "delete-session";
+export const INSERT_SESSION = "insert_session";
+export const DELETE_SESSION = "delete_session";
+export const SELECT_SESSION = "select_session";
 
 /** LOCATION */
 export const INSERT_LOCATION = "insert_location";

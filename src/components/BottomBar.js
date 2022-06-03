@@ -20,7 +20,7 @@ const BottomBar = ({
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(true);
   const [isBottomSheetFullOpen, setIsBottomSheetFullOpen] = useState(false);
 
-  const bottomBarOptions = ["Home", "Tareas", "Perfil"];
+  const bottomBarOptions = ["Home", "Otros", "Perfil"];
   const tareas = React.useRef(null);
 
   const renderContentTareas = () => {
@@ -79,9 +79,9 @@ const BottomBar = ({
                 return require("../../assets/icons/map_black.png");
               } else if (route === "Mapa" && !isFocusedMap) {
                 return require("../../assets/icons/map_white.png");
-              } else if (route === "Tareas" && isFocusedTareas) {
+              } else if (route === "Otros" && isFocusedTareas) {
                 return require("../../assets/icons/task_black.png");
-              } else if (route === "Tareas" && !isFocusedTareas) {
+              } else if (route === "Otros" && !isFocusedTareas) {
                 return require("../../assets/icons/task_white.png");
               } else if (route === "Perfil" && showPerfilModal) {
                 return require("../../assets/icons/perfil_black.png");
@@ -103,11 +103,12 @@ const BottomBar = ({
                 setIsFocusedMap(true);
                 setIsFocusedTareas(false);
                 setShowPerfilModal(false);
-              } else if (route === "Tareas") {
+              } else if (route === "Otros") {
                 setIsFocusedHome(false);
                 setIsFocusedMap(false);
                 setIsFocusedTareas(true);
                 setShowPerfilModal(false);
+                setShowHome(true);
                 tareas.current.snapTo(0);
               } else if (route === "Perfil") {
                 setIsFocusedHome(false);
