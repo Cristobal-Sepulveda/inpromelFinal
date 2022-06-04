@@ -54,19 +54,18 @@ const BottomBar = ({
           {bottomBarOptions.map((route, index) => {
             const BottomBarItem = ({ image, text, onPress }) => {
               return (
-                <>
-                  <TouchableOpacity
-                    style={{
-                      alignItems: "center",
-                      borderRadius: 10,
-                      paddingVertical: 4,
-                      width: 50,
-                    }}
-                    onPress={() => onPress(text)}
-                  >
-                    <Image style={{ width: 22, height: 22 }} source={image} />
-                  </TouchableOpacity>
-                </>
+                <TouchableOpacity
+                  key={index}
+                  style={{
+                    alignItems: "center",
+                    borderRadius: 10,
+                    paddingVertical: 4,
+                    width: 50,
+                  }}
+                  onPress={() => onPress(text)}
+                >
+                  <Image style={{ width: 22, height: 22 }} source={image} />
+                </TouchableOpacity>
               );
             };
 

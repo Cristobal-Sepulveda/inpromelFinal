@@ -24,6 +24,8 @@ const DetallePendienteModal = ({
   setFlatListItems,
 }) => {
   const [tareaAGuardar, setTareaAGuardar] = useState("");
+  const [showEditarPendienteModal, setShowEditarPendienteModal] =
+    useState(false);
 
   const editarPendiente = async () => {
     const aux = detallePendiente;
@@ -64,6 +66,10 @@ const DetallePendienteModal = ({
     ]);
   };
 
+  const switchModal = () => {
+    setShowEditarPendienteModal(!showEditarPendienteModal);
+  };
+
   const borrarPendiente = async () => {
     setFlatListItems([]);
     delete_pendiente(detallePendiente.id_pendiente);
@@ -90,122 +96,164 @@ const DetallePendienteModal = ({
 
   return (
     <View>
-      <Modal
-        coverScreen={true}
-        hasBackdrop={true}
-        isVisible={showDetallePendienteModal}
-        animationIn={"fadeIn"}
-        animationOut={"fadeOut"}
-        backdropTransitionOutTiming={0}
-        avoidKeyboard={true}
-        onBackdropPress={() => {
-          setShowDetallePendienteModal(!showDetallePendienteModal);
-        }}
-      >
-        <View style={styles.modalView}>
-          {/* Header del Modal */}
-          <View style={styles.modalHeader}>
-            <TouchableOpacity
-              onPress={() => {
-                setShowDetallePendienteModal(!showDetallePendienteModal);
-              }}
-            >
+      {showEditarPendienteModal ? (
+        <View>
+          <Modal isVisible={showEditarPendienteModal}>
+            <View style={styles.modalView}>
+              <View style={styles.modalView.header}></View>
+              <View style={styles.modalView.body}></View>
+              <View style={styles.modalView.footer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    switchModal();
+                  }}
+                >
+                  <Text style={{ fontSize: 20 }}>ASD</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </View>
+      ) : (
+        <Modal
+          coverScreen={true}
+          hasBackdrop={true}
+          isVisible={showDetallePendienteModal}
+          animationIn={"fadeIn"}
+          animationOut={"fadeOut"}
+          backdropTransitionOutTiming={0}
+          avoidKeyboard={false}
+          onBackdropPress={() => {
+            setShowDetallePendienteModal(!showDetallePendienteModal);
+          }}
+        >
+          <View style={styles.modalView}>
+            {/* Header del Modal */}
+            <View style={styles.modalHeader}>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowDetallePendienteModal(!showDetallePendienteModal);
+                }}
+              >
+                <Image
+                  style={styles.cerrarModal}
+                  source={require("../../assets/icons/cerrar.png")}
+                />
+              </TouchableOpacity>
               <Image
-                style={styles.cerrarModal}
-                source={require("../../assets/icons/cerrar.png")}
+                style={styles.imagenHeader}
+                source={require("../../assets/LogoInpromel.png")}
               />
-            </TouchableOpacity>
-            <Image
-              style={styles.imagenHeader}
-              source={require("../../assets/LogoInpromel.png")}
-            />
-            <View />
-          </View>
-          {/* Body de Modal */}
-          <View
-            style={{
-              width: "100%",
-            }}
-          >
-            <Text
-              style={{ textAlign: "center", fontSize: 20, marginVertical: 10 }}
+              <View />
+            </View>
+            {/* Body de Modal */}
+            <View
+              style={{
+                width: "100%",
+              }}
             >
-              Detalles Del Pendiente
-            </Text>
-            <View
-              style={{
-                marginVertical: 10,
-                borderBottomColor: "black",
-                borderBottomWidth: 1,
-              }}
-            />
-            <Text style={styles.label}>Titulo: {detallePendiente.titulo}</Text>
-            <Text style={styles.label}>Fecha: {detallePendiente.fecha}</Text>
-            <Text style={styles.label}>Topico: {detallePendiente.topico}</Text>
-            <View
-              style={{
-                marginVertical: 10,
-                borderBottomColor: "black",
-                borderBottomWidth: 1,
-              }}
-            />
-            <View style={{ flexDirection: "row" }}>
               <Text
                 style={{
-                  ...styles.label,
                   textAlign: "center",
+                  fontSize: 20,
                   marginVertical: 10,
                 }}
               >
-                Tarea:
+                Detalles Del Pendiente
               </Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder={detallePendiente.tarea}
-                placeholderTextColor="black"
-                keyboardType="default"
-                onChangeText={setTareaAGuardar}
+
+              {/* Linea separadora */}
+              <View
+                style={{
+                  marginVertical: 10,
+                  borderBottomColor: "black",
+                  borderBottomWidth: 1,
+                }}
+              />
+
+              {/* Contenido */}
+              <View style={{ flexDirection: "row" }}>
+                {/* Columna 1 */}
+                <View style={{ width: "50%" }}>
+                  <Text style={styles.label}>
+                    Titulo: {detallePendiente.titulo}
+                  </Text>
+                  <Text style={styles.label}>
+                    Fecha: {detallePendiente.fecha}
+                  </Text>
+                  <Text style={styles.label}>
+                    Topico: {detallePendiente.topico}
+                  </Text>
+                  <Text style={styles.label}>
+                    Tarea: {detallePendiente.tarea}
+                  </Text>
+                </View>
+                {/* Columna 2 */}
+                <View
+                  style={{
+                    width: "50%",
+                    flexDirection: "row",
+                    alignSelf: "center",
+                    justifyContent: "space-between",
+                    marginBottom: "1%",
+                  }}
+                >
+                  {/* Editar */}
+                  <TouchableOpacity
+                    style={{ marginStart: "40%" }}
+                    onPress={() => {
+                      switchModal();
+                    }}
+                  >
+                    <Image
+                      style={{ height: 22, width: 22, marginTop: "7%" }}
+                      source={require("../../assets/icons/actualizar.png")}
+                    />
+                  </TouchableOpacity>
+                  {/* Borrar */}
+                  <TouchableOpacity
+                    style={{ marginEnd: "20%" }}
+                    onPress={() => {
+                      alertaBorrar();
+                    }}
+                  >
+                    <Image
+                      style={{ height: 24, width: 24 }}
+                      source={require("../../assets/icons/borrar.png")}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              {/* Linea separadora */}
+              <View
+                style={{
+                  marginVertical: 10,
+                  borderBottomColor: "black",
+                  borderBottomWidth: 1,
+                }}
               />
             </View>
+            {/* Footer */}
+            <View
+              style={{
+                alignSelf: "center",
+                marginTop: "3%",
+                marginBottom: "2%",
+              }}
+            >
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  setShowDetallePendienteModal(!showDetallePendienteModal);
+                }}
+              >
+                <Text style={styles.buttonTextStyle}>Volver</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          {/* Footer */}
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginTop: 24,
-            }}
-          >
-            {/* Volver */}
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                setShowDetallePendienteModal(!showDetallePendienteModal);
-              }}
-            >
-              <Text style={styles.buttonTextStyle}>Volver</Text>
-            </TouchableOpacity>
-            {/* Editar */}
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                alertaEditar();
-              }}
-            >
-              <Text style={styles.buttonTextStyle}>Editar</Text>
-            </TouchableOpacity>
-            {/* Borrar */}
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                alertaBorrar();
-              }}
-            >
-              <Text style={styles.buttonTextStyle}>Borrar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+        </Modal>
+      )}
     </View>
   );
 };
@@ -227,7 +275,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     elevation: 10,
     padding: 10,
-    height: "65%",
+    alignSelf: "center",
   },
   modalHeader: {
     flexDirection: "row",

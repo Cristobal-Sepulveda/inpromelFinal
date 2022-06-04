@@ -252,16 +252,6 @@ const styles = StyleSheet.create({
     height: 40,
     marginTop: 5,
   },
-  modalBody: {
-    margin: 20,
-    borderRadius: 20,
-    padding: 35,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
 });
 
 const mapStateToProps = (state) => {

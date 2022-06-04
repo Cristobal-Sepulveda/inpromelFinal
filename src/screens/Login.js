@@ -12,7 +12,6 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { AuthContext } from "../context/context";
-import { useFonts, Roboto_500Medium } from "@expo-google-fonts/roboto";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -156,7 +155,6 @@ const styles = StyleSheet.create({
   },
   titulo: {
     fontWeight: "bold",
-    fontFamily: "Roboto_500Medium",
     textAlign: "center",
     fontSize: 30,
     color: "white",
