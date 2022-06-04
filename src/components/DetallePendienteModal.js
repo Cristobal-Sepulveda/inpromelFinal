@@ -14,6 +14,8 @@ import {
   editar_pendiente,
   select_pendientes,
 } from "../model/pendientes";
+import CustomDatePicker from "./CustomDatePicker";
+import CustomRadioBox from "./CustomRadioBox";
 
 const DetallePendienteModal = ({
   showDetallePendienteModal,
@@ -26,6 +28,7 @@ const DetallePendienteModal = ({
   const [tareaAGuardar, setTareaAGuardar] = useState("");
   const [showEditarPendienteModal, setShowEditarPendienteModal] =
     useState(false);
+  const [tareaARealizar, setTareaARealizar] = useState("");
 
   const editarPendiente = async () => {
     const aux = detallePendiente;
@@ -43,6 +46,7 @@ const DetallePendienteModal = ({
       );
     } catch (e) {
       console.log(e.message);
+      return;
     }
 
     const pendientes = await select_pendientes();
@@ -51,6 +55,7 @@ const DetallePendienteModal = ({
     for (let i = 0; i < aux2.length; i++) {
       setFlatListItems((prevData) => [...prevData, JSON.stringify(aux2[i])]);
     }
+    setShowEditarPendienteModal(!showEditarPendienteModal);
     setShowDetallePendienteModal(!showDetallePendienteModal);
   };
 
@@ -97,23 +102,122 @@ const DetallePendienteModal = ({
   return (
     <View>
       {showEditarPendienteModal ? (
-        <View>
-          <Modal isVisible={showEditarPendienteModal}>
-            <View style={styles.modalView}>
-              <View style={styles.modalView.header}></View>
-              <View style={styles.modalView.body}></View>
-              <View style={styles.modalView.footer}>
+        <Modal
+          isVisible={showEditarPendienteModal}
+          coverScreen={true}
+          hasBackdrop={true}
+          animationIn={"fadeIn"}
+          animationOut={"fadeOut"}
+          backdropTransitionOutTiming={0}
+          avoidKeyboard={false}
+          onBackdropPress={() => {
+            setShowEditarPendienteModal(!showEditarPendienteModal);
+          }}
+        >
+          {/* Contenido del Modal */}
+          <View style={styles.modalView}>
+            {/* Header del Modal */}
+            <View style={styles.modalHeader}>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowEditarPendienteModal(!showEditarPendienteModal);
+                }}
+              >
+                <Image
+                  style={styles.cerrarModal}
+                  source={require("../../assets/icons/back.png")}
+                />
+              </TouchableOpacity>
+              <Image
+                style={styles.imagenHeader}
+                source={require("../../assets/LogoInpromel.png")}
+              />
+              <View />
+            </View>
+            {/* Body del Modal */}
+            <View style={styles.modalBody}>
+              {/* Titulo Ventana */}
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontSize: 20,
+                  marginVertical: 10,
+                }}
+              >
+                Edita la Tarea del Pendiente
+              </Text>
+
+              {/* Linea separadora */}
+              <View
+                style={{
+                  marginVertical: 10,
+                  borderBottomColor: "black",
+                  borderBottomWidth: 1,
+                }}
+              />
+              {/* Contenido */}
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "row",
+                }}
+              >
+                <Text style={{ ...styles.label, width: "20%" }}>Tarea:</Text>
+                <TextInput
+                  style={styles.textInput}
+                  defaultValue={detallePendiente.tarea}
+                  placeholderTextColor="black"
+                  onChangeText={setTareaAGuardar}
+                  multiline={true}
+                  maxLength={100}
+                />
                 <TouchableOpacity
+                  style={{
+                    alignSelf: "center",
+                    marginStart: "auto",
+                    marginEnd: "auto",
+                  }}
                   onPress={() => {
-                    switchModal();
+                    alertaEditar();
                   }}
                 >
-                  <Text style={{ fontSize: 20 }}>ASD</Text>
+                  <Image
+                    style={{ width: 24, height: 24 }}
+                    source={require("../../assets/icons/edit.png")}
+                  />
                 </TouchableOpacity>
               </View>
+
+              {/* Linea separadora */}
+              <View
+                style={{
+                  marginVertical: 10,
+                  borderBottomColor: "black",
+                  borderBottomWidth: 1,
+                }}
+              ></View>
             </View>
-          </Modal>
-        </View>
+
+            {/* Footer del Modal */}
+            <View
+              style={{
+                width: "100%",
+                alignItems: "center",
+                marginTop: "3%",
+                marginBottom: "2%",
+              }}
+            >
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  switchModal();
+                }}
+              >
+                <Text style={styles.buttonTextStyle}>Volver</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       ) : (
         <Modal
           coverScreen={true}
@@ -127,6 +231,7 @@ const DetallePendienteModal = ({
             setShowDetallePendienteModal(!showDetallePendienteModal);
           }}
         >
+          {/* Contenido del Modal */}
           <View style={styles.modalView}>
             {/* Header del Modal */}
             <View style={styles.modalHeader}>
@@ -147,11 +252,8 @@ const DetallePendienteModal = ({
               <View />
             </View>
             {/* Body de Modal */}
-            <View
-              style={{
-                width: "100%",
-              }}
-            >
+            <View style={styles.modalBody}>
+              {/* Titulo del Modal */}
               <Text
                 style={{
                   textAlign: "center",
@@ -185,7 +287,7 @@ const DetallePendienteModal = ({
                     Topico: {detallePendiente.topico}
                   </Text>
                   <Text style={styles.label}>
-                    Tarea: {detallePendiente.tarea}
+                    Tarea: {detallePendiente.tarea}{" "}
                   </Text>
                 </View>
                 {/* Columna 2 */}
@@ -206,8 +308,8 @@ const DetallePendienteModal = ({
                     }}
                   >
                     <Image
-                      style={{ height: 22, width: 22, marginTop: "7%" }}
-                      source={require("../../assets/icons/actualizar.png")}
+                      style={{ height: 28, width: 28 }}
+                      source={require("../../assets/icons/eye.png")}
                     />
                   </TouchableOpacity>
                   {/* Borrar */}
@@ -237,7 +339,8 @@ const DetallePendienteModal = ({
             {/* Footer */}
             <View
               style={{
-                alignSelf: "center",
+                width: "100%",
+                alignItems: "center",
                 marginTop: "3%",
                 marginBottom: "2%",
               }}
@@ -264,7 +367,7 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2,
     backgroundColor: "#4285f4",
-    width: 109,
+    width: "39%",
   },
   buttonTextStyle: {
     color: "white",
@@ -276,11 +379,21 @@ const styles = StyleSheet.create({
     elevation: 10,
     padding: 10,
     alignSelf: "center",
+    minHeight: "50%",
+    width: "100%",
   },
   modalHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     height: 52,
+  },
+  modalBody: {
+    width: "100%",
+  },
+  modalFooter: {
+    marginTop: "3%",
+    marginBottom: "2%",
+    alignSelf: "center",
   },
   cerrarModal: {
     width: 24,
@@ -297,17 +410,20 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   label: {
+    marginStart: "3%",
     fontSize: 18,
+    textAlignVertical: "center",
   },
 
   textInput: {
-    height: 100,
-    width: "70%",
+    marginEnd: "5%",
+    height: 40,
+    width: "50%",
     borderWidth: 1,
     borderRadius: 10,
     padding: 8,
-    marginStart: 8,
-    marginVertical: 10,
+    height: 100,
+    textAlignVertical: "top",
   },
 });
 
