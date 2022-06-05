@@ -8,6 +8,7 @@ import {
   Image,
   Text,
   SafeAreaView,
+  TextInput,
 } from "react-native";
 import { RadioButton, Snackbar } from "react-native-paper";
 import AgregarPendienteModal from "../components/AgregarPendienteModal";
@@ -20,6 +21,8 @@ import {
 } from "../model/pendientes";
 import BottomSheet from "reanimated-bottom-sheet";
 import DetallePendienteModal from "../components/DetallePendienteModal";
+import CustomDatePicker from "../components/CustomDatePicker";
+import CustomRadioBox from "../components/CustomRadioBox";
 
 const ListadoDePendientes = ({
   redux,
@@ -33,12 +36,15 @@ const ListadoDePendientes = ({
   const [flatListItems, setFlatListItems] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(true);
   const [detallePendiente, setDetallePendiente] = useState([]);
-  const [showAgregarPendienteModal, setShowAgregarPendienteModal] =
-    useState(false);
+  const [elegirTopico, setElegirTopico] = useState(false);
   const [showDetallePendienteModal, setShowDetallePendienteModal] =
     useState(false);
   const [topicoChecked, setTopicoChecked] = useState();
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState("date");
+  const [show, setShow] = useState(false);
   const categorias = useRef(null);
+  const agregarPendiente = useRef(null);
   const pendientesList = useSelector((state) => {
     const auxArray = [];
     for (let i = 0; i < state.pendientes.length; i++) {
@@ -74,6 +80,15 @@ const ListadoDePendientes = ({
     setFlatListItems([]);
     cargarPendientesDesdeDB();
   }, []);
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode("date");
+  };
 
   const verTodos = async () => {
     const pendientesEnDb = await select_pendientes();
@@ -212,6 +227,80 @@ const ListadoDePendientes = ({
     );
   };
 
+  const renderContentAgregarPendiente = () => {
+    // showAgregarPendienteModal={showAgregarPendienteModal}
+    // setShowAgregarPendienteModal={setShowAgregarPendienteModal}
+    // setFlatListItems={setFlatListItems}
+    let clicks = 0;
+    return (
+      <View style={{ ...styles.bodyBottomSheet, zIndex: 2000 }}>
+        {/* Header */}
+        <View style={{ ...styles.lineSheets, marginBottom: "2%" }} />
+        <TextInput placeholder="Ingrese Título" />
+        {elegirTopico ? (
+          <View
+            style={{
+              justifyContent: "space-between",
+              marginTop: "3%",
+              flexDirection: "row",
+            }}
+          >
+            <CustomRadioBox
+              topicoName={"Urgente"}
+              topicoChecked={topicoChecked}
+              setTopicoChecked={setTopicoChecked}
+            />
+            <CustomRadioBox
+              topicoName={"Planificada"}
+              topicoChecked={topicoChecked}
+              setTopicoChecked={setTopicoChecked}
+            />
+            <CustomRadioBox
+              topicoName={"No Urgente"}
+              topicoChecked={topicoChecked}
+              setTopicoChecked={setTopicoChecked}
+            />
+          </View>
+        ) : (
+          <></>
+        )}
+        {/* Footbar del BottomSheet */}
+        <View
+          style={{
+            flexDirection: "row",
+            width: "15%",
+            marginStart: "5%",
+            position: "absolute",
+            top: "35%",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              agregarPendiente.current.snapTo(2);
+              setElegirTopico(true);
+            }}
+          >
+            <Image
+              style={{ height: 30, width: 30 }}
+              source={require("../../assets/icons/topic.png")}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              showDatepicker();
+            }}
+            style={{ marginStart: "20%" }}
+          >
+            <Image
+              style={{ height: 30, width: 30 }}
+              source={require("../../assets/icons/calendar.png")}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+
   const renderItem = ({ item }) => {
     const aux = JSON.parse(item);
     return (
@@ -294,7 +383,7 @@ const ListadoDePendientes = ({
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
-            backgroundColor: "#BF0413",
+            backgroundColor: "#4285f4",
             paddingVertical: 20,
             paddingHorizontal: "5%",
             marginBottom: "10%",
@@ -446,10 +535,7 @@ const ListadoDePendientes = ({
             ListEmptyComponent={
               <View
                 style={{
-                  padding: 20,
                   alignItems: "center",
-                  justifyContent: "center",
-                  flexDirection: "column",
                 }}
               >
                 <Image
@@ -457,7 +543,7 @@ const ListadoDePendientes = ({
                   style={{
                     borderRadius: 10,
                     width: "80%",
-                    height: 200,
+                    height: 150,
                     marginTop: "15%",
                     resizeMode: "contain",
                   }}
@@ -480,29 +566,28 @@ const ListadoDePendientes = ({
       </View>
 
       {/* FAB BUTTONS */}
+      {/* BOTON + */}
       <TouchableOpacity
         style={styles.fabButton2}
         onPress={() => {
-          setShowAgregarPendienteModal(true);
+          agregarPendiente.current.snapTo(1);
         }}
       >
         <Image source={require("../../assets/icons/plus.png")} />
       </TouchableOpacity>
+      {/* BOTON < */}
       <TouchableOpacity
         style={styles.fabButton}
         onPress={() => {
           volverAHome();
         }}
       >
-        <Image source={require("../../assets/icons/flechaIzquierda.png")} />
+        <Image
+          style={{ height: 18, width: 18 }}
+          source={require("../../assets/icons/flechaIzquierdaWhite.png")}
+        />
       </TouchableOpacity>
 
-      {/* Modal AgregarPendiente*/}
-      <AgregarPendienteModal
-        showAgregarPendienteModal={showAgregarPendienteModal}
-        setShowAgregarPendienteModal={setShowAgregarPendienteModal}
-        setFlatListItems={setFlatListItems}
-      />
       {/* Modal DetallePendiente */}
       <DetallePendienteModal
         showDetallePendienteModal={showDetallePendienteModal}
@@ -511,6 +596,19 @@ const ListadoDePendientes = ({
         setDetallePendiente={setDetallePendiente}
         flatListItems={flatListItems}
         setFlatListItems={setFlatListItems}
+      />
+
+      {/* BottomSheet AgregarPendiente*/}
+      <BottomSheet
+        ref={agregarPendiente}
+        callbackThreshold={0.1}
+        initialSnap={0}
+        snapPoints={[0, "15%", "20%"]}
+        borderRadius={10}
+        renderContent={renderContentAgregarPendiente}
+        onCloseEnd={() => {
+          setElegirTopico(false);
+        }}
       />
 
       {/* BottomSheet Por Categorias */}
@@ -544,6 +642,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 12,
     height: "100%",
+    zIndex: 2000,
   },
   fabButton: {
     flex: 1,

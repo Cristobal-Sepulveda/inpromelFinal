@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  Modal,
 } from "react-native";
-import Modal from "react-native-modal";
 import {
   delete_pendiente,
   editar_pendiente,
@@ -25,10 +25,10 @@ const DetallePendienteModal = ({
   flatListItems,
   setFlatListItems,
 }) => {
+  const [tituloAGuardar, setTituloAGuardar] = useState("");
+  const [fechaAGuardar, setFechaAGuardar] = useState("");
+  const [topicoAGuardar, setTopicoAGuardar] = useState("");
   const [tareaAGuardar, setTareaAGuardar] = useState("");
-  const [showEditarPendienteModal, setShowEditarPendienteModal] =
-    useState(false);
-  const [tareaARealizar, setTareaARealizar] = useState("");
 
   const editarPendiente = async () => {
     const aux = detallePendiente;
@@ -55,7 +55,6 @@ const DetallePendienteModal = ({
     for (let i = 0; i < aux2.length; i++) {
       setFlatListItems((prevData) => [...prevData, JSON.stringify(aux2[i])]);
     }
-    setShowEditarPendienteModal(!showEditarPendienteModal);
     setShowDetallePendienteModal(!showDetallePendienteModal);
   };
 
@@ -100,264 +99,198 @@ const DetallePendienteModal = ({
   };
 
   return (
-    <View>
-      {showEditarPendienteModal ? (
-        <Modal
-          isVisible={showEditarPendienteModal}
-          coverScreen={true}
-          hasBackdrop={true}
-          animationIn={"fadeIn"}
-          animationOut={"fadeOut"}
-          backdropTransitionOutTiming={0}
-          avoidKeyboard={false}
-          onBackdropPress={() => {
-            setShowEditarPendienteModal(!showEditarPendienteModal);
-          }}
-        >
-          {/* Contenido del Modal */}
-          <View style={styles.modalView}>
-            {/* Header del Modal */}
-            <View style={styles.modalHeader}>
-              <TouchableOpacity
-                onPress={() => {
-                  setShowEditarPendienteModal(!showEditarPendienteModal);
-                }}
-              >
-                <Image
-                  style={styles.cerrarModal}
-                  source={require("../../assets/icons/back.png")}
-                />
-              </TouchableOpacity>
-              <Image
-                style={styles.imagenHeader}
-                source={require("../../assets/LogoInpromel.png")}
-              />
-              <View />
-            </View>
-            {/* Body del Modal */}
-            <View style={styles.modalBody}>
-              {/* Titulo Ventana */}
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontSize: 20,
-                  marginVertical: 10,
-                }}
-              >
-                Edita la Tarea del Pendiente
-              </Text>
-
-              {/* Linea separadora */}
-              <View
-                style={{
-                  marginVertical: 10,
-                  borderBottomColor: "black",
-                  borderBottomWidth: 1,
-                }}
-              />
-              {/* Contenido */}
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "row",
-                }}
-              >
-                <Text style={{ ...styles.label, width: "20%" }}>Tarea:</Text>
-                <TextInput
-                  style={styles.textInput}
-                  defaultValue={detallePendiente.tarea}
-                  placeholderTextColor="black"
-                  onChangeText={setTareaAGuardar}
-                  multiline={true}
-                  maxLength={100}
-                />
-                <TouchableOpacity
-                  style={{
-                    alignSelf: "center",
-                    marginStart: "auto",
-                    marginEnd: "auto",
-                  }}
-                  onPress={() => {
-                    alertaEditar();
-                  }}
-                >
-                  <Image
-                    style={{ width: 24, height: 24 }}
-                    source={require("../../assets/icons/edit.png")}
-                  />
-                </TouchableOpacity>
-              </View>
-
-              {/* Linea separadora */}
-              <View
-                style={{
-                  marginVertical: 10,
-                  borderBottomColor: "black",
-                  borderBottomWidth: 1,
-                }}
-              ></View>
-            </View>
-
-            {/* Footer del Modal */}
-            <View
-              style={{
-                width: "100%",
-                alignItems: "center",
-                marginTop: "3%",
-                marginBottom: "2%",
+    <Modal visible={showDetallePendienteModal} animationType={"fade"}>
+      {/* Contenido del Modal */}
+      <View style={styles.modalView}>
+        {/* Header del Modal */}
+        <View style={styles.modalHeader}>
+          <View />
+        </View>
+        {/* Body del Modal */}
+        <View style={styles.modalBody}>
+          {/* CABECERA */}
+          <View
+            style={{
+              backgroundColor: "#4285f4",
+              paddingVertical: 20,
+              paddingHorizontal: "5%",
+              marginBottom: "10%",
+              marginTop: "-1%",
+              marginHorizontal: "2.5%",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                setShowDetallePendienteModal(!showDetallePendienteModal);
               }}
             >
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  switchModal();
-                }}
-              >
-                <Text style={styles.buttonTextStyle}>Volver</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-      ) : (
-        <Modal
-          coverScreen={true}
-          hasBackdrop={true}
-          isVisible={showDetallePendienteModal}
-          animationIn={"fadeIn"}
-          animationOut={"fadeOut"}
-          backdropTransitionOutTiming={0}
-          avoidKeyboard={false}
-          onBackdropPress={() => {
-            setShowDetallePendienteModal(!showDetallePendienteModal);
-          }}
-        >
-          {/* Contenido del Modal */}
-          <View style={styles.modalView}>
-            {/* Header del Modal */}
-            <View style={styles.modalHeader}>
-              <TouchableOpacity
-                onPress={() => {
-                  setShowDetallePendienteModal(!showDetallePendienteModal);
-                }}
-              >
-                <Image
-                  style={styles.cerrarModal}
-                  source={require("../../assets/icons/cerrar.png")}
-                />
-              </TouchableOpacity>
               <Image
-                style={styles.imagenHeader}
-                source={require("../../assets/LogoInpromel.png")}
+                style={{}}
+                source={require("../../assets/icons/flechaDetalle.png")}
               />
-              <View />
-            </View>
-            {/* Body de Modal */}
-            <View style={styles.modalBody}>
-              {/* Titulo del Modal */}
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontSize: 20,
-                  marginVertical: 10,
-                }}
-              >
-                Detalles Del Pendiente
-              </Text>
-
-              {/* Linea separadora */}
-              <View
-                style={{
-                  marginVertical: 10,
-                  borderBottomColor: "black",
-                  borderBottomWidth: 1,
-                }}
-              />
-
-              {/* Contenido */}
-              <View style={{ flexDirection: "row" }}>
-                {/* Columna 1 */}
-                <View style={{ width: "50%" }}>
-                  <Text style={styles.label}>
-                    Titulo: {detallePendiente.titulo}
-                  </Text>
-                  <Text style={styles.label}>
-                    Fecha: {detallePendiente.fecha}
-                  </Text>
-                  <Text style={styles.label}>
-                    Topico: {detallePendiente.topico}
-                  </Text>
-                  <Text style={styles.label}>
-                    Tarea: {detallePendiente.tarea}{" "}
-                  </Text>
-                </View>
-                {/* Columna 2 */}
-                <View
-                  style={{
-                    width: "50%",
-                    flexDirection: "row",
-                    alignSelf: "center",
-                    justifyContent: "space-between",
-                    marginBottom: "1%",
-                  }}
-                >
-                  {/* Editar */}
-                  <TouchableOpacity
-                    style={{ marginStart: "40%" }}
-                    onPress={() => {
-                      switchModal();
-                    }}
-                  >
-                    <Image
-                      style={{ height: 28, width: 28 }}
-                      source={require("../../assets/icons/eye.png")}
-                    />
-                  </TouchableOpacity>
-                  {/* Borrar */}
-                  <TouchableOpacity
-                    style={{ marginEnd: "20%" }}
-                    onPress={() => {
-                      alertaBorrar();
-                    }}
-                  >
-                    <Image
-                      style={{ height: 24, width: 24 }}
-                      source={require("../../assets/icons/borrar.png")}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              {/* Linea separadora */}
-              <View
-                style={{
-                  marginVertical: 10,
-                  borderBottomColor: "black",
-                  borderBottomWidth: 1,
-                }}
-              />
-            </View>
-            {/* Footer */}
-            <View
+            </TouchableOpacity>
+            <Text
               style={{
-                width: "100%",
-                alignItems: "center",
-                marginTop: "3%",
-                marginBottom: "2%",
+                alignSelf: "center",
+                fontSize: 20,
+                fontWeight: "400",
+                color: "white",
               }}
             >
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  setShowDetallePendienteModal(!showDetallePendienteModal);
-                }}
-              >
-                <Text style={styles.buttonTextStyle}>Volver</Text>
-              </TouchableOpacity>
+              Detalle del Pendiente
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                alertaBorrar();
+              }}
+            >
+              <Image
+                style={{}}
+                source={require("../../assets/icons/delete.png")}
+              />
+            </TouchableOpacity>
+          </View>
+          {/* Linea separadora */}
+          <View
+            style={{
+              marginVertical: 10,
+              borderBottomColor: "black",
+              borderBottomWidth: 1,
+            }}
+          />
+          {/* Contenido */}
+          {/* Titulo del Pendiente */}
+          <TextInput
+            style={{
+              width: "100%",
+              fontSize: 20,
+              marginVertical: "2%",
+              marginStart: "3%",
+            }}
+            defaultValue={detallePendiente.titulo}
+            placeholderTextColor="black"
+            onChangeText={setTituloAGuardar}
+            multiline={true}
+            maxLength={100}
+          />
+          {/* Fecha */}
+          <View
+            style={{
+              width: "100%",
+              flexDirection: "row",
+              marginVertical: "2%",
+              marginStart: "2.5%",
+            }}
+          >
+            <Image source={require("../../assets/icons/calendar.png")} />
+            <Text
+              style={{
+                color: "grey",
+                borderWidth: 1,
+                borderColor: "grey",
+                borderRadius: 20,
+                paddingVertical: 5,
+                paddingHorizontal: 10,
+              }}
+            >
+              {detallePendiente.fecha}
+            </Text>
+          </View>
+          {/* Topico */}
+          <View
+            style={{
+              width: "100%",
+              flexDirection: "row",
+              marginVertical: "2%",
+              marginStart: "2.5%",
+            }}
+          >
+            <Image source={require("../../assets/icons/topic.png")} />
+            <View
+              style={{
+                justifyContent: "space-between",
+                flexDirection: "row",
+              }}
+            >
+              <CustomRadioBox
+                topicoName={"Urgente"}
+                topicoChecked={topicoAGuardar}
+                setTopicoChecked={setTopicoAGuardar}
+              />
+              <CustomRadioBox
+                topicoName={"Planificada"}
+                topicoChecked={topicoAGuardar}
+                setTopicoChecked={setTopicoAGuardar}
+              />
+              <CustomRadioBox
+                topicoName={"No Urgente"}
+                topicoChecked={topicoAGuardar}
+                setTopicoChecked={setTopicoAGuardar}
+              />
             </View>
           </View>
-        </Modal>
-      )}
-    </View>
+          {/* Tarea */}
+          <View
+            style={{
+              width: "100%",
+              marginTop: 8,
+            }}
+          >
+            <Text style={{ ...styles.label, width: "30%" }}>
+              Edite la Tarea:
+            </Text>
+            <TextInput
+              style={{
+                borderWidth: 1,
+                borderColor: "grey",
+                padding: 10,
+                marginStart: "2%",
+                height: 200,
+              }}
+              defaultValue={detallePendiente.tarea}
+              placeholderTextColor="black"
+              onChangeText={setTareaAGuardar}
+              multiline={true}
+              maxLength={100}
+            />
+          </View>
+        </View>
+
+        {/* Footer del Modal */}
+        <View
+          style={{
+            width: "100%",
+            alignItems: "center",
+            marginTop: "3%",
+            marginBottom: "2%",
+            zIndex: 10,
+            position: "absolute",
+            bottom: "5%",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <TouchableOpacity
+            style={{ ...styles.button, marginStart: "5%" }}
+            onPress={() => {
+              setShowDetallePendienteModal(!showDetallePendienteModal);
+            }}
+          >
+            <Text style={styles.buttonTextStyle}>Volver</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ ...styles.button, marginEnd: "5%" }}
+            onPress={() => {
+              setShowDetallePendienteModal(!showDetallePendienteModal);
+            }}
+          >
+            <Text style={styles.buttonTextStyle}>Guardar Cambios</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
   );
 };
 
@@ -374,13 +307,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   modalView: {
-    backgroundColor: "white",
-    borderRadius: 10,
-    elevation: 10,
     padding: 10,
     alignSelf: "center",
-    minHeight: "50%",
     width: "100%",
+    height: "100%",
+    backgroundColor: "#f0f0f6",
   },
   modalHeader: {
     flexDirection: "row",
@@ -411,19 +342,26 @@ const styles = StyleSheet.create({
   },
   label: {
     marginStart: "3%",
-    fontSize: 18,
-    textAlignVertical: "center",
+    fontSize: 15,
+    color: "grey",
   },
 
   textInput: {
-    marginEnd: "5%",
-    height: 40,
-    width: "50%",
-    borderWidth: 1,
-    borderRadius: 10,
     padding: 8,
-    height: 100,
+    height: "55%",
     textAlignVertical: "top",
+    borderWidth: 1,
+    borderColor: "grey",
+    borderRadius: 5,
+  },
+  borrarPendiente: {
+    width: 24,
+    height: 24,
+    position: "absolute",
+    top: 0,
+    right: 0,
+    marginTop: 15,
+    marginRight: 15,
   },
 });
 
