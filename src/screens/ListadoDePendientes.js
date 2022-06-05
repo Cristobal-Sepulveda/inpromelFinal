@@ -36,7 +36,9 @@ const ListadoDePendientes = ({
   const [flatListItems, setFlatListItems] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(true);
   const [detallePendiente, setDetallePendiente] = useState([]);
-  const [elegirTopico, setElegirTopico] = useState(false);
+
+  const [showAgregarPendienteModal, setShowAgregarPendienteModal] =
+    useState(false);
   const [showDetallePendienteModal, setShowDetallePendienteModal] =
     useState(false);
   const [topicoChecked, setTopicoChecked] = useState();
@@ -223,80 +225,6 @@ const ListadoDePendientes = ({
             Filtrar
           </Text>
         </TouchableOpacity>
-      </View>
-    );
-  };
-
-  const renderContentAgregarPendiente = () => {
-    // showAgregarPendienteModal={showAgregarPendienteModal}
-    // setShowAgregarPendienteModal={setShowAgregarPendienteModal}
-    // setFlatListItems={setFlatListItems}
-    let clicks = 0;
-    return (
-      <View style={{ ...styles.bodyBottomSheet, zIndex: 2000 }}>
-        {/* Header */}
-        <View style={{ ...styles.lineSheets, marginBottom: "2%" }} />
-        <TextInput placeholder="Ingrese Título" />
-        {elegirTopico ? (
-          <View
-            style={{
-              justifyContent: "space-between",
-              marginTop: "3%",
-              flexDirection: "row",
-            }}
-          >
-            <CustomRadioBox
-              topicoName={"Urgente"}
-              topicoChecked={topicoChecked}
-              setTopicoChecked={setTopicoChecked}
-            />
-            <CustomRadioBox
-              topicoName={"Planificada"}
-              topicoChecked={topicoChecked}
-              setTopicoChecked={setTopicoChecked}
-            />
-            <CustomRadioBox
-              topicoName={"No Urgente"}
-              topicoChecked={topicoChecked}
-              setTopicoChecked={setTopicoChecked}
-            />
-          </View>
-        ) : (
-          <></>
-        )}
-        {/* Footbar del BottomSheet */}
-        <View
-          style={{
-            flexDirection: "row",
-            width: "15%",
-            marginStart: "5%",
-            position: "absolute",
-            top: "35%",
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              agregarPendiente.current.snapTo(2);
-              setElegirTopico(true);
-            }}
-          >
-            <Image
-              style={{ height: 30, width: 30 }}
-              source={require("../../assets/icons/topic.png")}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              showDatepicker();
-            }}
-            style={{ marginStart: "20%" }}
-          >
-            <Image
-              style={{ height: 30, width: 30 }}
-              source={require("../../assets/icons/calendar.png")}
-            />
-          </TouchableOpacity>
-        </View>
       </View>
     );
   };
@@ -570,7 +498,7 @@ const ListadoDePendientes = ({
       <TouchableOpacity
         style={styles.fabButton2}
         onPress={() => {
-          agregarPendiente.current.snapTo(1);
+          setShowAgregarPendienteModal(!showAgregarPendienteModal);
         }}
       >
         <Image source={require("../../assets/icons/plus.png")} />
@@ -598,17 +526,10 @@ const ListadoDePendientes = ({
         setFlatListItems={setFlatListItems}
       />
 
-      {/* BottomSheet AgregarPendiente*/}
-      <BottomSheet
-        ref={agregarPendiente}
-        callbackThreshold={0.1}
-        initialSnap={0}
-        snapPoints={[0, "15%", "20%"]}
-        borderRadius={10}
-        renderContent={renderContentAgregarPendiente}
-        onCloseEnd={() => {
-          setElegirTopico(false);
-        }}
+      <AgregarPendienteModal
+        showAgregarPendienteModal={showAgregarPendienteModal}
+        setShowAgregarPendienteModal={setShowAgregarPendienteModal}
+        setFlatListItems={setFlatListItems}
       />
 
       {/* BottomSheet Por Categorias */}

@@ -11,7 +11,7 @@ const CustomRadioBox = ({ topicoChecked, setTopicoChecked, topicoName }) => {
         onPress={() => {
           setTopicoChecked(topicoName);
         }}
-        color="#4285f4"
+        color="grey"
       />
       <Text style={styles.textLabel}>{topicoName}</Text>
     </View>
@@ -19,9 +19,7 @@ const CustomRadioBox = ({ topicoChecked, setTopicoChecked, topicoName }) => {
 };
 
 const styles = StyleSheet.create({
-  textLabel: {
-    marginTop: "4%",
-  },
+  textLabel: { paddingTop: 8 },
 });
 
 export default CustomRadioBox;

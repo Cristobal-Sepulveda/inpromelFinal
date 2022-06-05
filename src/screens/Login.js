@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   },
   inputs: {
     borderColor: "#ffffff",
-    borderWidth: 1,
+    borderWidth: 2,
     padding: 10,
     marginTop: 10,
     color: "#ffffff",

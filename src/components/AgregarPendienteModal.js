@@ -24,6 +24,8 @@ const AgregarPendienteModal = ({
   const [date, setDate] = useState(new Date());
   const [topicoChecked, setTopicoChecked] = useState("");
   const [tareaARealizar, setTareaARealizar] = useState("");
+  const [elegirTopico, setElegirTopico] = useState(false);
+  const [ingresarTarea, setIngresarTarea] = useState(false);
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
 
@@ -61,146 +63,148 @@ const AgregarPendienteModal = ({
   return (
     <View>
       <Modal
-        coverScreen={true}
-        hasBackdrop={true}
+        style={{ margin: 0 }}
         isVisible={showAgregarPendienteModal}
-        animationIn={"fadeIn"}
-        animationOut={"fadeOut"}
-        backdropTransitionOutTiming={0}
+        animationIn={"slideInUp"}
+        animationOut={"slideOutDown"}
+        hasBackdrop={true}
         onBackdropPress={() => {
+          setElegirTopico(false);
           setShowAgregarPendienteModal(!showAgregarPendienteModal);
         }}
       >
-        <View style={styles.modalView}>
-          {/* Header del Modal */}
-          <View style={styles.modalHeader}>
-            <TouchableOpacity
-              onPress={() => {
-                setShowAgregarPendienteModal(false);
-              }}
-            >
-              <Image
-                style={styles.cerrarModal}
-                source={require("../../assets/icons/cerrar.png")}
-              />
-            </TouchableOpacity>
-            <Image
-              style={styles.imagenHeader}
-              source={require("../../assets/LogoInpromel.png")}
-            />
-            <View />
-          </View>
-
-          {/* Body del Modal */}
-          <Text
-            style={{ textAlign: "center", fontSize: 20, marginVertical: 10 }}
-          >
-            Agregar Pendiente
-          </Text>
-          <View style={{ width: "100%" }}>
-            <TextInput
-              style={{
-                ...styles.textInput,
-                marginTop: 2,
-                height: 50,
-              }}
-              placeholder="Ingrese título del pendiente"
-              keyboardType="default"
-              onChangeText={setTitulo}
-            />
-            {/* datePicker */}
-            <CustomDatePicker
-              date={date}
-              mode={mode}
-              show={show}
-              setDate={setDate}
-              setShow={setShow}
-              setMode={setMode}
-            />
-            <Text
-              style={{
-                height: 40,
-                backgroundColor: "#071b75",
-                color: "white",
-                textAlignVertical: "center",
-                textAlign: "center",
-                marginTop: "6%",
-              }}
-            >
-              Seleccione Tópico
-            </Text>
-            <View
-              style={{
-                justifyContent: "space-between",
-                marginTop: "3%",
-                flexDirection: "row",
-              }}
-            >
-              <CustomRadioBox
-                topicoName={"Urgente"}
-                topicoChecked={topicoChecked}
-                setTopicoChecked={setTopicoChecked}
-              />
-              <CustomRadioBox
-                topicoName={"Planificada"}
-                topicoChecked={topicoChecked}
-                setTopicoChecked={setTopicoChecked}
-              />
-              <CustomRadioBox
-                topicoName={"No Urgente"}
-                topicoChecked={topicoChecked}
-                setTopicoChecked={setTopicoChecked}
+        <View style={styles.modalContainer}>
+          {/* Body del BottomSheet */}
+          {/* Ingrese Titulo */}
+          <TextInput
+            style={{ marginStart: "3%", marginTop: "2%", color: "#4285f4" }}
+            placeholder="Ingrese Título del Pendiente"
+            placeholderTextColor="#4285f4"
+          />
+          {/* Tarea */}
+          {ingresarTarea ? (
+            <View>
+              <TextInput
+                style={{ marginStart: "3%", marginTop: "2%" }}
+                placeholder="Ingrese Descripción"
+                placeholderTextColor="grey"
+                multiline={true}
               />
             </View>
-            <Text
-              style={{
-                height: 40,
-                backgroundColor: "#071b75",
-                color: "white",
-                textAlignVertical: "center",
-                textAlign: "center",
-                marginTop: "3%",
-              }}
-            >
-              Ingrese Tarea
-            </Text>
-            <TextInput
-              style={{
-                ...styles.textInput,
-                marginTop: 16,
-                marginBottom: 1,
-                height: "25%",
-              }}
-              multiline={true}
-              placeholder="Tarea a realizar"
-              keyboardType="default"
-              onChangeText={setTareaARealizar}
-            />
-          </View>
+          ) : (
+            <></>
+          )}
+          {/* RadioButtoms */}
+          {elegirTopico ? (
+            <View>
+              <Text
+                style={{
+                  marginStart: "3%",
+                  marginTop: "2%",
+                  color: "grey",
+                }}
+              >
+                Elija Categoría
+              </Text>
+              <View
+                style={{
+                  marginTop: "1%",
+                  flexDirection: "row",
+                  width: "100%",
+                }}
+              >
+                <View style={{ marginStart: "1%" }}>
+                  <CustomRadioBox
+                    topicoName={"Urgente"}
+                    topicoChecked={topicoChecked}
+                    setTopicoChecked={setTopicoChecked}
+                  />
+                </View>
+                <CustomRadioBox
+                  topicoName={"Planificada"}
+                  topicoChecked={topicoChecked}
+                  setTopicoChecked={setTopicoChecked}
+                />
+                <View style={{ marginEnd: "5%" }}>
+                  <CustomRadioBox
+                    topicoName={"No Urgente"}
+                    topicoChecked={topicoChecked}
+                    setTopicoChecked={setTopicoChecked}
+                  />
+                </View>
+              </View>
+            </View>
+          ) : (
+            <></>
+          )}
 
-          {/* FootBar del Modal */}
+          {/* Footbar del BottomSheet */}
           <View
             style={{
               flexDirection: "row",
+              width: "100%",
+              marginStart: "3%",
+              marginTop: "3%",
+              marginBottom: "7%",
               justifyContent: "space-between",
-              marginTop: 24,
             }}
           >
+            {/* Tarea Button */}
             <TouchableOpacity
-              style={{ ...styles.button, marginStart: 30, width: 140 }}
+              onPress={() => {
+                setIngresarTarea(true);
+              }}
+              style={{ marginStart: "1%", marginTop: "1.5%" }}
+            >
+              <Image source={require("../../assets/icons/edit.png")} />
+            </TouchableOpacity>
+
+            {/* Topic Button */}
+            <TouchableOpacity
+              style={{ marginStart: "-1.5%", marginTop: "0.6%" }}
+              onPress={() => {
+                setElegirTopico(true);
+              }}
+            >
+              <Image
+                style={{ height: 30, width: 30 }}
+                source={require("../../assets/icons/topic.png")}
+              />
+            </TouchableOpacity>
+
+            {/* Calendar Button */}
+            <TouchableOpacity
+              onPress={() => {
+                showDatepicker();
+              }}
+              style={{ marginEnd: "60%", marginTop: "0.7%" }}
+            >
+              <Image
+                style={{
+                  height: 27,
+                  width: 27,
+                  marginTop: "5%",
+                }}
+                source={require("../../assets/icons/calendar.png")}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity
               onPress={() => {
                 guardarPendiente();
               }}
             >
-              <Text style={styles.textStyle}>Guardar Pendiente</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ ...styles.button, marginEnd: 30 }}
-              onPress={() => {
-                setShowAgregarPendienteModal(!showAgregarPendienteModal);
-              }}
-            >
-              <Text style={styles.textStyle}>Volver</Text>
+              <Text
+                style={{
+                  color: "grey",
+                  fontSize: 18,
+                  position: "absolute",
+                  right: 50,
+                  top: 3,
+                }}
+              >
+                Guardar
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -210,6 +214,12 @@ const AgregarPendienteModal = ({
 };
 
 const styles = StyleSheet.create({
+  modalContainer: {
+    backgroundColor: "white",
+    width: "100%",
+    position: "absolute",
+    bottom: 0,
+  },
   button: {
     borderRadius: 20,
     padding: 10,
