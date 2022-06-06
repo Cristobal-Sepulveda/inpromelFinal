@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "inpromelFinal",
-    "slug": "inpromelFinal",
+    "name": "InpromelApp",
+    "slug": "InpromelApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -37,7 +37,11 @@
         "com.google.android.c2dm.permission.RECEIVE",
         "com.android.launcher.permission.INSTALL_SHORTCUT",
         "com.htc.launcher.permission.UPDATE_SHORTCUT"
-      ]
+      ],
+      "adaptativeIcon":{
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "white"
+      },
 
     },
     "web": {
