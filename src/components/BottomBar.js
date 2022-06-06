@@ -140,7 +140,7 @@ const BottomBar = ({
           ref={tareas}
           callbackThreshold={0.1}
           initialSnap={2}
-          snapPoints={[380, "80%", 0]}
+          snapPoints={[250, "65%", 0]}
           borderRadius={10}
           renderContent={renderContentTareas}
           onOpenStart={() => {

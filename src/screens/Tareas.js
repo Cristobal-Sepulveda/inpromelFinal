@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, Button, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Graficos from "../components/Graficos";
@@ -95,6 +95,10 @@ const Tareas = ({ isBottomSheetFullOpen }) => {
     <View style={{ marginTop: 20 }}>
       {isBottomSheetFullOpen ? (
         <>
+          <Graficos />
+        </>
+      ) : (
+        <>
           <View
             style={{
               flexDirection: "row",
@@ -104,7 +108,7 @@ const Tareas = ({ isBottomSheetFullOpen }) => {
           >
             <Image
               style={{ width: 25, height: 10 }}
-              source={require("../../assets/icons/flechaAbajo.png")}
+              source={require("../../assets/icons/flechaArriba.png")}
             />
             <View></View>
             <View></View>
@@ -115,22 +119,21 @@ const Tareas = ({ isBottomSheetFullOpen }) => {
             <View></View>
             <Image
               style={{ width: 25, height: 10 }}
-              source={require("../../assets/icons/flechaAbajo.png")}
+              source={require("../../assets/icons/flechaArriba.png")}
             />
           </View>
 
-          <Text style={{ alignSelf: "center", marginTop: 20 }}>
-            HELLO WORLD
+          <Text style={{ alignSelf: "center", marginTop: 20, fontSize: 20 }}>
+            Envia tus Pendientes
           </Text>
-          <Text>Modulo 2</Text>
-          <Button
-            title="send notification"
+          <TouchableOpacity
+            style={styles.button}
             onPress={() => sendNotification(expoPushToken)}
-          />
-        </>
-      ) : (
-        <>
-          <Graficos />
+          >
+            <Text style={{ color: "white", textAlign: "center" }}>
+              Notificar Pendientes
+            </Text>
+          </TouchableOpacity>
         </>
       )}
     </View>
@@ -138,6 +141,16 @@ const Tareas = ({ isBottomSheetFullOpen }) => {
 };
 
 const styles = StyleSheet.create({
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    backgroundColor: "#4285f4",
+    width: "46%",
+    alignSelf: "center",
+    position: "absolute",
+    top: "140%",
+  },
   lineSheets: {
     borderTopColor: "#E5E5E5",
     borderTopWidth: 6,

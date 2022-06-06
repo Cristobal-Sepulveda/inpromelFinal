@@ -19,10 +19,10 @@ const SwitchGraficos = ({ setGraficoEnBarra, graficoEnBarra }) => {
         hasPadding
         options={[
           {
-            label: "Gráfico de Lineal",
+            label: "Gráfico de Barras",
             value: true,
           },
-          { label: "Gráfico de Columnas", value: false },
+          { label: "Gráfico de Lineal", value: false },
         ]}
         testID="gender-switch-selector"
         accessibilityLabel="gender-switch-selector"
@@ -33,6 +33,7 @@ const SwitchGraficos = ({ setGraficoEnBarra, graficoEnBarra }) => {
 
 const styles = StyleSheet.create({
   switch: {
+    alignSelf: "center",
     width: 273,
     height: 30,
   },

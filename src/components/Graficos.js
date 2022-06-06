@@ -10,12 +10,15 @@ import {
 import SwitchGraficos from "../components/SwitchGraficos";
 
 const Graficos = ({}) => {
-  const [graficoEnBarra, setGraficoEnBarra] = useState(false);
+  const [graficoEnBarra, setGraficoEnBarra] = useState(true);
   const data = [50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80];
+  const cantidadPorTipoPendientes = [8, 2, 10];
+  const tipoPendientes = ["Urgente", "Planificado", "No Urgente"];
   const contentInset = { top: 10, bottom: 10 };
 
   return (
     <>
+      {/* Cabecera */}
       <View
         style={{
           flexDirection: "row",
@@ -25,7 +28,7 @@ const Graficos = ({}) => {
       >
         <Image
           style={{ width: 25, height: 10 }}
-          source={require("../../assets/icons/flechaArriba.png")}
+          source={require("../../assets/icons/flechaAbajo.png")}
         />
         <View></View>
         <View></View>
@@ -36,21 +39,75 @@ const Graficos = ({}) => {
         <View></View>
         <Image
           style={{ width: 25, height: 10 }}
-          source={require("../../assets/icons/flechaArriba.png")}
+          source={require("../../assets/icons/flechaAbajo.png")}
         />
       </View>
+
+      {/* Body */}
       <Text style={{ alignSelf: "center", marginVertical: 20, fontSize: 20 }}>
         Elije el gráfico que deseas visualizar
       </Text>
       <SwitchGraficos
         graficoEnBarra={graficoEnBarra}
         setGraficoEnBarra={setGraficoEnBarra}
-        style={styles.switch}
       />
-
-      {!graficoEnBarra ? (
-        <View>
-          <View style={{ height: 200, padding: 20 }}>
+      {/* Posibles Graficos */}
+      {graficoEnBarra ? (
+        <>
+          <Text style={{ textAlign: "center", fontSize: 20, marginTop: "5%" }}>
+            Pendientes
+          </Text>
+          <View
+            style={{
+              height: 200,
+              padding: 20,
+              flexDirection: "row",
+              width: "100%",
+            }}
+          >
+            <YAxis
+              data={cantidadPorTipoPendientes}
+              contentInset={contentInset}
+              svg={{
+                fill: "grey",
+                fontSize: 10,
+              }}
+              numberOfTicks={10}
+              min={0}
+              formatLabel={(value) => `${value}`}
+            />
+            <BarChart
+              style={{ flex: 1 }}
+              data={cantidadPorTipoPendientes}
+              svg={{ fontSize: 5, fill: "#4285f4" }}
+              contentInset={contentInset}
+              spacingInner={0.7}
+              spacingOuter={0.5}
+              gridMin={0}
+            >
+              <Grid />
+            </BarChart>
+          </View>
+          <View
+            style={{
+              paddingHorizontal: 20,
+              marginTop: "-5%",
+              width: "100%",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text style={{ marginStart: "14.9%" }}>Urgente</Text>
+            <Text style={{ marginStart: "4.4%" }}>Planificado</Text>
+            <Text style={{ marginEnd: "8%" }}>No Urgente</Text>
+          </View>
+        </>
+      ) : (
+        <>
+          <Text style={{ textAlign: "center", fontSize: 20, marginTop: "5%" }}>
+            Tareas Completas
+          </Text>
+          <View style={{ height: 220, padding: 20 }}>
             <LineChart
               style={{ flex: 1 }}
               data={data}
@@ -68,35 +125,13 @@ const Graficos = ({}) => {
               svg={{ fontSize: 10, fill: "black" }}
             />
           </View>
-        </View>
-      ) : (
-        <View style={{ height: 200, flexDirection: "row" }}>
-          <YAxis
-            data={data}
-            contentInset={contentInset}
-            svg={{
-              fill: "grey",
-              fontSize: 10,
-            }}
-            numberOfTicks={10}
-            formatLabel={(value) => `${value}ºC`}
-          />
-          <LineChart
-            style={{ flex: 1, marginLeft: 16 }}
-            data={data}
-            svg={{ stroke: "rgb(134, 65, 244)" }}
-            contentInset={contentInset}
-          >
-            <Grid />
-          </LineChart>
-        </View>
+        </>
       )}
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  switch: {},
   lineSheets: {
     borderTopColor: "#E5E5E5",
     borderTopWidth: 6,

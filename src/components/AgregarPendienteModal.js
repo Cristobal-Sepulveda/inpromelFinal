@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Alert,
   View,
@@ -14,6 +14,7 @@ import CustomRadioBox from "./CustomRadioBox";
 import { insert_pendiente, select_pendientes } from "../model/pendientes";
 import { connect } from "react-redux";
 import * as Types from "../store/actions/types";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const AgregarPendienteModal = ({
   insertPendiente,
@@ -23,11 +24,27 @@ const AgregarPendienteModal = ({
   const [titulo, setTitulo] = useState("");
   const [date, setDate] = useState(new Date());
   const [topicoChecked, setTopicoChecked] = useState("");
-  const [tareaARealizar, setTareaARealizar] = useState("");
+  const [descripcion, setDescripcion] = useState("");
   const [elegirTopico, setElegirTopico] = useState(false);
   const [ingresarTarea, setIngresarTarea] = useState(false);
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    console.log(selectedDate);
+    setShow(false);
+    const currentDate = selectedDate;
+    setDate(currentDate);
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode("date");
+  };
 
   /** Esta funcion es enviada al componente BotonesEnviarPedidoYVolver
    *  y lo que hace es checkear que todos los campos hayan sido
@@ -37,21 +54,24 @@ const AgregarPendienteModal = ({
       titulo: titulo,
       fecha: date.toString().slice(4, 15),
       topico: topicoChecked,
-      tarea: tareaARealizar,
+      tarea: descripcion,
     });
-    insertPendiente(titulo, date, topicoChecked, tareaARealizar);
+    insertPendiente(titulo, date, topicoChecked, descripcion);
   };
 
   const limpiandoModal = () => {
     setTitulo("");
     setDate(new Date());
     setTopicoChecked("");
-    setTareaARealizar("");
+    setDescripcion("");
   };
 
   const guardarPendiente = async () => {
     // Primera condicionante de salida
-    if (titulo === "" || topicoChecked === "" || tareaARealizar === "") {
+    console.log(titulo);
+    console.log(topicoChecked);
+    console.log(descripcion);
+    if (titulo === "" || topicoChecked === "" || descripcion === "") {
       Alert.alert("Debes llenar todos los datos antes de guardar el pendiente");
       return;
     }
@@ -70,6 +90,7 @@ const AgregarPendienteModal = ({
         hasBackdrop={true}
         onBackdropPress={() => {
           setElegirTopico(false);
+          setIngresarTarea(false);
           setShowAgregarPendienteModal(!showAgregarPendienteModal);
         }}
       >
@@ -80,6 +101,7 @@ const AgregarPendienteModal = ({
             style={{ marginStart: "3%", marginTop: "2%", color: "#4285f4" }}
             placeholder="Ingrese Título del Pendiente"
             placeholderTextColor="#4285f4"
+            onChangeText={setTitulo}
           />
           {/* Tarea */}
           {ingresarTarea ? (
@@ -89,6 +111,7 @@ const AgregarPendienteModal = ({
                 placeholder="Ingrese Descripción"
                 placeholderTextColor="grey"
                 multiline={true}
+                onChangeText={setDescripcion}
               />
             </View>
           ) : (
@@ -120,12 +143,14 @@ const AgregarPendienteModal = ({
                     setTopicoChecked={setTopicoChecked}
                   />
                 </View>
-                <CustomRadioBox
-                  topicoName={"Planificada"}
-                  topicoChecked={topicoChecked}
-                  setTopicoChecked={setTopicoChecked}
-                />
-                <View style={{ marginEnd: "5%" }}>
+                <View style={{ marginStart: "6.4%" }}>
+                  <CustomRadioBox
+                    topicoName={"Planificada"}
+                    topicoChecked={topicoChecked}
+                    setTopicoChecked={setTopicoChecked}
+                  />
+                </View>
+                <View style={{ marginStart: "6.4%" }}>
                   <CustomRadioBox
                     topicoName={"No Urgente"}
                     topicoChecked={topicoChecked}
@@ -136,6 +161,16 @@ const AgregarPendienteModal = ({
             </View>
           ) : (
             <></>
+          )}
+          {/* DateTimePicker */}
+          {show && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={date}
+              mode={mode}
+              is24Hour={true}
+              onChange={onChange}
+            />
           )}
 
           {/* Footbar del BottomSheet */}
@@ -189,6 +224,7 @@ const AgregarPendienteModal = ({
               />
             </TouchableOpacity>
 
+            {/* Guardar */}
             <TouchableOpacity
               onPress={() => {
                 guardarPendiente();
@@ -199,6 +235,7 @@ const AgregarPendienteModal = ({
                   color: "grey",
                   fontSize: 18,
                   position: "absolute",
+                  // right: 100,
                   right: 50,
                   top: 3,
                 }}

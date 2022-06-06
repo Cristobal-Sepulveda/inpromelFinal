@@ -172,7 +172,7 @@ const Perfil = ({ showPerfilModal, setShowPerfilModal, setIsFocusedHome }) => {
             marginVertical: 15,
           }}
         >
-          <TouchableOpacity style={{ marginStart: "6%" }}>
+          <TouchableOpacity style={{ marginStart: "5.5%" }}>
             <Text style={{ fontSize: 13 }}>Politica de Privacidad</Text>
           </TouchableOpacity>
           <View
@@ -185,8 +185,17 @@ const Perfil = ({ showPerfilModal, setShowPerfilModal, setIsFocusedHome }) => {
               marginHorizontal: "5%",
             }}
           />
-          <TouchableOpacity style={{ marginEnd: "6%" }}>
-            <Text style={{ fontSize: 13 }}>Condiciones del Servicio</Text>
+          <TouchableOpacity
+            onPress={() => {
+              Alert.alert(
+                "Información de Contacto",
+                "Desarrollador: Cristóbal Sepúlveda\nHorario de Atencion: 09:00 a 18:00\nTeléfono: +569 5072 2566\nCorreo: \nsepulveda.cristobal.ignacio@gmail.com",
+                [{ text: "Aceptar", onPress: () => {} }]
+              );
+            }}
+            style={{ marginEnd: "10%" }}
+          >
+            <Text style={{ fontSize: 13 }}>Informacion de Contacto</Text>
           </TouchableOpacity>
         </View>
       </View>

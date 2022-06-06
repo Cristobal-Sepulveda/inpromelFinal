@@ -42,9 +42,6 @@ const ListadoDePendientes = ({
   const [showDetallePendienteModal, setShowDetallePendienteModal] =
     useState(false);
   const [topicoChecked, setTopicoChecked] = useState();
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState("date");
-  const [show, setShow] = useState(false);
   const categorias = useRef(null);
   const agregarPendiente = useRef(null);
   const pendientesList = useSelector((state) => {
@@ -232,7 +229,13 @@ const ListadoDePendientes = ({
   const renderItem = ({ item }) => {
     const aux = JSON.parse(item);
     return (
-      <View style={styles.itemContainer}>
+      <TouchableOpacity
+        style={styles.itemContainer}
+        onPress={() => {
+          setDetallePendiente(aux);
+          setShowDetallePendienteModal(true);
+        }}
+      >
         {/* COLUMNA 1 */}
         {aux.topico === "Urgente" ? (
           <View style={{ width: "20%" }}>
@@ -271,27 +274,7 @@ const ListadoDePendientes = ({
             )}
           </View>
         </View>
-
-        {/* Columna 3 */}
-        <View>
-          <TouchableOpacity
-            onPress={() => {
-              setDetallePendiente(aux);
-              setShowDetallePendienteModal(true);
-            }}
-          >
-            <Image
-              style={{
-                marginStart: "50%",
-                marginTop: "2%",
-                width: 35,
-                height: 35,
-              }}
-              source={require("../../assets/icons/lupa.png")}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -306,7 +289,7 @@ const ListadoDePendientes = ({
           marginEnd: "auto",
         }}
       >
-        {/* CABECERA */}
+        {/* Header */}
         <View
           style={{
             flexDirection: "row",
@@ -368,96 +351,86 @@ const ListadoDePendientes = ({
             />
           </TouchableOpacity>
         </View>
-        {/* Pendientes y botones */}
-        <View style={{ backgroundColor: "#BF0413" }}>
-          <Text style={{ marginTop: 8, textAlign: "center", color: "white" }}>
-            PENDIENTES
-          </Text>
-          <View
+        {/* Body */}
+        {/* top buttomBar */}
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 10,
+            backgroundColor: "lightgrey",
+            paddingVertical: 15,
+            borderTopRightRadius: 10,
+            borderTopLeftRadius: 10,
+          }}
+        >
+          <TouchableOpacity
             style={{
-              marginTop: 10,
-              borderBottomColor: "white",
-              borderBottomWidth: 1,
-            }}
-          />
-
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginTop: 10,
+              backgroundColor: "#4285f4",
+              width: "20%",
+              marginStart: "10%",
+              borderRadius: 5,
             }}
           >
-            <TouchableOpacity
+            <Text
               style={{
-                backgroundColor: "#4285f4",
-                width: "20%",
-                marginStart: "10%",
-              }}
-            >
-              <Text
-                style={{
-                  color: "white",
-                  textAlign: "center",
-                  marginTop: 8,
-                }}
-                onPress={() => {
-                  verTodos();
-                }}
-              >
-                Ver Todos
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ backgroundColor: "#4285f4", width: "20%" }}
-              onPress={() => {
-                eliminarPendientes();
-              }}
-            >
-              <Text
-                style={{
-                  color: "white",
-                  textAlign: "center",
-                  textAlignVertical: "center",
-                }}
-              >
-                Eliminar Todo
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#4285f4",
-                width: "20%",
-                marginEnd: "10%",
+                color: "white",
+                textAlign: "center",
+                marginTop: 8,
               }}
               onPress={() => {
-                categorias.current.snapTo(1);
+                verTodos();
               }}
             >
-              <Text style={{ color: "white", textAlign: "center" }}>
-                Por categorias
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View
+              Ver Todos
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
             style={{
-              marginTop: 10,
-              marginBottom: 20,
-              borderBottomColor: "white",
-              borderBottomWidth: 1,
+              backgroundColor: "#4285f4",
+              width: "20%",
+              borderRadius: 5,
             }}
-          />
+            onPress={() => {
+              eliminarPendientes();
+            }}
+          >
+            <Text
+              style={{
+                color: "white",
+                textAlign: "center",
+                textAlignVertical: "center",
+              }}
+            >
+              Eliminar Todo
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#4285f4",
+              width: "20%",
+              marginEnd: "10%",
+              borderRadius: 5,
+            }}
+            onPress={() => {
+              categorias.current.snapTo(1);
+            }}
+          >
+            <Text style={{ color: "white", textAlign: "center", marginTop: 8 }}>
+              Filtrar
+            </Text>
+          </TouchableOpacity>
         </View>
 
-        {/* BODY CON FLATLIST */}
-        <SafeAreaView style={{ height: "80%" }}>
+        {/*FLATLIST */}
+        <SafeAreaView style={{ height: "70%" }}>
           <FlatList
+            style={{ borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}
             data={flatListItems}
             renderItem={renderItem}
             keyExtractor={(item) => JSON.parse(item).key}
             numColumns={1}
-            backgroundColor="#BF0413"
+            backgroundColor="lightgrey"
             refreshing={isRefreshing}
             contentContainerStyle={{ paddingBottom: 180 }}
             ListEmptyComponent={
