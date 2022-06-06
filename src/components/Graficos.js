@@ -8,14 +8,65 @@ import {
   LineChart,
 } from "react-native-svg-charts";
 import SwitchGraficos from "../components/SwitchGraficos";
+import { connect } from "react-redux";
+import * as Types from "../store/actions/types";
+import { select_pendientes } from "../model";
 
-const Graficos = ({}) => {
+const Graficos = ({ selectPendientes }) => {
   const [graficoEnBarra, setGraficoEnBarra] = useState(true);
+  const [pendientesList, setPendientesList] = useState([0, 0, 0]);
+  const [yNumber, setYNumber] = useState(0);
   const data = [50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80];
-  const cantidadPorTipoPendientes = [8, 2, 10];
-  const tipoPendientes = ["Urgente", "Planificado", "No Urgente"];
   const contentInset = { top: 10, bottom: 10 };
 
+  const obtenerPendientes = async () => {
+    const aux = await select_pendientes();
+    let urgente = 0;
+    let planificada = 0;
+    let noUrgente = 0;
+    const pendientes = aux.rows._array;
+    for (let i = 0; i < pendientes.length; i++) {
+      console.log(pendientes[i]);
+      if (pendientes[i].topico === "Urgente") {
+        console.log("Urgente");
+        const cantidad = pendientesList;
+        console.log(cantidad);
+        setPendientesList([cantidad[0]++, cantidad[1], cantidad[2]]);
+        urgente++;
+        console.log(pendientesList);
+      }
+      if (pendientes[i].topico === "Planificada") {
+        console.log("Planificado");
+        const cantidad = pendientesList;
+        console.log(cantidad);
+        setPendientesList([cantidad[0], cantidad[1]++, cantidad[2]]);
+        planificada++;
+        console.log(pendientesList);
+      }
+      if (pendientes[i].topico === "No Urgente") {
+        console.log("No Urgente");
+        const cantidad = pendientesList;
+        console.log(cantidad);
+        setPendientesList([cantidad[0], cantidad[1], cantidad[2]++]);
+        noUrgente++;
+        console.log(pendientesList);
+      }
+    }
+    setPendientesList(pendientesList);
+    if (urgente >= planificada && urgente >= noUrgente) {
+      setYNumber(urgente);
+    }
+    if (planificada >= urgente && planificada >= noUrgente) {
+      setYNumber(planificada);
+    }
+    if (noUrgente >= urgente && noUrgente >= planificada) {
+      setYNumber(noUrgente);
+    }
+  };
+
+  useEffect(() => {
+    obtenerPendientes();
+  }, []);
   return (
     <>
       {/* Cabecera */}
@@ -66,19 +117,19 @@ const Graficos = ({}) => {
             }}
           >
             <YAxis
-              data={cantidadPorTipoPendientes}
+              data={pendientesList}
               contentInset={contentInset}
               svg={{
                 fill: "grey",
                 fontSize: 10,
               }}
-              numberOfTicks={10}
+              numberOfTicks={yNumber}
               min={0}
               formatLabel={(value) => `${value}`}
             />
             <BarChart
               style={{ flex: 1 }}
-              data={cantidadPorTipoPendientes}
+              data={pendientesList}
               svg={{ fontSize: 5, fill: "#4285f4" }}
               contentInset={contentInset}
               spacingInner={0.7}
@@ -140,4 +191,17 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Graficos;
+const mapStateToProps = (state) => {
+  return { redux: state };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  selectPendientes: () =>
+    dispatch({
+      type: Types.SELECT_PENDIENTES,
+      payload: {},
+    }),
+});
+
+const connectComponent = connect(mapStateToProps, mapDispatchToProps);
+export default connectComponent(Graficos);

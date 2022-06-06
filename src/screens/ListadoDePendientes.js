@@ -246,13 +246,13 @@ const ListadoDePendientes = ({
         ) : aux.topico === "Planificada" ? (
           <View style={{ width: "20%" }}>
             <View
-              style={{ ...styles.pendientePriority, backgroundColor: "yellow" }}
+              style={{ ...styles.pendientePriority, backgroundColor: "orange" }}
             />
           </View>
         ) : aux.topico === "No Urgente" ? (
           <View style={{ width: "20%" }}>
             <View
-              style={{ ...styles.pendientePriority, backgroundColor: "green" }}
+              style={{ ...styles.pendientePriority, backgroundColor: "yellow" }}
             />
           </View>
         ) : (
@@ -293,13 +293,14 @@ const ListadoDePendientes = ({
         <View
           style={{
             flexDirection: "row",
-            justifyContent: "space-between",
             backgroundColor: "#4285f4",
             paddingVertical: 20,
             paddingHorizontal: "5%",
             marginBottom: "10%",
+            justifyContent: "space-between",
           }}
         >
+          <View />
           <Text
             style={{
               alignSelf: "center",
@@ -351,6 +352,7 @@ const ListadoDePendientes = ({
             />
           </TouchableOpacity>
         </View>
+
         {/* Body */}
         {/* top buttomBar */}
         <View
@@ -421,9 +423,8 @@ const ListadoDePendientes = ({
             </Text>
           </TouchableOpacity>
         </View>
-
         {/*FLATLIST */}
-        <SafeAreaView style={{ height: "70%" }}>
+        <SafeAreaView style={{ height: "71%" }}>
           <FlatList
             style={{ borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}
             data={flatListItems}
@@ -432,7 +433,7 @@ const ListadoDePendientes = ({
             numColumns={1}
             backgroundColor="lightgrey"
             refreshing={isRefreshing}
-            contentContainerStyle={{ paddingBottom: 180 }}
+            contentContainerStyle={{ paddingBottom: "2%" }}
             ListEmptyComponent={
               <View
                 style={{
@@ -546,7 +547,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     right: 30,
-    bottom: 30,
+    bottom: 50,
     backgroundColor: "#4285f4",
     borderRadius: 50,
   },
@@ -568,7 +569,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     right: 30,
-    bottom: 100,
+    bottom: 120,
     backgroundColor: "#4285f4",
     borderRadius: 50,
   },

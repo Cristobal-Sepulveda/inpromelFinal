@@ -77,6 +77,8 @@ const AgregarPendienteModal = ({
     }
     guardarEnReduxYDB();
     limpiandoModal();
+    setElegirTopico(false);
+    setIngresarTarea(false);
     setShowAgregarPendienteModal(false);
   };
 
