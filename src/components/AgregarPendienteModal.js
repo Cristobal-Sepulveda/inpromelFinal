@@ -22,7 +22,7 @@ const AgregarPendienteModal = ({
   setShowAgregarPendienteModal,
 }) => {
   const [titulo, setTitulo] = useState("");
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState([new Date(), 0]);
   const [topicoChecked, setTopicoChecked] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [elegirTopico, setElegirTopico] = useState(false);
@@ -31,10 +31,13 @@ const AgregarPendienteModal = ({
   const [show, setShow] = useState(false);
 
   const onChange = (event, selectedDate) => {
-    console.log(selectedDate);
     setShow(false);
-    const currentDate = selectedDate;
-    setDate(currentDate);
+    if (event.type === "set") {
+      const currentDate = selectedDate;
+      setDate([currentDate, 1]);
+    } else {
+      console.log("asd");
+    }
   };
 
   const showMode = (currentMode) => {
@@ -52,16 +55,16 @@ const AgregarPendienteModal = ({
   const guardarEnReduxYDB = async () => {
     insert_pendiente({
       titulo: titulo,
-      fecha: date.toString().slice(4, 15),
+      fecha: date[0].toString().slice(4, 15),
       topico: topicoChecked,
       tarea: descripcion,
     });
-    insertPendiente(titulo, date, topicoChecked, descripcion);
+    insertPendiente(titulo, date[0], topicoChecked, descripcion);
   };
 
   const limpiandoModal = () => {
     setTitulo("");
-    setDate(new Date());
+    setDate([new Date(), 0]);
     setTopicoChecked("");
     setDescripcion("");
   };
@@ -71,7 +74,12 @@ const AgregarPendienteModal = ({
     console.log(titulo);
     console.log(topicoChecked);
     console.log(descripcion);
-    if (titulo === "" || topicoChecked === "" || descripcion === "") {
+    if (
+      titulo === "" ||
+      topicoChecked === "" ||
+      descripcion === "" ||
+      date[1] === 0
+    ) {
       Alert.alert("Debes llenar todos los datos antes de guardar el pendiente");
       return;
     }
@@ -168,7 +176,7 @@ const AgregarPendienteModal = ({
           {show && (
             <DateTimePicker
               testID="dateTimePicker"
-              value={date}
+              value={date[0]}
               mode={mode}
               is24Hour={true}
               onChange={onChange}

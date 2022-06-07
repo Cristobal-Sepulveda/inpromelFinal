@@ -147,7 +147,7 @@ const Perfil = ({ showPerfilModal, setShowPerfilModal, setIsFocusedHome }) => {
         <View style={{ marginVertical: 25, marginStart: "9%" }}>
           <TouchableOpacity style={{ flexDirection: "row", marginBottom: 20 }}>
             <Image source={require("../../assets/icons/agregarCuenta.png")} />
-            <Text style={{ marginStart: "5%" }}>Agregar otra cuenta</Text>
+            <Text style={{ marginStart: "5%" }}>Crear una Nueva Cuenta</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{ flexDirection: "row" }}>
             <Image

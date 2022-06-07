@@ -104,16 +104,7 @@ const Login = ({ redux, insertSession, wipeRedux }) => {
               marginEnd: "auto",
             }}
           >
-            <TouchableOpacity
-              style={{ ...styles.buttons, marginStart: "5%" }}
-              onPress={limpiarCeldas}
-            >
-              <Text style={styles.buttonsText}>Limpiar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ ...styles.buttons, marginEnd: "5%" }}
-              onPress={() => login()}
-            >
+            <TouchableOpacity style={styles.buttons} onPress={() => login()}>
               <Text style={styles.buttonsText}>Iniciar sesión</Text>
             </TouchableOpacity>
           </View>
@@ -130,8 +121,8 @@ const styles = StyleSheet.create({
   },
   buttons: {
     backgroundColor: "#4285f4",
-    width: "40%",
     height: 40,
+    width: "100%",
     borderRadius: 5,
   },
   buttonsText: {

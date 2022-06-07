@@ -20,30 +20,22 @@ import {
   select_pendientes_categoria,
 } from "../model/pendientes";
 import BottomSheet from "reanimated-bottom-sheet";
-import DetallePendienteModal from "../components/DetallePendienteModal";
-import CustomDatePicker from "../components/CustomDatePicker";
-import CustomRadioBox from "../components/CustomRadioBox";
+import DetallePendiente from "../components/DetallePendiente";
+import { delete_pendiente } from "../model/pendientes";
 
-const ListadoDePendientes = ({
-  redux,
-  selectPendientes,
-  insertPendiente,
-  deletePendiente,
-  deletePendientes,
-  setShowHome,
-  showHome,
-}) => {
+const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
   const [flatListItems, setFlatListItems] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(true);
   const [detallePendiente, setDetallePendiente] = useState([]);
-
   const [showAgregarPendienteModal, setShowAgregarPendienteModal] =
     useState(false);
-  const [showDetallePendienteModal, setShowDetallePendienteModal] =
-    useState(false);
+  const [showDetallePendiente, setShowDetallePendiente] = useState(false);
   const [topicoChecked, setTopicoChecked] = useState();
   const categorias = useRef(null);
-  const agregarPendiente = useRef(null);
+  const [mode, setMode] = useState("date");
+  const [show, setShow] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const [dateClickeado, setDateClickeado] = useState(false);
   const pendientesList = useSelector((state) => {
     const auxArray = [];
     for (let i = 0; i < state.pendientes.length; i++) {
@@ -80,6 +72,24 @@ const ListadoDePendientes = ({
     cargarPendientesDesdeDB();
   }, []);
 
+  const cargarPendientesDesdeDB = async () => {
+    const aux = await select_pendientes();
+    const pendientes = aux.rows._array;
+    for (let i = 0; i < pendientes.length; i++) {
+      setFlatListItems((prevData) => [
+        ...prevData,
+        JSON.stringify(pendientes[i]),
+      ]);
+    }
+  };
+
+  const onChange = (event, selectedDate) => {
+    console.log(selectedDate);
+    setShow(false);
+    const currentDate = selectedDate;
+    setDate(currentDate);
+  };
+
   const showMode = (currentMode) => {
     setShow(true);
     setMode(currentMode);
@@ -89,6 +99,31 @@ const ListadoDePendientes = ({
     showMode("date");
   };
 
+  const borrarPendiente = async () => {
+    setFlatListItems([]);
+    delete_pendiente(detallePendiente.id_pendiente);
+    setShowDetallePendiente(!showDetallePendiente);
+    const pendientes = await select_pendientes();
+    const aux = pendientes.rows._array;
+    console.log(aux);
+    for (let i = 0; i < aux.length; i++) {
+      setFlatListItems((prevData) => [...prevData, JSON.stringify(aux[i])]);
+    }
+  };
+
+  const alertaBorrar = () => {
+    Alert.alert("Aviso", "¿Estas seguro que quieres borrar este pendiente?", [
+      { text: "Cancelar", onPress: () => {} },
+      {
+        text: "Confirmar",
+        onPress: () => {
+          borrarPendiente();
+        },
+      },
+    ]);
+  };
+
+  /* Filtros*/
   const verTodos = async () => {
     const pendientesEnDb = await select_pendientes();
     const aux = pendientesEnDb.rows._array;
@@ -97,13 +132,11 @@ const ListadoDePendientes = ({
       setFlatListItems((prevData) => [...prevData, JSON.stringify(aux[i])]);
     }
   };
-
   const eliminarPendientes = async () => {
     setFlatListItems([]);
     deletePendientes();
     await drop_pendientes();
   };
-
   const porCategorias = async (categoria) => {
     const aux = await select_pendientes();
     const pendientes = aux.rows._array;
@@ -119,17 +152,7 @@ const ListadoDePendientes = ({
     categorias.current.snapTo(0);
   };
 
-  const cargarPendientesDesdeDB = async () => {
-    const aux = await select_pendientes();
-    const pendientes = aux.rows._array;
-    for (let i = 0; i < pendientes.length; i++) {
-      setFlatListItems((prevData) => [
-        ...prevData,
-        JSON.stringify(pendientes[i]),
-      ]);
-    }
-  };
-
+  /* FAB BUTTON ACTION */
   const volverAHome = () => {
     deletePendientes();
     setShowHome(!showHome);
@@ -233,7 +256,7 @@ const ListadoDePendientes = ({
         style={styles.itemContainer}
         onPress={() => {
           setDetallePendiente(aux);
-          setShowDetallePendienteModal(true);
+          setShowDetallePendiente(true);
         }}
       >
         {/* COLUMNA 1 */}
@@ -300,205 +323,269 @@ const ListadoDePendientes = ({
             justifyContent: "space-between",
           }}
         >
-          <View />
-          <Text
-            style={{
-              alignSelf: "center",
-              fontSize: 20,
-              fontWeight: "400",
-              color: "white",
-              marginStart: "10%",
-            }}
-          >
-            Listado de Pendientes
-          </Text>
-          <TouchableOpacity
-            onPress={() => {
-              Alert.alert(
-                "Aviso",
-                "Para ingresar un pendiente, haga click en el boton +",
-                [
-                  {
-                    text: "Cerrar",
-                    onPress: () => {},
-                  },
-                  {
-                    text: "Ver mas",
-                    onPress: () => {
-                      Alert.alert(
-                        "Aviso",
-                        "Para ver en detalle un pendiente, haz click en el",
-                        [
-                          {
-                            text: "Cerrar",
-                            onPress: () => {},
-                          },
-                        ]
-                      );
-                    },
-                  },
-                ]
-              );
-            }}
-          >
-            <Image
-              source={require("../../assets/icons/info.png")}
-              style={{
-                height: 112 * 0.25,
-                width: 112 * 0.25,
-                alignSelf: "center",
-                marginEnd: "5%",
-              }}
-            />
-          </TouchableOpacity>
-        </View>
-
-        {/* Body */}
-        {/* top buttomBar */}
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginTop: 10,
-            backgroundColor: "lightgrey",
-            paddingVertical: 15,
-            borderTopRightRadius: 10,
-            borderTopLeftRadius: 10,
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#4285f4",
-              width: "20%",
-              marginStart: "10%",
-              borderRadius: 5,
-            }}
-          >
-            <Text
-              style={{
-                color: "white",
-                textAlign: "center",
-                marginTop: 8,
-              }}
-              onPress={() => {
-                verTodos();
-              }}
-            >
-              Ver Todos
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#4285f4",
-              width: "20%",
-              borderRadius: 5,
-            }}
-            onPress={() => {
-              eliminarPendientes();
-            }}
-          >
-            <Text
-              style={{
-                color: "white",
-                textAlign: "center",
-                textAlignVertical: "center",
-              }}
-            >
-              Eliminar Todo
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#4285f4",
-              width: "20%",
-              marginEnd: "10%",
-              borderRadius: 5,
-            }}
-            onPress={() => {
-              categorias.current.snapTo(1);
-            }}
-          >
-            <Text style={{ color: "white", textAlign: "center", marginTop: 8 }}>
-              Filtrar
-            </Text>
-          </TouchableOpacity>
-        </View>
-        {/*FLATLIST */}
-        <SafeAreaView style={{ height: "71%" }}>
-          <FlatList
-            style={{ borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}
-            data={flatListItems}
-            renderItem={renderItem}
-            keyExtractor={(item) => JSON.parse(item).key}
-            numColumns={1}
-            backgroundColor="lightgrey"
-            refreshing={isRefreshing}
-            contentContainerStyle={{ paddingBottom: "2%" }}
-            ListEmptyComponent={
-              <View
-                style={{
-                  alignItems: "center",
+          {showDetallePendiente ? (
+            <>
+              <TouchableOpacity
+                style={{ marginTop: "1%" }}
+                onPress={() => {
+                  setDateClickeado(false);
+                  setShowDetallePendiente(!showDetallePendiente);
                 }}
               >
                 <Image
-                  source={require("../../assets/atardecer.png")}
+                  source={require("../../assets/icons/flechaDetalle.png")}
+                />
+              </TouchableOpacity>
+              <Text
+                style={{
+                  alignSelf: "center",
+                  fontSize: 20,
+                  fontWeight: "400",
+                  color: "white",
+                }}
+              >
+                Detalle del Pendiente
+              </Text>
+              <TouchableOpacity
+                style={{ marginEnd: "5%", marginTop: "0.8%" }}
+                onPress={() => {
+                  alertaBorrar();
+                }}
+              >
+                <Image
+                  style={{ width: 26, height: 26 }}
+                  source={require("../../assets/icons/delete.png")}
+                />
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              <View />
+              <Text
+                style={{
+                  alignSelf: "center",
+                  fontSize: 20,
+                  fontWeight: "400",
+                  color: "white",
+                  marginStart: "10%",
+                }}
+              >
+                Listado de Pendientes
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  Alert.alert(
+                    "Aviso",
+                    "Para ingresar un pendiente, haga click en el boton +",
+                    [
+                      {
+                        text: "Cerrar",
+                        onPress: () => {},
+                      },
+                      {
+                        text: "Ver mas",
+                        onPress: () => {
+                          Alert.alert(
+                            "Aviso",
+                            "Para ver en detalle un pendiente, haz click en el",
+                            [
+                              {
+                                text: "Cerrar",
+                                onPress: () => {},
+                              },
+                            ]
+                          );
+                        },
+                      },
+                    ]
+                  );
+                }}
+              >
+                <Image
+                  source={require("../../assets/icons/info.png")}
                   style={{
-                    borderRadius: 10,
-                    width: "80%",
-                    height: 150,
-                    marginTop: "15%",
-                    resizeMode: "contain",
+                    height: 112 * 0.25,
+                    width: 112 * 0.25,
+                    alignSelf: "center",
+                    marginEnd: "5%",
                   }}
                 />
+              </TouchableOpacity>
+            </>
+          )}
+        </View>
+
+        {/* Body */}
+        {showDetallePendiente ? (
+          <DetallePendiente
+            showDetallePendiente={showDetallePendiente}
+            setShowDetallePendiente={setShowDetallePendiente}
+            detallePendiente={detallePendiente}
+            setDetallePendiente={setDetallePendiente}
+            flatListItems={flatListItems}
+            setFlatListItems={setFlatListItems}
+          />
+        ) : (
+          <>
+            {/* top buttomBar */}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 10,
+                backgroundColor: "lightgrey",
+                paddingVertical: 15,
+                borderTopRightRadius: 10,
+                borderTopLeftRadius: 10,
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#4285f4",
+                  width: "20%",
+                  marginStart: "10%",
+                  borderRadius: 5,
+                }}
+              >
                 <Text
                   style={{
-                    textAlign: "center",
                     color: "white",
-                    fontSize: 25,
-                    marginTop: "8%",
-                    marginEnd: "4%",
+                    textAlign: "center",
+                    marginTop: 8,
+                  }}
+                  onPress={() => {
+                    verTodos();
                   }}
                 >
-                  No tienes pendientes
+                  Ver Todos
                 </Text>
-              </View>
-            }
-          />
-        </SafeAreaView>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#4285f4",
+                  width: "20%",
+                  borderRadius: 5,
+                }}
+                onPress={() => {
+                  eliminarPendientes();
+                }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    textAlign: "center",
+                    textAlignVertical: "center",
+                  }}
+                >
+                  Eliminar Todo
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#4285f4",
+                  width: "20%",
+                  marginEnd: "10%",
+                  borderRadius: 5,
+                }}
+                onPress={() => {
+                  categorias.current.snapTo(1);
+                }}
+              >
+                <Text
+                  style={{ color: "white", textAlign: "center", marginTop: 8 }}
+                >
+                  Filtrar
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {/*FLATLIST */}
+            <SafeAreaView style={{ height: "71%" }}>
+              <FlatList
+                style={{
+                  borderBottomRightRadius: 10,
+                  borderBottomLeftRadius: 10,
+                }}
+                data={flatListItems}
+                renderItem={renderItem}
+                keyExtractor={(item) => JSON.parse(item).key}
+                numColumns={1}
+                backgroundColor="lightgrey"
+                refreshing={isRefreshing}
+                contentContainerStyle={{ paddingBottom: "2%" }}
+                ListEmptyComponent={
+                  <View
+                    style={{
+                      alignItems: "center",
+                    }}
+                  >
+                    <Image
+                      source={require("../../assets/atardecer.png")}
+                      style={{
+                        borderRadius: 10,
+                        width: "80%",
+                        height: 150,
+                        marginTop: "15%",
+                        resizeMode: "contain",
+                      }}
+                    />
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        color: "white",
+                        fontSize: 25,
+                        marginTop: "8%",
+                        marginEnd: "4%",
+                      }}
+                    >
+                      No tienes pendientes
+                    </Text>
+                  </View>
+                }
+              />
+            </SafeAreaView>
+          </>
+        )}
       </View>
 
       {/* FAB BUTTONS */}
       {/* BOTON + */}
-      <TouchableOpacity
-        style={styles.fabButton2}
-        onPress={() => {
-          setShowAgregarPendienteModal(!showAgregarPendienteModal);
-        }}
-      >
-        <Image source={require("../../assets/icons/plus.png")} />
-      </TouchableOpacity>
-      {/* BOTON < */}
-      <TouchableOpacity
-        style={styles.fabButton}
-        onPress={() => {
-          volverAHome();
-        }}
-      >
-        <Image
-          style={{ height: 18, width: 18 }}
-          source={require("../../assets/icons/flechaIzquierdaWhite.png")}
-        />
-      </TouchableOpacity>
-
-      {/* Modal DetallePendiente */}
-      <DetallePendienteModal
-        showDetallePendienteModal={showDetallePendienteModal}
-        setShowDetallePendienteModal={setShowDetallePendienteModal}
-        detallePendiente={detallePendiente}
-        setDetallePendiente={setDetallePendiente}
-        flatListItems={flatListItems}
-        setFlatListItems={setFlatListItems}
-      />
+      {showDetallePendiente ? (
+        <>
+          <TouchableOpacity
+            style={styles.fabButton}
+            onPress={() => {
+              setShowDetallePendiente(false);
+            }}
+          >
+            <Image
+              style={{ height: 18, width: 18 }}
+              source={require("../../assets/icons/flechaIzquierdaWhite.png")}
+            />
+          </TouchableOpacity>
+        </>
+      ) : (
+        <>
+          <TouchableOpacity
+            style={styles.fabButton2}
+            onPress={() => {
+              setShowAgregarPendienteModal(!showAgregarPendienteModal);
+            }}
+          >
+            <Image source={require("../../assets/icons/plus.png")} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.fabButton}
+            onPress={() => {
+              volverAHome();
+            }}
+          >
+            <Image
+              style={{ height: 18, width: 18 }}
+              source={require("../../assets/icons/flechaIzquierdaWhite.png")}
+            />
+          </TouchableOpacity>
+        </>
+      )}
 
       <AgregarPendienteModal
         showAgregarPendienteModal={showAgregarPendienteModal}
