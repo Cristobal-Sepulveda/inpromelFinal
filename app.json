@@ -38,10 +38,10 @@
         "com.android.launcher.permission.INSTALL_SHORTCUT",
         "com.htc.launcher.permission.UPDATE_SHORTCUT"
       ],
-      "adaptativeIcon":{
+      "adaptiveIcon":{
         "foregroundImage": "./assets/icon.png",
-        "backgroundColor": "white"
-      },
+        "backgroundColor": "#ffffff"
+      }
 
     },
     "web": {
