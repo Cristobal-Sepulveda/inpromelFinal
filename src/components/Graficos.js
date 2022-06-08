@@ -18,6 +18,7 @@ const Graficos = ({ selectPendientes }) => {
   const [yNumber, setYNumber] = useState(0);
   const data = [50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80];
   const contentInset = { top: 10, bottom: 10 };
+  const [listaVacia, setListaVacia] = useState();
 
   const obtenerPendientes = async () => {
     const aux = await select_pendientes();
@@ -25,6 +26,10 @@ const Graficos = ({ selectPendientes }) => {
     let planificada = 0;
     let noUrgente = 0;
     const pendientes = aux.rows._array;
+    if (pendientes.length === 0) {
+      setListaVacia(true);
+      return;
+    }
     for (let i = 0; i < pendientes.length; i++) {
       console.log(pendientes[i]);
       if (pendientes[i].topico === "Urgente") {
@@ -62,11 +67,13 @@ const Graficos = ({ selectPendientes }) => {
     if (noUrgente >= urgente && noUrgente >= planificada) {
       setYNumber(noUrgente);
     }
+    setListaVacia(false);
   };
 
   useEffect(() => {
     obtenerPendientes();
   }, []);
+
   return (
     <>
       {/* Cabecera */}
@@ -108,50 +115,82 @@ const Graficos = ({ selectPendientes }) => {
           <Text style={{ textAlign: "center", fontSize: 20, marginTop: "5%" }}>
             Pendientes
           </Text>
-          <View
-            style={{
-              height: 200,
-              padding: 20,
-              flexDirection: "row",
-              width: "100%",
-            }}
-          >
-            <YAxis
-              data={pendientesList}
-              contentInset={contentInset}
-              svg={{
-                fill: "grey",
-                fontSize: 10,
+          {listaVacia ? (
+            <View
+              style={{
+                alignItems: "center",
+                height: 200,
               }}
-              numberOfTicks={yNumber}
-              min={0}
-              formatLabel={(value) => `${value}`}
-            />
-            <BarChart
-              style={{ flex: 1 }}
-              data={pendientesList}
-              svg={{ fontSize: 5, fill: "#4285f4" }}
-              contentInset={contentInset}
-              spacingInner={0.7}
-              spacingOuter={0.5}
-              gridMin={0}
             >
-              <Grid />
-            </BarChart>
-          </View>
-          <View
-            style={{
-              paddingHorizontal: 20,
-              marginTop: "-5%",
-              width: "100%",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={{ marginStart: "14.9%" }}>Urgente</Text>
-            <Text style={{ marginStart: "4.4%" }}>Planificado</Text>
-            <Text style={{ marginEnd: "8%" }}>No Urgente</Text>
-          </View>
+              <Image
+                source={require("../../assets/atardecer.png")}
+                style={{
+                  borderRadius: 10,
+                  width: "70%",
+                  height: 150,
+                  resizeMode: "contain",
+                  marginTop: "2%",
+                }}
+              />
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontSize: 25,
+                  marginEnd: "4%",
+                  marginTop: "4%",
+                }}
+              >
+                No tienes pendientes
+              </Text>
+            </View>
+          ) : (
+            <>
+              <View
+                style={{
+                  height: 200,
+                  padding: 20,
+                  flexDirection: "row",
+                  width: "100%",
+                }}
+              >
+                <YAxis
+                  data={pendientesList}
+                  contentInset={contentInset}
+                  svg={{
+                    fill: "grey",
+                    fontSize: 10,
+                  }}
+                  numberOfTicks={yNumber}
+                  min={0}
+                  formatLabel={(value) => `${value}`}
+                />
+                <BarChart
+                  style={{ flex: 1 }}
+                  data={pendientesList}
+                  svg={{ fontSize: 5, fill: "#4285f4" }}
+                  contentInset={contentInset}
+                  spacingInner={0.7}
+                  spacingOuter={0.5}
+                  gridMin={0}
+                >
+                  <Grid />
+                </BarChart>
+              </View>
+              <View
+                style={{
+                  paddingHorizontal: 20,
+                  marginTop: "-5%",
+                  width: "100%",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={{ marginStart: "14.9%" }}>Urgente</Text>
+                <Text style={{ marginStart: "4.4%" }}>Planificado</Text>
+                <Text style={{ marginEnd: "8%" }}>No Urgente</Text>
+              </View>
+            </>
+          )}
         </>
       ) : (
         <>

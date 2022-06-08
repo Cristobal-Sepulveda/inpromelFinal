@@ -20,6 +20,7 @@ const AgregarPendienteModal = ({
   insertPendiente,
   showAgregarPendienteModal,
   setShowAgregarPendienteModal,
+  syncFlatList,
 }) => {
   const [titulo, setTitulo] = useState("");
   const [date, setDate] = useState([new Date(), 0]);
@@ -55,11 +56,17 @@ const AgregarPendienteModal = ({
   const guardarEnReduxYDB = async () => {
     insert_pendiente({
       titulo: titulo,
-      fecha: date[0].toString().slice(4, 15),
+      fecha: date[0].toLocaleDateString(),
       topico: topicoChecked,
       tarea: descripcion,
     });
-    insertPendiente(titulo, date[0], topicoChecked, descripcion);
+    // insertPendiente(
+    //   titulo,
+    //   date[0].toLocaleDateString(),
+    //   topicoChecked,
+    //   descripcion
+    // );
+    syncFlatList();
   };
 
   const limpiandoModal = () => {
@@ -71,9 +78,6 @@ const AgregarPendienteModal = ({
 
   const guardarPendiente = async () => {
     // Primera condicionante de salida
-    console.log(titulo);
-    console.log(topicoChecked);
-    console.log(descripcion);
     if (
       titulo === "" ||
       topicoChecked === "" ||

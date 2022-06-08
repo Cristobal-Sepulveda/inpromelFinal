@@ -25,7 +25,7 @@ import { delete_pendiente } from "../model/pendientes";
 
 const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
   const [flatListItems, setFlatListItems] = useState([]);
-  const [isRefreshing, setIsRefreshing] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [detallePendiente, setDetallePendiente] = useState([]);
   const [showAgregarPendienteModal, setShowAgregarPendienteModal] =
     useState(false);
@@ -43,13 +43,11 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
     }
     return auxArray;
   });
-
   useEffect(() => {
     if (
       pendientesList.length &&
       !flatListItems.includes(pendientesList[pendientesList.length - 1])
     ) {
-      console.log("entre");
       if (
         flatListItems.length === 0 &&
         pendientesList.length > 0 &&
@@ -68,11 +66,12 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
   }, [pendientesList]);
 
   useEffect(() => {
-    setFlatListItems([]);
     cargarPendientesDesdeDB();
   }, []);
 
   const cargarPendientesDesdeDB = async () => {
+    setFlatListItems([]);
+    console.log(flatListItems);
     const aux = await select_pendientes();
     const pendientes = aux.rows._array;
     for (let i = 0; i < pendientes.length; i++) {
@@ -84,7 +83,6 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
   };
 
   const onChange = (event, selectedDate) => {
-    console.log(selectedDate);
     setShow(false);
     const currentDate = selectedDate;
     setDate(currentDate);
@@ -105,7 +103,6 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
     setShowDetallePendiente(!showDetallePendiente);
     const pendientes = await select_pendientes();
     const aux = pendientes.rows._array;
-    console.log(aux);
     for (let i = 0; i < aux.length; i++) {
       setFlatListItems((prevData) => [...prevData, JSON.stringify(aux[i])]);
     }
@@ -160,26 +157,10 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
 
   //funcion iniciada al hacer sync en la flatList...
   const syncFlatList = async () => {
-    console.log("syncFlatList");
+    console.log("asd");
+    setIsRefreshing(true);
+    cargarPendientesDesdeDB();
     setIsRefreshing(false);
-    const userConexionType = await obtenerTipoConexion();
-    if (userConexionType.tipoConexion == "wifi") {
-      return Alert.alert("lista sincronizada");
-    }
-    if (userConexionType.tipoConexion == "cellular") {
-      if (userConexionType.connectionDetails == "4g") {
-        return Alert.alert("lista sincronizada");
-      } else {
-        return Alert.alert(
-          "Tu conexion de celular debe ser 4g",
-          "para poder sincronizar el listado"
-        );
-      }
-    }
-    return Alert.alert(
-      "Debes tener conexion a internet para poder",
-      "sincronizar el listado"
-    );
   };
 
   const renderContentCategorias = () => {
@@ -290,11 +271,7 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
           </View>
           <View style={{ flexDirection: "row" }}>
             <Text>Fecha: </Text>
-            {JSON.stringify(aux.fecha).slice(1, 12)[10] === "T" ? (
-              <Text>{JSON.stringify(aux.fecha).slice(1, 11)}</Text>
-            ) : (
-              <Text>{JSON.stringify(aux.fecha).slice(1, 12)}</Text>
-            )}
+            <Text>{new Date(aux.fecha).toLocaleDateString()}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -511,7 +488,9 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
                 numColumns={1}
                 backgroundColor="lightgrey"
                 refreshing={isRefreshing}
+                onRefresh={syncFlatList}
                 contentContainerStyle={{ paddingBottom: "2%" }}
+                ListHeaderComponent={<View />}
                 ListEmptyComponent={
                   <View
                     style={{
@@ -522,7 +501,7 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
                       source={require("../../assets/atardecer.png")}
                       style={{
                         borderRadius: 10,
-                        width: "80%",
+                        width: "60%",
                         height: 150,
                         marginTop: "15%",
                         resizeMode: "contain",
@@ -531,7 +510,7 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
                     <Text
                       style={{
                         textAlign: "center",
-                        color: "white",
+                        color: "black",
                         fontSize: 25,
                         marginTop: "8%",
                         marginEnd: "4%",
@@ -591,6 +570,7 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
         showAgregarPendienteModal={showAgregarPendienteModal}
         setShowAgregarPendienteModal={setShowAgregarPendienteModal}
         setFlatListItems={setFlatListItems}
+        syncFlatList={syncFlatList}
       />
 
       {/* BottomSheet Por Categorias */}

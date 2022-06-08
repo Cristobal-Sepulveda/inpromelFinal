@@ -7,7 +7,6 @@ import {
   Keyboard,
   Image,
   StyleSheet,
-  Dimensions,
   Alert,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -76,38 +75,38 @@ const Login = ({ redux, insertSession, wipeRedux }) => {
         />
 
         <View style={styles.formulario}>
-          <Text style={styles.titulo}>Bienvenido a InpromelApp</Text>
-          <TextInput
-            style={{ ...styles.inputs, marginTop: 30 }}
-            placeholder="Mail"
-            placeholderTextColor="#ffffff"
-            value={mail}
-            onChangeText={(text) => setMail(text)}
-          />
-
-          <TextInput
-            style={styles.inputs}
-            placeholder="Contraseña"
-            placeholderTextColor="#ffffff"
-            value={contraseña}
-            onChangeText={(text) => setContraseña(text)}
-            secureTextEntry={true}
-          />
-
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginTop: "6%",
-              width: "100%",
-              marginStart: "auto",
-              marginEnd: "auto",
-            }}
-          >
-            <TouchableOpacity style={styles.buttons} onPress={() => login()}>
-              <Text style={styles.buttonsText}>Iniciar sesión</Text>
-            </TouchableOpacity>
+          <View style={{ ...styles.inputs, marginBottom: 14 }}>
+            <Image
+              style={styles.searchIcon}
+              source={require("../../assets/icons/perfil_black.png")}
+            />
+            <TextInput
+              style={{ flex: 1 }}
+              placeholder="Mail"
+              placeholderTextColor="grey"
+              value={mail}
+              onChangeText={(text) => setMail(text)}
+            />
           </View>
+
+          <View style={styles.inputs}>
+            <Image
+              style={styles.searchIcon}
+              source={require("../../assets/icons/candado.png")}
+            />
+            <TextInput
+              style={{ flex: 1 }}
+              placeholder="***********"
+              placeholderTextColor="grey"
+              value={contraseña}
+              onChangeText={(text) => setContraseña(text)}
+              secureTextEntry={true}
+            />
+          </View>
+
+          <TouchableOpacity style={styles.button} onPress={() => login()}>
+            <Text style={styles.buttonsText}>Iniciar sesión</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -119,18 +118,7 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
   },
-  buttons: {
-    backgroundColor: "#4285f4",
-    height: 48,
-    width: "100%",
-    borderRadius: 5,
-  },
-  buttonsText: {
-    color: "white",
-    textAlign: "center",
-    fontSize: 16,
-    marginTop: 12,
-  },
+
   fondoDeLogin: {
     flex: 0,
     width: "100%",
@@ -144,27 +132,38 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     top: "13%",
   },
-  titulo: {
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 30,
-    color: "white",
-  },
   formulario: {
     padding: 10,
     position: "absolute",
-    top: "29%",
+    top: "39%",
     width: "80%",
     alignSelf: "center",
     position: "absolute",
   },
+  searchIcon: {
+    padding: 10,
+    margin: 5,
+  },
   inputs: {
-    borderColor: "#f0f0f0",
-    borderWidth: 2,
+    backgroundColor: "#f0f0f0",
     padding: 10,
     marginTop: 10,
     color: "#ffffff",
     borderRadius: 5,
+    flexDirection: "row",
+  },
+  button: {
+    backgroundColor: "#4285f4",
+    height: 48,
+    width: "100%",
+    borderRadius: 5,
+    marginTop: 16,
+  },
+  buttonsText: {
+    color: "white",
+    textAlign: "center",
+    fontSize: 16,
+    marginTop: 12,
   },
 });
 

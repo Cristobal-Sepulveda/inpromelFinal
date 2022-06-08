@@ -13,13 +13,12 @@ import CustomRadioBox from "./CustomRadioBox";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 const DetallePendiente = ({
-  showDetallePendiente,
   setShowDetallePendiente,
   detallePendiente,
+  flatListItems,
   setFlatListItems,
 }) => {
   const [tituloAGuardar, setTituloAGuardar] = useState("");
-  const [fechaAGuardar, setFechaAGuardar] = useState("");
   const [topicoAGuardar, setTopicoAGuardar] = useState("");
   const [tareaAGuardar, setTareaAGuardar] = useState("");
   const [mode, setMode] = useState("date");
@@ -29,7 +28,11 @@ const DetallePendiente = ({
 
   useEffect(() => {
     setTopicoAGuardar(detallePendiente.topico);
+    setTareaAGuardar(detallePendiente.tarea);
+    setTituloAGuardar(detallePendiente.titulo);
+    setDate(new Date(detallePendiente.fecha));
   }, []);
+
   const onChange = (event, selectedDate) => {
     console.log(selectedDate);
     setShow(false);
@@ -49,15 +52,12 @@ const DetallePendiente = ({
   const editarPendiente = async () => {
     const aux = detallePendiente;
     setFlatListItems([]);
-    aux.tarea = tareaAGuardar;
-    console.log(aux);
-    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     try {
       await editar_pendiente(
-        aux.titulo,
-        aux.fecha,
-        aux.topico,
-        aux.tarea,
+        tituloAGuardar,
+        date.toString().slice(0, 15),
+        topicoAGuardar,
+        tareaAGuardar,
         aux.id_pendiente
       );
     } catch (e) {
@@ -67,23 +67,36 @@ const DetallePendiente = ({
 
     const pendientes = await select_pendientes();
     const aux2 = pendientes.rows._array;
-    console.log(aux2);
+    console.log(flatListItems);
     for (let i = 0; i < aux2.length; i++) {
       setFlatListItems((prevData) => [...prevData, JSON.stringify(aux2[i])]);
     }
-    setShowDetallePendiente(!showDetallePendiente);
+    setShowDetallePendiente(false);
   };
 
   const alertaEditar = () => {
-    Alert.alert("Aviso", "¿Estas seguro que quieres editar este pendiente?", [
-      { text: "Cancelar", onPress: () => {} },
-      {
-        text: "Confirmar",
-        onPress: () => {
-          editarPendiente();
+    console.log(tituloAGuardar, detallePendiente.titulo);
+    console.log(tareaAGuardar, detallePendiente.tarea);
+    console.log(topicoAGuardar, detallePendiente.topico);
+    console.log(date.toLocaleDateString(), detallePendiente.fecha);
+    if (
+      tituloAGuardar === detallePendiente.titulo &&
+      tareaAGuardar === detallePendiente.tarea &&
+      topicoAGuardar === detallePendiente.topico &&
+      date.toLocaleDateString() === detallePendiente.fecha
+    ) {
+      Alert.alert("Aviso", "No hay cambios para guardar.");
+    } else {
+      Alert.alert("Aviso", "¿Estas seguro que quieres editar este pendiente?", [
+        { text: "Cancelar", onPress: () => {} },
+        {
+          text: "Confirmar",
+          onPress: () => {
+            editarPendiente();
+          },
         },
-      },
-    ]);
+      ]);
+    }
   };
 
   return (
@@ -169,7 +182,7 @@ const DetallePendiente = ({
                   paddingHorizontal: 10,
                 }}
               >
-                {JSON.stringify(date).slice(1, 11)}
+                {date.toLocaleDateString()}
               </Text>
             ) : (
               <Text
@@ -217,6 +230,18 @@ const styles = StyleSheet.create({
     backgroundColor: "lightgrey",
     borderRadius: 10,
     marginTop: "2.7%",
+  },
+  fabButton: {
+    flex: 1,
+    position: "absolute",
+    width: 50,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    right: 10,
+    bottom: 74.5,
+    backgroundColor: "#4285f4",
+    borderRadius: 50,
   },
   body: {
     height: "50%",
