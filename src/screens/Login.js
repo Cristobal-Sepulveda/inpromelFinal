@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   },
   buttons: {
     backgroundColor: "#4285f4",
-    height: 40,
+    height: 48,
     width: "100%",
     borderRadius: 5,
   },
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
     fontSize: 16,
-    marginTop: 9,
+    marginTop: 12,
   },
   fondoDeLogin: {
     flex: 0,
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   inputs: {
-    borderColor: "#ffffff",
+    borderColor: "#f0f0f0",
     borderWidth: 2,
     padding: 10,
     marginTop: 10,

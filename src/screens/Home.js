@@ -1,15 +1,5 @@
 import React, { useState, createRef } from "react";
-import {
-  View,
-  Button,
-  Text,
-  StyleSheet,
-  FlatList,
-  SafeAreaView,
-  TouchableOpacity,
-  Image,
-  Alert,
-} from "react-native";
+import { View, StyleSheet, TouchableOpacity, Image, Alert } from "react-native";
 import BottomBar from "../components/BottomBar";
 import { connect } from "react-redux";
 import Perfil from "./Perfil";

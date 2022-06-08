@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import BottomSheet from "reanimated-bottom-sheet";
 import { clear } from "react-native/Libraries/LogBox/Data/LogBoxData";
 import Tareas from "../screens/Tareas";
+import { isSoftMenuBarEnabled } from "react-native-extra-dimensions-android";
 
 const BottomBar = ({
   showPerfilModal,
@@ -19,7 +20,6 @@ const BottomBar = ({
   const [isFocusedTareas, setIsFocusedTareas] = useState(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(true);
   const [isBottomSheetFullOpen, setIsBottomSheetFullOpen] = useState(false);
-
   const bottomBarOptions = ["Home", "Otros", "Perfil"];
   const tareas = React.useRef(null);
 
@@ -55,7 +55,6 @@ const BottomBar = ({
             const BottomBarItem = ({ image, text, onPress }) => {
               return (
                 <TouchableOpacity
-                  key={index}
                   style={{
                     alignItems: "center",
                     borderRadius: 10,
@@ -119,18 +118,20 @@ const BottomBar = ({
             };
 
             return (
-              <>
-                <View key={index}>
-                  <BottomBarItem
-                    image={imageSource()}
-                    text={route}
-                    onPress={onPress}
-                  />
-                  <Text style={{ fontSize: 12, textAlign: "center" }}>
-                    {route}
-                  </Text>
-                </View>
-              </>
+              <View key={index}>
+                <BottomBarItem
+                  key={index++}
+                  image={imageSource()}
+                  text={route}
+                  onPress={onPress}
+                />
+                <Text
+                  key={index++}
+                  style={{ fontSize: 12, textAlign: "center" }}
+                >
+                  {route}
+                </Text>
+              </View>
             );
           })}
         </View>

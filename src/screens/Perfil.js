@@ -13,19 +13,11 @@ import { AuthContext } from "../context/context";
 import NetInfo from "@react-native-community/netinfo";
 import { connect } from "react-redux";
 import { select_session } from "../model";
-import { Touchable } from "react-native-web";
 
 const Perfil = ({ showPerfilModal, setShowPerfilModal, setIsFocusedHome }) => {
   const { signOut } = useContext(AuthContext);
   const [name, setName] = useState("");
   const [online, setOnline] = useState(true);
-  const deviceWidth = Dimensions.get("window").width;
-  const deviceHeight =
-    Platform.OS === "ios"
-      ? Dimensions.get("window").height
-      : require("react-native-extra-dimensions-android").get(
-          "REAL_WINDOW_HEIGHT"
-        );
 
   const userIsOnline = () => {
     NetInfo.addEventListener((state) => {
@@ -70,8 +62,6 @@ const Perfil = ({ showPerfilModal, setShowPerfilModal, setIsFocusedHome }) => {
     <Modal
       hasBackdrop={true}
       isVisible={showPerfilModal}
-      deviceWidth={deviceWidth}
-      deviceHeight={deviceHeight}
       animationIn={"fadeIn"}
       animationOut={"fadeOut"}
       backdropTransitionOutTiming={0}

@@ -34,7 +34,6 @@ const RootNavigation = () => {
 
   //Funcion utilizada para ver si el usuario pasa a la screen Welcome o Login
   const existeUsuarioLogeado = async () => {
-    await delay(2000);
     const usuario = await select_session();
     if (usuario.rows._array.length !== 0) {
       setSplashScreen(false);
