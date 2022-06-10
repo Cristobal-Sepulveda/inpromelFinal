@@ -1,6 +1,6 @@
 {
   "name": "inpromelfinal",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android",
