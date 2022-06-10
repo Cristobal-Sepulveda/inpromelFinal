@@ -49,6 +49,7 @@ const Perfil = ({ showPerfilModal, setShowPerfilModal, setIsFocusedHome }) => {
       },
     ]);
   };
+
   const obtenerUsuario = async () => {
     const aux = await select_session();
     setName(aux.rows._array[0].name);
@@ -86,7 +87,11 @@ const Perfil = ({ showPerfilModal, setShowPerfilModal, setIsFocusedHome }) => {
             style={styles.imagenHeader}
             source={require("../../assets/LogoInpromel.png")}
           />
-          <TouchableOpacity onPress={cerrarSesion}>
+          <TouchableOpacity
+            onPress={() => {
+              cerrarSesion();
+            }}
+          >
             <Image
               style={styles.cerrarSesion}
               source={require("../../assets/icons/cerrar_sesion.png")}
@@ -175,6 +180,7 @@ const Perfil = ({ showPerfilModal, setShowPerfilModal, setIsFocusedHome }) => {
               marginHorizontal: "5%",
             }}
           />
+
           <TouchableOpacity
             onPress={() => {
               Alert.alert(

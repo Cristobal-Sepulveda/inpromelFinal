@@ -71,7 +71,6 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
 
   const cargarPendientesDesdeDB = async () => {
     setFlatListItems([]);
-    console.log(flatListItems);
     const aux = await select_pendientes();
     const pendientes = aux.rows._array;
     for (let i = 0; i < pendientes.length; i++) {
@@ -157,7 +156,6 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
 
   //funcion iniciada al hacer sync en la flatList...
   const syncFlatList = async () => {
-    console.log("asd");
     setIsRefreshing(true);
     cargarPendientesDesdeDB();
     setIsRefreshing(false);
