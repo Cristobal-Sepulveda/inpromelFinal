@@ -1,6 +1,6 @@
 {
   "name": "inpromelfinal",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android",
@@ -29,6 +29,7 @@
     "expo-status-bar": "~1.1.0",
     "expo-updates": "~0.10.13",
     "firebase": "9.6.11",
+    "firebase-tools": "^11.0.1",
     "global": "^4.4.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",

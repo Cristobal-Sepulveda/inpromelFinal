@@ -81,7 +81,7 @@ const Login = ({ redux, insertSession, wipeRedux }) => {
               source={require("../../assets/icons/perfil_black.png")}
             />
             <TextInput
-              style={{ flex: 1 }}
+              style={{ flex: 1, height: 48 }}
               placeholder="Mail"
               placeholderTextColor="grey"
               value={mail}
@@ -95,7 +95,7 @@ const Login = ({ redux, insertSession, wipeRedux }) => {
               source={require("../../assets/icons/candado.png")}
             />
             <TextInput
-              style={{ flex: 1 }}
+              style={{ flex: 1, height: 48 }}
               placeholder="***********"
               placeholderTextColor="grey"
               value={contraseña}
