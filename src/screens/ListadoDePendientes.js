@@ -176,6 +176,7 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
         {/* Body Content */}
 
         {/* RADIOBUTTONS */}
+
         <View style={{ marginStart: "5%", marginTop: "5%" }}>
           {/* RADIO_BUTTON URGENTE */}
           <View style={{ flexDirection: "row" }}>
@@ -578,6 +579,7 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
         snapPoints={[0, "32%"]}
         borderRadius={10}
         renderContent={renderContentCategorias}
+        enabledContentTapInteraction={false}
       />
     </>
   );

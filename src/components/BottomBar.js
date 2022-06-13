@@ -143,6 +143,7 @@ const BottomBar = ({
           initialSnap={2}
           snapPoints={[250, "70%", 0]}
           borderRadius={10}
+          enabledContentTapInteraction={false}
           renderContent={renderContentTareas}
           onOpenStart={() => {
             setIsBottomSheetOpen(true);
