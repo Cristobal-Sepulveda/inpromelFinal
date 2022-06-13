@@ -127,7 +127,11 @@ const BottomBar = ({
                 />
                 <Text
                   key={index++}
-                  style={{ fontSize: 12, textAlign: "center" }}
+                  style={{
+                    fontSize: 12,
+                    textAlign: "center",
+                    paddingBottom: 10,
+                  }}
                 >
                   {route}
                 </Text>
@@ -136,7 +140,7 @@ const BottomBar = ({
           })}
         </View>
 
-        {/* AQUI SE DIBUJA EL BOTTOMSHEET: TAREAS*/}
+        {/* AQUI SE DIBUJA EL BOTTOMSHEET: TAREAS */}
         <BottomSheet
           ref={tareas}
           callbackThreshold={0.1}

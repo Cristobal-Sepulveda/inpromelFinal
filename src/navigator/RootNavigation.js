@@ -17,7 +17,7 @@ const Stack = createStackNavigator();
 
 const RootNavigation = () => {
   const [usuarioLogeado, setUsuarioLogeado] = useState(false);
-  const [splashScreen, setSplashScreen] = useState(false);
+  const [splashScreen, setSplashScreen] = useState(true);
   const ref = useRef(null);
 
   const authContext = useMemo(

@@ -212,6 +212,8 @@ const DetallePendiente = ({
           onChange={onChange}
         />
       )}
+
+      {/* FAB BUTTON */}
       <TouchableOpacity
         style={styles.fabButton2}
         onPress={() => {
@@ -226,22 +228,10 @@ const DetallePendiente = ({
 
 const styles = StyleSheet.create({
   container: {
-    height: "81.3%",
+    height: "80.8%",
     backgroundColor: "lightgrey",
     borderRadius: 10,
     marginTop: "2.7%",
-  },
-  fabButton: {
-    flex: 1,
-    position: "absolute",
-    width: 50,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    right: 10,
-    bottom: 74.5,
-    backgroundColor: "#4285f4",
-    borderRadius: 50,
   },
   body: {
     height: "50%",
@@ -262,8 +252,8 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    right: 10,
-    bottom: 108.5,
+    right: 10.5,
+    bottom: 88.5,
     backgroundColor: "#4285f4",
     borderRadius: 50,
   },

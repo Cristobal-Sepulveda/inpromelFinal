@@ -1,16 +1,27 @@
-import React from "react";
+import CheckBoxWithRef from "@react-native-community/checkbox/dist/CheckBox.android";
+import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import SwitchSelector from "react-native-switch-selector";
 //configuracion switch de biosense
 
 const SwitchGraficos = ({ setGraficoEnBarra, graficoEnBarra }) => {
+  const [graficoEnPantalla, setGraficoEnPantalla] = useState(true);
+
+  const checkeandoClick = (value) => {
+    console.log(value);
+    if (value !== graficoEnPantalla) {
+      setGraficoEnPantalla(value);
+      setGraficoEnBarra(!graficoEnBarra);
+    }
+  };
+
   return (
     <View style={styles.switch}>
       <SwitchSelector
         initial={0}
         // onPress={() => setGraficoEnBarra(!graficoEnBarra)}
-        onPress={() => {
-          console.log("hola");
+        onPress={(value) => {
+          checkeandoClick(value);
         }}
         borderRadius={10}
         height={32}

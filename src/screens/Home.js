@@ -127,10 +127,7 @@ const styles = StyleSheet.create({
   },
 
   body: {
-    height: "92%",
-  },
-  bottomBar: {
-    height: "8%",
+    height: "92.2%",
   },
   centeredView: {
     flex: 1,

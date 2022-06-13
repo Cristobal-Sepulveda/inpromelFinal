@@ -12,7 +12,11 @@ const SplashScreen = () => {
     crearTablas();
   }, []);
 
-  return <View style={styles.container}></View>;
+  return (
+    <View style={styles.container}>
+      <Image source={require("../../assets/gradient.png")} />
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
