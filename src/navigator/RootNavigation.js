@@ -45,8 +45,10 @@ const RootNavigation = () => {
     const usuario = await select_session();
     if (usuario.rows._array.length !== 0) {
       setUsuarioLogeado(true);
+      setSplashScreen(false);
       return;
     } else {
+      setSplashScreen(false);
       return;
     }
   };
