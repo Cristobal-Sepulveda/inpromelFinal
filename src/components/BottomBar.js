@@ -165,13 +165,12 @@ const BottomBar = ({
 };
 
 const styles = StyleSheet.create({
-  activity: { paddingVertical: 80 },
   bottombar: {
     backgroundColor: "#f6f6f6",
     flexDirection: "row",
     justifyContent: "space-around",
     width: "100%",
-    zIndex: 1000,
+    zIndex: 2000000,
   },
   snackBar: {
     bottom: 80,

@@ -8,7 +8,10 @@ const SwitchGraficos = ({ setGraficoEnBarra, graficoEnBarra }) => {
     <View style={styles.switch}>
       <SwitchSelector
         initial={0}
-        onPress={() => setGraficoEnBarra(!graficoEnBarra)}
+        // onPress={() => setGraficoEnBarra(!graficoEnBarra)}
+        onPress={() => {
+          console.log("hola");
+        }}
         borderRadius={10}
         height={32}
         fontSize={12}

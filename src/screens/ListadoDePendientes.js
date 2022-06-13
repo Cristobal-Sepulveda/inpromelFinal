@@ -30,7 +30,7 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
   const [showAgregarPendienteModal, setShowAgregarPendienteModal] =
     useState(false);
   const [showDetallePendiente, setShowDetallePendiente] = useState(false);
-  const [topicoChecked, setTopicoChecked] = useState();
+  const [topicoChecked, setTopicoChecked] = useState("");
   const categorias = useRef(null);
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
@@ -43,6 +43,7 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
     }
     return auxArray;
   });
+
   useEffect(() => {
     if (
       pendientesList.length &&
@@ -128,11 +129,13 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
       setFlatListItems((prevData) => [...prevData, JSON.stringify(aux[i])]);
     }
   };
+
   const eliminarPendientes = async () => {
     setFlatListItems([]);
     deletePendientes();
     await drop_pendientes();
   };
+
   const porCategorias = async (categoria) => {
     const aux = await select_pendientes();
     const pendientes = aux.rows._array;
@@ -172,58 +175,54 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
         </Text>
         {/* Body Content */}
 
-        <View style={{ marginStart: "5%", marginTop: "10%" }}>
-          <View style={{ flexDirection: "row", alignContent: "center" }}>
+        {/* RADIOBUTTONS */}
+        <View style={{ marginStart: "5%", marginTop: "5%" }}>
+          {/* RADIO_BUTTON URGENTE */}
+          <View style={{ flexDirection: "row" }}>
             <RadioButton
               value={"Urgente"}
               status={topicoChecked === "Urgente" ? "checked" : "unchecked"}
               onPress={() => {
                 setTopicoChecked("Urgente");
+                porCategorias(topicoChecked);
               }}
               color="#4285f4"
             />
             <Text style={styles.textLabel}>{"Urgente"}</Text>
           </View>
-          <View style={{ flexDirection: "row", alignContent: "center" }}>
+          {/* RADIO_BUTTON PLANIFICADA */}
+          <View
+            style={{
+              flexDirection: "row",
+              alignContent: "center",
+              marginVertical: "2%",
+            }}
+          >
             <RadioButton
               value={"Planificada"}
               status={topicoChecked === "Planificada" ? "checked" : "unchecked"}
               onPress={() => {
                 setTopicoChecked("Planificada");
+                porCategorias(topicoChecked);
               }}
               color="#4285f4"
             />
             <Text style={styles.textLabel}>{"Planificada"}</Text>
           </View>
+          {/* RADIO_BUTTON NO URGENTE */}
           <View style={{ flexDirection: "row", alignContent: "center" }}>
             <RadioButton
               value={"No Urgente"}
               status={topicoChecked === "No Urgente" ? "checked" : "unchecked"}
               onPress={() => {
                 setTopicoChecked("No Urgente");
+                porCategorias(topicoChecked);
               }}
               color="#4285f4"
             />
             <Text style={styles.textLabel}>{"No Urgente"}</Text>
           </View>
         </View>
-        {/* FootBar */}
-        <TouchableOpacity
-          style={{
-            backgroundColor: "#4285f4",
-            width: "20%",
-            height: 40,
-            alignSelf: "center",
-            marginTop: "6%",
-          }}
-          onPress={() => {
-            porCategorias(topicoChecked);
-          }}
-        >
-          <Text style={{ color: "white", marginTop: 10, textAlign: "center" }}>
-            Filtrar
-          </Text>
-        </TouchableOpacity>
       </View>
     );
   };
@@ -496,7 +495,7 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
                     }}
                   >
                     <Image
-                      source={require("../../assets/icons/eye.png")}
+                      source={require("../../assets/icons/playa.jpg")}
                       style={{
                         borderRadius: 10,
                         width: "60%",
@@ -576,7 +575,7 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
         ref={categorias}
         callbackThreshold={0.1}
         initialSnap={0}
-        snapPoints={[0, "40%"]}
+        snapPoints={[0, "32%"]}
         borderRadius={10}
         renderContent={renderContentCategorias}
       />

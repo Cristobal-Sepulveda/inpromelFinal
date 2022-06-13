@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { AuthContext } from "../context/context";
@@ -6,14 +6,19 @@ import SplashScreen from "../screens/SplashScreen";
 import Login from "../screens/Login";
 import Welcome from "../screens/Welcome";
 import Home from "../screens/Home";
-import { delay } from "../utils/funciones";
-import { select_session, drop_session } from "../model";
+import {
+  select_session,
+  drop_session,
+  create_pendientes_table,
+  create_session_table,
+} from "../model";
 
 const Stack = createStackNavigator();
 
 const RootNavigation = () => {
   const [usuarioLogeado, setUsuarioLogeado] = useState(false);
-  const [splashScreen, setSplashScreen] = useState(true);
+  const [splashScreen, setSplashScreen] = useState(false);
+  const ref = useRef(null);
 
   const authContext = useMemo(
     () => ({
@@ -23,9 +28,12 @@ const RootNavigation = () => {
 
       signOut: async () => {
         setUsuarioLogeado(false);
-        await drop_session();
         setSplashScreen(true);
-        await delay(2000);
+        try {
+          await drop_session();
+        } catch (e) {
+          console.log(e.message);
+        }
         setSplashScreen(false);
       },
     }),
@@ -36,16 +44,27 @@ const RootNavigation = () => {
   const existeUsuarioLogeado = async () => {
     const usuario = await select_session();
     if (usuario.rows._array.length !== 0) {
-      setSplashScreen(false);
       setUsuarioLogeado(true);
       return;
     } else {
-      setSplashScreen(false);
       return;
     }
   };
 
+  // Creador de las tablas a usar con el SQLite
+  const crearTablas = async () => {
+    try {
+      await create_session_table();
+      await create_pendientes_table();
+    } catch (e) {
+      console.log(e.message);
+    }
+
+    console.log("Aqui");
+  };
+
   useEffect(() => {
+    crearTablas();
     existeUsuarioLogeado();
   }, []);
 
@@ -59,7 +78,7 @@ const RootNavigation = () => {
             <Stack.Screen name="SplashScreen" component={SplashScreen} />
           </Stack.Navigator>
         ) : (
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Navigator screenOptions={{ headerShow: false }}>
             {usuarioLogeado ? (
               <>
                 <Stack.Screen name="Welcome" component={Welcome} />
@@ -68,7 +87,11 @@ const RootNavigation = () => {
             ) : (
               <>
                 <Stack.Screen name="Login" component={Login} />
-                <Stack.Screen name="Home" component={Home} />
+                <Stack.Screen
+                  name="Home"
+                  component={Home}
+                  options={{ headerShown: false }}
+                />
               </>
             )}
           </Stack.Navigator>

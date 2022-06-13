@@ -81,9 +81,9 @@ const Login = ({ redux, insertSession, wipeRedux }) => {
               source={require("../../assets/icons/perfil_black.png")}
             />
             <TextInput
-              style={{ flex: 1, height: 48 }}
+              style={{ flex: 1, height: 54 }}
               placeholder="Mail"
-              placeholderTextColor="grey"
+              placeholderTextColor="black"
               value={mail}
               onChangeText={(text) => setMail(text)}
             />
@@ -95,9 +95,9 @@ const Login = ({ redux, insertSession, wipeRedux }) => {
               source={require("../../assets/icons/candado.png")}
             />
             <TextInput
-              style={{ flex: 1, height: 48 }}
+              style={{ flex: 1, height: 54 }}
               placeholder="***********"
-              placeholderTextColor="grey"
+              placeholderTextColor="black"
               value={contraseña}
               onChangeText={(text) => setContraseña(text)}
               secureTextEntry={true}
@@ -142,11 +142,11 @@ const styles = StyleSheet.create({
   },
   searchIcon: {
     padding: 10,
-    margin: 5,
+    marginHorizontal: 10,
+    marginTop: 14,
   },
   inputs: {
     backgroundColor: "#f0f0f0",
-    padding: 10,
     marginTop: 10,
     color: "#ffffff",
     borderRadius: 5,

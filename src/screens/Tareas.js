@@ -147,9 +147,8 @@ const styles = StyleSheet.create({
     elevation: 2,
     backgroundColor: "#4285f4",
     width: "46%",
+    marginTop: "5%",
     alignSelf: "center",
-    position: "absolute",
-    top: "140%",
   },
   lineSheets: {
     borderTopColor: "#E5E5E5",

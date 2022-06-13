@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "InpromelApp",
-    "slug": "InpromelApp",
+    "name": "Inpromel",
+    "slug": "Inpromel",
     "version": "1.0.8",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splashScreen.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#DDDDE1"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -24,10 +24,10 @@
       "versionCode": 8,
       "config":{
         "googleMaps": {
-          "apiKey": "AIzaSyDro88s9bE5HuSqwS6y9ExX5xU1prpUYXA"
+          "apiKey": "AIzaSyDpJhF9-SwxJREUHkz4XVEMQKtpYjxEguo"
         }
       },
-      "package": "com.impromel.impromelApp",
+      "package": "com.impromel.impromel",
       "permissions": [
         "READ_PHONE_STATE",
         "READ_INTERNAL_STORAGE",
@@ -40,7 +40,7 @@
         "com.htc.launcher.permission.UPDATE_SHORTCUT"
       ],
       "adaptiveIcon":{
-        "foregroundImage": "./assets/iconAndroid.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
 

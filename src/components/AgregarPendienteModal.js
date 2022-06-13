@@ -209,7 +209,7 @@ const AgregarPendienteModal = ({
 
             {/* Topic Button */}
             <TouchableOpacity
-              style={{ marginStart: "-1.5%", marginTop: "0.6%" }}
+              style={{ marginStart: "1.5%", marginTop: "0.6%" }}
               onPress={() => {
                 setElegirTopico(true);
               }}
@@ -225,7 +225,7 @@ const AgregarPendienteModal = ({
               onPress={() => {
                 showDatepicker();
               }}
-              style={{ marginEnd: "60%", marginTop: "0.7%" }}
+              style={{ marginStart: "2%", marginEnd: "40%", marginTop: "0.7%" }}
             >
               <Image
                 style={{
@@ -239,6 +239,7 @@ const AgregarPendienteModal = ({
 
             {/* Guardar */}
             <TouchableOpacity
+              style={{ marginEnd: "10%", marginTop: "1.5%" }}
               onPress={() => {
                 guardarPendiente();
               }}
@@ -247,10 +248,6 @@ const AgregarPendienteModal = ({
                 style={{
                   color: "grey",
                   fontSize: 18,
-                  position: "absolute",
-                  // right: 100,
-                  right: 50,
-                  top: 3,
                 }}
               >
                 Guardar

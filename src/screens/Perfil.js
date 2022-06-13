@@ -215,9 +215,6 @@ const styles = StyleSheet.create({
   cerrarModal: {
     width: 24,
     height: 24,
-    position: "absolute",
-    top: 0,
-    left: 0,
     marginTop: 15,
     marginLeft: 15,
   },
@@ -229,9 +226,6 @@ const styles = StyleSheet.create({
   cerrarSesion: {
     width: 24,
     height: 24,
-    position: "absolute",
-    top: 0,
-    right: 0,
     marginTop: 15,
     marginRight: 15,
   },

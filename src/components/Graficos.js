@@ -123,7 +123,7 @@ const Graficos = ({ selectPendientes }) => {
               }}
             >
               <Image
-                source={require("../../assets/icons/eye.png")}
+                source={require("../../assets/icons/playa.jpg")}
                 style={{
                   borderRadius: 10,
                   width: "70%",
