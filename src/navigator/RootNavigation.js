@@ -78,7 +78,7 @@ const RootNavigation = () => {
             <Stack.Screen name="SplashScreen" component={SplashScreen} />
           </Stack.Navigator>
         ) : (
-          <Stack.Navigator screenOptions={{ headerShow: false }}>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
             {usuarioLogeado ? (
               <>
                 <Stack.Screen name="Welcome" component={Welcome} />
@@ -87,11 +87,7 @@ const RootNavigation = () => {
             ) : (
               <>
                 <Stack.Screen name="Login" component={Login} />
-                <Stack.Screen
-                  name="Home"
-                  component={Home}
-                  options={{ headerShown: false }}
-                />
+                <Stack.Screen name="Home" component={Home} />
               </>
             )}
           </Stack.Navigator>
