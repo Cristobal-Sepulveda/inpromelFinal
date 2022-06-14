@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "112495915435",
+    "project_id": "inpromelproduccion",
+    "storage_bucket": "inpromelproduccion.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:112495915435:android:29795560506fd53cc6e2ee",
+        "android_client_info": {
+          "package_name": "com.impromel.impromelApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "112495915435-68s9tg36uhac1fvqhf5c5tk8g7pcq91t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.impromel.impromelApp",
+            "certificate_hash": "d7fb74650a1eccc6f1289d11f644be9e7d257a77"
+          }
+        },
+        {
+          "client_id": "112495915435-159set9s2b50l45kscle7smar40mvurg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6_qLFXKLHKHiPsUHthOEZY4JNrNhKtxs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "112495915435-159set9s2b50l45kscle7smar40mvurg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

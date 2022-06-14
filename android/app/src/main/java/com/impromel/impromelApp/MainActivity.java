@@ -1,4 +1,4 @@
-package com.impromel.impromel;
+package com.impromel.impromelApp;
 
 import android.os.Bundle;
 

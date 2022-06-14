@@ -2,7 +2,7 @@
   "expo": {
     "name": "Inpromel",
     "slug": "Inpromel",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -21,13 +21,13 @@
       "supportsTablet": true
     },
     "android": {
-      "versionCode": 8,
+      "versionCode": 9,
       "config":{
         "googleMaps": {
           "apiKey": "AIzaSyDpJhF9-SwxJREUHkz4XVEMQKtpYjxEguo"
         }
       },
-      "package": "com.impromel.impromel",
+      "package": "com.impromel.impromelApp",
       "permissions": [
         "READ_PHONE_STATE",
         "READ_INTERNAL_STORAGE",
