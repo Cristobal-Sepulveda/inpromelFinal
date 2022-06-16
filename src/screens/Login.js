@@ -73,6 +73,22 @@ const Login = ({ redux, insertSession, wipeRedux }) => {
           style={styles.logo}
           source={require("../../assets/LogoInpromel.png")}
         />
+        <TouchableOpacity
+          style={{ ...styles.logo, top: "31%" }}
+          onPress={() => {
+            Alert.alert("Credenciales", "\nMail: 1@1.1\nContraseña: 123456");
+          }}
+        >
+          <Image
+            source={require("../../assets/icons/info.png")}
+            style={{
+              height: 112 * 0.25,
+              width: 112 * 0.25,
+              alignSelf: "center",
+              marginEnd: "5%",
+            }}
+          />
+        </TouchableOpacity>
 
         <View style={styles.formulario}>
           <View style={{ ...styles.inputs, marginBottom: 14 }}>

@@ -474,7 +474,7 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
               </TouchableOpacity>
             </View>
             {/*FLATLIST */}
-            <SafeAreaView style={{ height: "71%" }}>
+            <SafeAreaView style={{ height: "71.5%" }}>
               <FlatList
                 style={{
                   borderBottomRightRadius: 10,

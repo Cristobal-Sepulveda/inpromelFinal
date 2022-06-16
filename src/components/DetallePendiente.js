@@ -74,6 +74,9 @@ const DetallePendiente = ({
     setShowDetallePendiente(false);
   };
 
+  const guardarCambios = () => {
+    alertaEditar(date.toLocaleDateString());
+  };
   const alertaEditar = () => {
     console.log(tituloAGuardar, detallePendiente.titulo);
     console.log(tareaAGuardar, detallePendiente.tarea);
@@ -217,7 +220,7 @@ const DetallePendiente = ({
       <TouchableOpacity
         style={styles.fabButton2}
         onPress={() => {
-          alertaEditar();
+          guardarCambios();
         }}
       >
         <Image source={require("../../assets/icons/save.png")} />
@@ -228,7 +231,7 @@ const DetallePendiente = ({
 
 const styles = StyleSheet.create({
   container: {
-    height: "80.8%",
+    height: "81.27%",
     backgroundColor: "lightgrey",
     borderRadius: 10,
     marginTop: "2.7%",

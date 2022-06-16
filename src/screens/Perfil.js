@@ -111,10 +111,10 @@ const Perfil = ({ showPerfilModal, setShowPerfilModal, setIsFocusedHome }) => {
               }}
             />
             <View style={{ marginStart: "3%" }}>
-              <Text style={{ fontSize: 15 }}>
-                Nombre Nombre Apellido Apellido
+              <Text style={{ fontSize: 13.5 }}>
+                Nombre: Aquí se podría agregar nombre
               </Text>
-              <Text style={{ fontSize: 13 }}>{name}</Text>
+              <Text style={{ fontSize: 13.5 }}>Correo: {name}</Text>
             </View>
           </View>
           <TouchableOpacity
@@ -127,7 +127,7 @@ const Perfil = ({ showPerfilModal, setShowPerfilModal, setIsFocusedHome }) => {
             }}
           >
             <Text style={{ padding: 10 }}>
-              Administra tu Cuenta de Inpromel
+              Administra tu cuenta de Inpromel
             </Text>
           </TouchableOpacity>
         </View>
@@ -142,14 +142,14 @@ const Perfil = ({ showPerfilModal, setShowPerfilModal, setIsFocusedHome }) => {
         <View style={{ marginVertical: 25, marginStart: "9%" }}>
           <TouchableOpacity style={{ flexDirection: "row", marginBottom: 20 }}>
             <Image source={require("../../assets/icons/agregarCuenta.png")} />
-            <Text style={{ marginStart: "5%" }}>Crear una Nueva Cuenta</Text>
+            <Text style={{ marginStart: "5%" }}>Crear una nueva cuenta</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{ flexDirection: "row" }}>
             <Image
               source={require("../../assets/icons/administrarCuenta.png")}
             />
             <Text style={{ marginStart: "5%" }}>
-              Administrar cuentas en este dispositivo
+              Administrar cuentas de usuario
             </Text>
           </TouchableOpacity>
         </View>
@@ -168,7 +168,7 @@ const Perfil = ({ showPerfilModal, setShowPerfilModal, setIsFocusedHome }) => {
           }}
         >
           <TouchableOpacity style={{ marginStart: "5.5%" }}>
-            <Text style={{ fontSize: 13 }}>Politica de Privacidad</Text>
+            <Text style={{ fontSize: 13 }}>Politica de privacidad</Text>
           </TouchableOpacity>
           <View
             style={{
@@ -185,13 +185,13 @@ const Perfil = ({ showPerfilModal, setShowPerfilModal, setIsFocusedHome }) => {
             onPress={() => {
               Alert.alert(
                 "Información de Contacto",
-                "Desarrollador: Cristóbal Sepúlveda\nHorario de Atencion: 09:00 a 18:00\nTeléfono: +569 5072 2566\nCorreo: \nsepulveda.cristobal.ignacio@gmail.com",
+                "Cristóbal Sepúlveda\n+569 5072 2566\nsepulveda.cristobal.ignacio@gmail.com",
                 [{ text: "Aceptar", onPress: () => {} }]
               );
             }}
             style={{ marginEnd: "10%" }}
           >
-            <Text style={{ fontSize: 13 }}>Informacion de Contacto</Text>
+            <Text style={{ fontSize: 13 }}>Informacion de contacto</Text>
           </TouchableOpacity>
         </View>
       </View>
