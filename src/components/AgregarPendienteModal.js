@@ -36,7 +36,6 @@ const AgregarPendienteModal = ({
     if (event.type === "set") {
       const currentDate = selectedDate;
       setDate([currentDate, 1]);
-    } else {
     }
   };
 

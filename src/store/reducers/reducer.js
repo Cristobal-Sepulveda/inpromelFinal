@@ -4,6 +4,7 @@ const initialState = {
   session: [],
   location: [],
   pendientes: [],
+  nueva_fecha: "1",
 };
 
 const reducer = (state = initialState, action) => {
@@ -45,6 +46,16 @@ const reducer = (state = initialState, action) => {
 
     case Types.DELETE_PENDIENTES:
       return { ...state, pendientes: [] };
+
+    /** EDITANDO FECHA DEL PENDIENTE */
+    case Types.SELECT_NUEVA_FECHA: {
+      return state.nueva_fecha;
+    }
+
+    case Types.INSERT_NUEVA_FECHA: {
+      state.nueva_fecha = action.payload.nuevaFecha;
+      return state;
+    }
 
     // WIPE ALL
     case Types.WIPE_REDUX:

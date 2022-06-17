@@ -13,5 +13,9 @@ export const SELECT_PENDIENTES = "select_pendientes";
 export const DELETE_PENDIENTE = "delete_pendiente";
 export const DELETE_PENDIENTES = "delete_pendientes";
 
+/** EDITANDO FECHA DEL PENDIENTE */
+export const SELECT_NUEVA_FECHA = "select_nueva_fecha";
+export const INSERT_NUEVA_FECHA = "insert_nueva_fecha";
+
 /** WIPE ALL */
 export const WIPE_REDUX = "delete_all";

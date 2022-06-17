@@ -2,104 +2,64 @@ import React, { useState, useEffect } from "react";
 import {
   Alert,
   View,
+  Button,
   Text,
   StyleSheet,
   TouchableOpacity,
   Image,
   TextInput,
 } from "react-native";
-import { editar_pendiente, select_pendientes } from "../model/pendientes";
 import CustomRadioBox from "./CustomRadioBox";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { connect, useSelector } from "react-redux";
+import * as Types from "../store/actions/types";
 
 const DetallePendiente = ({
-  setShowDetallePendiente,
+  redux,
   detallePendiente,
-  flatListItems,
-  setFlatListItems,
+  setTituloAGuardar,
+  setTareaAGuardar,
+  setTopicoAGuardar,
+  topicoAGuardar,
+  insertNuevaFecha,
 }) => {
-  const [tituloAGuardar, setTituloAGuardar] = useState("");
-  const [topicoAGuardar, setTopicoAGuardar] = useState("");
-  const [tareaAGuardar, setTareaAGuardar] = useState("");
+  const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
-  const [date, setDate] = useState(new Date());
   const [dateClickeado, setDateClickeado] = useState(false);
+  const [cambiadorDeFechaEnLayout, setCambiadorDeFechaEnLayout] =
+    useState(false);
+  const [valorFechaEnLayout, setValorFechaEnLayout] = useState("");
 
   useEffect(() => {
-    setTopicoAGuardar(detallePendiente.topico);
-    setTareaAGuardar(detallePendiente.tarea);
     setTituloAGuardar(detallePendiente.titulo);
+    setTareaAGuardar(detallePendiente.tarea);
+    setTopicoAGuardar(detallePendiente.topico);
     setDate(new Date(detallePendiente.fecha));
+    insertNuevaFecha(detallePendiente.fecha);
+    setValorFechaEnLayout(redux.nueva_fecha);
   }, []);
 
   const onChange = (event, selectedDate) => {
-    console.log(selectedDate);
     setShow(false);
-    const currentDate = selectedDate;
-    setDate(currentDate);
+    if (event.type === "set") {
+      setDateClickeado(true);
+      insertNuevaFecha(selectedDate.toLocaleDateString());
+      setValorFechaEnLayout(redux.nueva_fecha);
+    }
   };
 
   const showMode = (currentMode) => {
     setShow(true);
-    setMode(currentMode);
+    setMode("currentMode");
   };
 
   const showDatepicker = () => {
     showMode("date");
   };
 
-  const editarPendiente = async () => {
-    const aux = detallePendiente;
-    setFlatListItems([]);
-    try {
-      await editar_pendiente(
-        tituloAGuardar,
-        date.toString().slice(0, 15),
-        topicoAGuardar,
-        tareaAGuardar,
-        aux.id_pendiente
-      );
-    } catch (e) {
-      console.log(e.message);
-      return;
-    }
-
-    const pendientes = await select_pendientes();
-    const aux2 = pendientes.rows._array;
-    console.log(flatListItems);
-    for (let i = 0; i < aux2.length; i++) {
-      setFlatListItems((prevData) => [...prevData, JSON.stringify(aux2[i])]);
-    }
-    setShowDetallePendiente(false);
-  };
-
-  const guardarCambios = () => {
-    alertaEditar(date.toLocaleDateString());
-  };
-  const alertaEditar = () => {
-    console.log(tituloAGuardar, detallePendiente.titulo);
-    console.log(tareaAGuardar, detallePendiente.tarea);
-    console.log(topicoAGuardar, detallePendiente.topico);
-    console.log(date.toLocaleDateString(), detallePendiente.fecha);
-    if (
-      tituloAGuardar === detallePendiente.titulo &&
-      tareaAGuardar === detallePendiente.tarea &&
-      topicoAGuardar === detallePendiente.topico &&
-      date.toLocaleDateString() === detallePendiente.fecha
-    ) {
-      Alert.alert("Aviso", "No hay cambios para guardar.");
-    } else {
-      Alert.alert("Aviso", "¿Estas seguro que quieres editar este pendiente?", [
-        { text: "Cancelar", onPress: () => {} },
-        {
-          text: "Confirmar",
-          onPress: () => {
-            editarPendiente();
-          },
-        },
-      ]);
-    }
+  const verNuevaFecha = () => {
+    console.log("nueva_fecha: ", redux.nueva_fecha);
   };
 
   return (
@@ -164,6 +124,7 @@ const DetallePendiente = ({
             setTopicoChecked={setTopicoAGuardar}
           />
         </View>
+
         {/* Fecha */}
         <View style={styles.row}>
           <Image source={require("../../assets/icons/calendar.png")} />
@@ -171,37 +132,30 @@ const DetallePendiente = ({
             style={{ marginStart: "2.5%" }}
             onPress={() => {
               showDatepicker();
-              setDateClickeado(true);
             }}
           >
-            {dateClickeado ? (
-              <Text
-                style={{
-                  color: "grey",
-                  borderWidth: 1,
-                  borderColor: "grey",
-                  borderRadius: 20,
-                  paddingVertical: 5,
-                  paddingHorizontal: 10,
-                }}
-              >
-                {date.toLocaleDateString()}
-              </Text>
-            ) : (
-              <Text
-                style={{
-                  color: "grey",
-                  borderWidth: 1,
-                  borderColor: "grey",
-                  borderRadius: 20,
-                  paddingVertical: 5,
-                  paddingHorizontal: 10,
-                }}
-              >
-                {detallePendiente.fecha}
-              </Text>
-            )}
+            <Text
+              style={{
+                color: "grey",
+                borderWidth: 1,
+                borderColor: "grey",
+                borderRadius: 20,
+                paddingVertical: 5,
+                paddingHorizontal: 10,
+              }}
+            >
+              {valorFechaEnLayout}
+            </Text>
           </TouchableOpacity>
+        </View>
+        {/* Botones para ver nueva_fecha de redux */}
+        <View>
+          <Button
+            title="ver nueva_fecha"
+            onPress={() => {
+              verNuevaFecha();
+            }}
+          />
         </View>
       </View>
 
@@ -215,16 +169,6 @@ const DetallePendiente = ({
           onChange={onChange}
         />
       )}
-
-      {/* FAB BUTTON */}
-      <TouchableOpacity
-        style={styles.fabButton2}
-        onPress={() => {
-          guardarCambios();
-        }}
-      >
-        <Image source={require("../../assets/icons/save.png")} />
-      </TouchableOpacity>
     </View>
   );
 };
@@ -280,4 +224,23 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DetallePendiente;
+const mapStateToProps = (state) => {
+  return { redux: state };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  insertNuevaFecha: (nuevaFecha) =>
+    dispatch({
+      type: Types.INSERT_NUEVA_FECHA,
+      payload: { nuevaFecha },
+    }),
+  selectNuevaFecha: () =>
+    dispatch({
+      type: Types.SELECT_NUEVA_FECHA,
+      payload: {},
+    }),
+});
+
+const connectComponent = connect(mapStateToProps, mapDispatchToProps);
+
+export default connectComponent(DetallePendiente);

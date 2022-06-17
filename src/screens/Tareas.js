@@ -106,10 +106,11 @@ const Tareas = ({ isBottomSheetFullOpen }) => {
               width: "100%",
             }}
           >
-            <Image
+            {/* <Image
               style={{ width: 25, height: 10 }}
               source={require("../../assets/icons/flechaArriba.png")}
-            />
+            /> */}
+            <View style={{ width: 25, height: 10 }} />
             <View></View>
             <View></View>
             <View></View>

@@ -76,7 +76,10 @@ const Login = ({ redux, insertSession, wipeRedux }) => {
         <TouchableOpacity
           style={{ ...styles.logo, top: "31%" }}
           onPress={() => {
-            Alert.alert("Credenciales", "\nMail: 1@1.1\nContraseña: 123456");
+            Alert.alert(
+              "Credenciales",
+              "\nMail: 1@1.1\nContraseña: 123456\nCuenta validada con Firebase"
+            );
           }}
         >
           <Image

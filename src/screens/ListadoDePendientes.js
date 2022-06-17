@@ -17,13 +17,24 @@ import * as Types from "../store/actions/types";
 import {
   select_pendientes,
   drop_pendientes,
+  editar_pendiente,
   select_pendientes_categoria,
 } from "../model/pendientes";
 import BottomSheet from "reanimated-bottom-sheet";
 import DetallePendiente from "../components/DetallePendiente";
 import { delete_pendiente } from "../model/pendientes";
 
-const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
+const ListadoDePendientes = ({
+  redux,
+  selectNuevaFecha,
+  deletePendientes,
+  setShowHome,
+  showHome,
+}) => {
+  const [tituloAGuardar, setTituloAGuardar] = useState("");
+  const [tareaAGuardar, setTareaAGuardar] = useState("");
+  const [topicoAGuardar, setTopicoAGuardar] = useState("");
+
   const [flatListItems, setFlatListItems] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [detallePendiente, setDetallePendiente] = useState([]);
@@ -36,39 +47,85 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(new Date());
   const [dateClickeado, setDateClickeado] = useState(false);
-  const pendientesList = useSelector((state) => {
-    const auxArray = [];
-    for (let i = 0; i < state.pendientes.length; i++) {
-      auxArray.push(JSON.stringify(state.pendientes[i]));
-    }
-    return auxArray;
-  });
+  // const pendientesList = useSelector((state) => {
+  //   const auxArray = [];
+  //   for (let i = 0; i < state.pendientes.length; i++) {
+  //     auxArray.push(JSON.stringify(state.pendientes[i]));
+  //   }
+  //   return auxArray;
+  // });
 
-  useEffect(() => {
-    if (
-      pendientesList.length &&
-      !flatListItems.includes(pendientesList[pendientesList.length - 1])
-    ) {
-      if (
-        flatListItems.length === 0 &&
-        pendientesList.length > 0 &&
-        !flatListItems.includes(pendientesList[pendientesList.length - 1])
-      ) {
-        for (let i = 0; i < pendientesList.length; i++) {
-          setFlatListItems((prevData) => [...prevData, pendientesList[i]]);
-        }
-      } else {
-        setFlatListItems((prevData) => [
-          ...prevData,
-          pendientesList[pendientesList.length - 1],
-        ]);
-      }
-    }
-  }, [pendientesList]);
+  // useEffect(() => {
+  //   if (
+  //     pendientesList.length &&
+  //     !flatListItems.includes(pendientesList[pendientesList.length - 1])
+  //   ) {
+  //     if (
+  //       flatListItems.length === 0 &&
+  //       pendientesList.length > 0 &&
+  //       !flatListItems.includes(pendientesList[pendientesList.length - 1])
+  //     ) {
+  //       for (let i = 0; i < pendientesList.length; i++) {
+  //         setFlatListItems((prevData) => [...prevData, pendientesList[i]]);
+  //       }
+  //     } else {
+  //       setFlatListItems((prevData) => [
+  //         ...prevData,
+  //         pendientesList[pendientesList.length - 1],
+  //       ]);
+  //     }
+  //   }
+  // }, [pendientesList]);
 
   useEffect(() => {
     cargarPendientesDesdeDB();
   }, []);
+
+  const editarPendiente = async () => {
+    const aux = detallePendiente;
+    setFlatListItems([]);
+    try {
+      await editar_pendiente(
+        tituloAGuardar,
+        redux.nueva_fecha,
+        topicoAGuardar,
+        tareaAGuardar,
+        aux.id_pendiente
+      );
+    } catch (e) {
+      console.log(e.message);
+      return;
+    }
+
+    const pendientes = await select_pendientes();
+    const aux2 = pendientes.rows._array;
+    console.log(flatListItems);
+    for (let i = 0; i < aux2.length; i++) {
+      setFlatListItems((prevData) => [...prevData, JSON.stringify(aux2[i])]);
+    }
+    setShowDetallePendiente(false);
+  };
+
+  const alertaEditar = () => {
+    if (
+      tituloAGuardar === detallePendiente.titulo &&
+      tareaAGuardar === detallePendiente.tarea &&
+      topicoAGuardar === detallePendiente.topico &&
+      redux.nueva_fecha === detallePendiente.fecha
+    ) {
+      Alert.alert("Aviso", "No hay cambios para guardar.");
+    } else {
+      Alert.alert("Aviso", "¿Estas seguro que quieres editar este pendiente?", [
+        { text: "Cancelar", onPress: () => {} },
+        {
+          text: "Confirmar",
+          onPress: () => {
+            editarPendiente();
+          },
+        },
+      ]);
+    }
+  };
 
   const cargarPendientesDesdeDB = async () => {
     setFlatListItems([]);
@@ -399,6 +456,11 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
             setDetallePendiente={setDetallePendiente}
             flatListItems={flatListItems}
             setFlatListItems={setFlatListItems}
+            alertaEditar={alertaEditar}
+            setTituloAGuardar={setTituloAGuardar}
+            setTareaAGuardar={setTareaAGuardar}
+            setTopicoAGuardar={setTopicoAGuardar}
+            topicoAGuardar={topicoAGuardar}
           />
         ) : (
           <>
@@ -489,35 +551,6 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
                 onRefresh={syncFlatList}
                 contentContainerStyle={{ paddingBottom: "2%" }}
                 ListHeaderComponent={<View />}
-                ListEmptyComponent={
-                  <View
-                    style={{
-                      alignItems: "center",
-                    }}
-                  >
-                    <Image
-                      source={require("../../assets/icons/playa.jpg")}
-                      style={{
-                        borderRadius: 10,
-                        width: "60%",
-                        height: 150,
-                        marginTop: "15%",
-                        resizeMode: "contain",
-                      }}
-                    />
-                    <Text
-                      style={{
-                        textAlign: "center",
-                        color: "black",
-                        fontSize: 25,
-                        marginTop: "8%",
-                        marginEnd: "4%",
-                      }}
-                    >
-                      No tienes pendientes
-                    </Text>
-                  </View>
-                }
               />
             </SafeAreaView>
           </>
@@ -528,6 +561,15 @@ const ListadoDePendientes = ({ deletePendientes, setShowHome, showHome }) => {
       {/* BOTON + */}
       {showDetallePendiente ? (
         <>
+          <TouchableOpacity
+            style={styles.fabButton2}
+            onPress={() => {
+              alertaEditar();
+            }}
+          >
+            <Image source={require("../../assets/icons/save.png")} />
+          </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.fabButton}
             onPress={() => {
@@ -674,6 +716,12 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch({
       type: Types.DELETE_PENDIENTE,
       payload: { id_pendiente },
+    }),
+
+  selectNuevaFecha: () =>
+    dispatch({
+      type: Types.SELECT_NUEVA_FECHA,
+      payload: {},
     }),
 });
 
