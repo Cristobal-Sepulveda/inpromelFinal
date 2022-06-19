@@ -22,7 +22,6 @@
     },
     "android": {
       "versionCode": 9,
-      "softwareKeyboardLayoutMode": "pan",
       "config":{
         "googleMaps": {
           "apiKey": "AIzaSyBCM93TGgGyDdc-D_XJhcyBwYBJ1-Sy2-o"
