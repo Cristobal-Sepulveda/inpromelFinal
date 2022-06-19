@@ -135,9 +135,8 @@ const Graficos = ({ selectPendientes }) => {
               />
               <Text
                 style={{
-                  textAlign: "center",
+                  alignSelf: "center",
                   fontSize: 25,
-                  marginEnd: "4%",
                   marginTop: "4%",
                 }}
               >

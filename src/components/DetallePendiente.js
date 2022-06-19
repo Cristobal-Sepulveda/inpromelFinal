@@ -27,8 +27,6 @@ const DetallePendiente = ({
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
   const [dateClickeado, setDateClickeado] = useState(false);
-  const [cambiadorDeFechaEnLayout, setCambiadorDeFechaEnLayout] =
-    useState(false);
   const [valorFechaEnLayout, setValorFechaEnLayout] = useState("");
 
   useEffect(() => {
@@ -149,14 +147,14 @@ const DetallePendiente = ({
           </TouchableOpacity>
         </View>
         {/* Botones para ver nueva_fecha de redux */}
-        <View>
+        {/* <View>
           <Button
             title="ver nueva_fecha"
             onPress={() => {
               verNuevaFecha();
             }}
           />
-        </View>
+        </View> */}
       </View>
 
       {/* DateTimePicker */}
@@ -175,7 +173,7 @@ const DetallePendiente = ({
 
 const styles = StyleSheet.create({
   container: {
-    height: "81.27%",
+    height: "81.3%",
     backgroundColor: "lightgrey",
     borderRadius: 10,
     marginTop: "2.7%",

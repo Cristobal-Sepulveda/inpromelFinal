@@ -23,14 +23,13 @@ const SwitchGraficos = ({ setGraficoEnBarra, graficoEnBarra }) => {
         onPress={(value) => {
           checkeandoClick(value);
         }}
-        borderRadius={10}
         height={32}
         fontSize={12}
         textColor={"white"}
         selectedColor={"white"}
         buttonColor={"#4285f4"}
         backgroundColor={"#353b48"}
-        hasPadding
+        //hasPadding
         options={[
           {
             label: "Gráfico de Barras",

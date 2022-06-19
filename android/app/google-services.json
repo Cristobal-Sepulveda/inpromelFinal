@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "112495915435-68s9tg36uhac1fvqhf5c5tk8g7pcq91t.apps.googleusercontent.com",
+          "client_id": "112495915435-06ba84an2q9pbhi9u6d9i0unkfs6u02v.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.impromel.impromelApp",
-            "certificate_hash": "d7fb74650a1eccc6f1289d11f644be9e7d257a77"
+            "certificate_hash": "e9a5158a832e5bc66e27e86952d6834781411d68"
           }
         },
         {

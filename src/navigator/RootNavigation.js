@@ -12,6 +12,7 @@ import {
   create_pendientes_table,
   create_session_table,
 } from "../model";
+import { StatusBar } from "expo-status-bar";
 
 const Stack = createStackNavigator();
 
@@ -95,6 +96,7 @@ const RootNavigation = () => {
           </Stack.Navigator>
         )}
       </NavigationContainer>
+      <StatusBar backgroundColor="#000000" style="light" />
     </AuthContext.Provider>
   );
 };

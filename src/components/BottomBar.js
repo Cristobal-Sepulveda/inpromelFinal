@@ -145,7 +145,7 @@ const BottomBar = ({
           ref={tareas}
           callbackThreshold={0.1}
           initialSnap={2}
-          snapPoints={[250, "70%", 0]}
+          snapPoints={[250, "70%", -20]}
           borderRadius={10}
           enabledContentTapInteraction={false}
           renderContent={renderContentTareas}
@@ -176,6 +176,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     width: "100%",
     zIndex: 2000000,
+    marginTop: "1.5%",
   },
   snackBar: {
     bottom: 80,

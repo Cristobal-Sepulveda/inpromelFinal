@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, createRef } from "react";
 import {
   Alert,
   View,
@@ -15,6 +15,7 @@ import { insert_pendiente, select_pendientes } from "../model/pendientes";
 import { connect } from "react-redux";
 import * as Types from "../store/actions/types";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import DetallePendiente from "./DetallePendiente";
 
 const AgregarPendienteModal = ({
   insertPendiente,
@@ -30,6 +31,8 @@ const AgregarPendienteModal = ({
   const [ingresarTarea, setIngresarTarea] = useState(false);
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
+  let descripcionTextInput = useRef(null);
+  let tituloTextInput = useRef(null);
 
   const onChange = (event, selectedDate) => {
     setShow(false);
@@ -92,6 +95,13 @@ const AgregarPendienteModal = ({
     setShowAgregarPendienteModal(false);
   };
 
+  const callbackRef = (node) => {
+    console.log("Attached node: ", node);
+    if (node) {
+      node.focus();
+    }
+  };
+
   return (
     <View>
       <Modal
@@ -105,27 +115,36 @@ const AgregarPendienteModal = ({
           setIngresarTarea(false);
           setShowAgregarPendienteModal(!showAgregarPendienteModal);
         }}
+        onShow={() => {
+          tituloTextInput.focus();
+        }}
       >
         <View style={styles.modalContainer}>
           {/* Body del BottomSheet */}
           {/* Ingrese Titulo */}
           <TextInput
+            ref={(input) => {
+              tituloTextInput = input;
+            }}
             style={{ marginStart: "3%", marginTop: "2%", color: "#4285f4" }}
             placeholder="Ingrese Título del Pendiente"
             placeholderTextColor="#4285f4"
             onChangeText={setTitulo}
+            blurOnSubmit={false}
+            onSubmitEditing={() => {
+              setIngresarTarea(true);
+            }}
           />
           {/* Tarea */}
           {ingresarTarea ? (
-            <View>
-              <TextInput
-                style={{ marginStart: "3%", marginTop: "2%" }}
-                placeholder="Ingrese Descripción"
-                placeholderTextColor="grey"
-                multiline={true}
-                onChangeText={setDescripcion}
-              />
-            </View>
+            <TextInput
+              ref={callbackRef}
+              style={{ marginStart: "3%", marginTop: "2%" }}
+              placeholder="Ingrese Descripción"
+              placeholderTextColor="grey"
+              multiline={true}
+              onChangeText={setDescripcion}
+            />
           ) : (
             <></>
           )}
