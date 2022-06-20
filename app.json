@@ -2,10 +2,10 @@
   "expo": {
     "name": "Inpromel",
     "slug": "Inpromel",
-    "version": "1.0.9",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -20,13 +20,20 @@
     "ios": {
       "supportsTablet": true
     },
+    "comentarios": {
+    "androidNavigationBar": {
+      "backgroundColor": "#000000"
+    }
+  },
     "android": {
-      "versionCode": 9,
+      "versionCode": 10,
+      "googleServicesFile": "./google-services.json",
       "config":{
         "googleMaps": {
           "apiKey": "AIzaSyBCM93TGgGyDdc-D_XJhcyBwYBJ1-Sy2-o"
         }
       },
+
       "package": "com.impromel.impromelApp",
       "permissions": [
         "READ_PHONE_STATE",

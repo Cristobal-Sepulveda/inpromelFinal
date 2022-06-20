@@ -9,6 +9,7 @@ import {
   Text,
   SafeAreaView,
   TextInput,
+  Dimensions,
 } from "react-native";
 import { RadioButton, Snackbar } from "react-native-paper";
 import AgregarPendienteModal from "../components/AgregarPendienteModal";
@@ -338,7 +339,6 @@ const ListadoDePendientes = ({
       {/* CONTAINER */}
       <View
         style={{
-          marginTop: "20%",
           width: "90%",
           marginStart: "auto",
           marginEnd: "auto",
@@ -351,14 +351,16 @@ const ListadoDePendientes = ({
             backgroundColor: "#4285f4",
             paddingVertical: 20,
             paddingHorizontal: "5%",
-            marginBottom: "10%",
+            marginBottom: "5%",
+            marginTop: "13%",
             justifyContent: "space-between",
+            height: "10%",
           }}
         >
           {showDetallePendiente ? (
             <>
               <TouchableOpacity
-                style={{ marginTop: "1%" }}
+                style={{ marginTop: "1%", alignSelf: "center" }}
                 onPress={() => {
                   setDateClickeado(false);
                   setShowDetallePendiente(!showDetallePendiente);
@@ -371,7 +373,7 @@ const ListadoDePendientes = ({
               <Text
                 style={{
                   alignSelf: "center",
-                  fontSize: 20,
+                  fontSize: 16,
                   fontWeight: "400",
                   color: "white",
                 }}
@@ -379,7 +381,7 @@ const ListadoDePendientes = ({
                 Detalle del Pendiente
               </Text>
               <TouchableOpacity
-                style={{ marginEnd: "5%", marginTop: "0.8%" }}
+                style={{ marginEnd: "5%", alignSelf: "center" }}
                 onPress={() => {
                   alertaBorrar();
                 }}
@@ -396,15 +398,16 @@ const ListadoDePendientes = ({
               <Text
                 style={{
                   alignSelf: "center",
-                  fontSize: 20,
                   fontWeight: "400",
                   color: "white",
                   marginStart: "10%",
+                  fontSize: 16,
                 }}
               >
                 Listado de Pendientes
               </Text>
               <TouchableOpacity
+                style={{ alignSelf: "center" }}
                 onPress={() => {
                   Alert.alert(
                     "Aviso",
@@ -463,15 +466,19 @@ const ListadoDePendientes = ({
             topicoAGuardar={topicoAGuardar}
           />
         ) : (
-          <>
+          <View
+            style={{
+              borderRadius: 10,
+              minHeight: "77.5%",
+              backgroundColor: "lightgrey",
+            }}
+          >
             {/* top buttomBar */}
             <View
               style={{
                 flexDirection: "row",
                 justifyContent: "space-between",
-                marginTop: 10,
-                backgroundColor: "lightgrey",
-                paddingVertical: 15,
+                paddingVertical: "5%",
                 borderTopRightRadius: 10,
                 borderTopLeftRadius: 10,
               }}
@@ -479,8 +486,8 @@ const ListadoDePendientes = ({
               <TouchableOpacity
                 style={{
                   backgroundColor: "#4285f4",
-                  width: "20%",
-                  marginStart: "10%",
+                  width: "21%",
+                  marginStart: "8%",
                   borderRadius: 5,
                 }}
               >
@@ -489,6 +496,7 @@ const ListadoDePendientes = ({
                     color: "white",
                     textAlign: "center",
                     marginTop: 8,
+                    fontSize: 13,
                   }}
                   onPress={() => {
                     verTodos();
@@ -512,6 +520,7 @@ const ListadoDePendientes = ({
                     color: "white",
                     textAlign: "center",
                     textAlignVertical: "center",
+                    fontSize: 13,
                   }}
                 >
                   Eliminar Todo
@@ -529,14 +538,26 @@ const ListadoDePendientes = ({
                 }}
               >
                 <Text
-                  style={{ color: "white", textAlign: "center", marginTop: 8 }}
+                  style={{
+                    color: "white",
+                    textAlign: "center",
+                    marginTop: 8,
+                    fontSize: 13,
+                  }}
                 >
                   Filtrar
                 </Text>
               </TouchableOpacity>
             </View>
+            {/* SEPARADOR */}
+            <View
+              style={{
+                borderBottomColor: "white",
+                borderBottomWidth: 1,
+              }}
+            />
             {/*FLATLIST */}
-            <SafeAreaView style={{ height: "71%" }}>
+            <SafeAreaView>
               <FlatList
                 style={{
                   borderBottomRightRadius: 10,
@@ -550,10 +571,9 @@ const ListadoDePendientes = ({
                 refreshing={isRefreshing}
                 onRefresh={syncFlatList}
                 contentContainerStyle={{ paddingBottom: "2%" }}
-                ListHeaderComponent={<View />}
               />
             </SafeAreaView>
-          </>
+          </View>
         )}
       </View>
 
@@ -618,7 +638,7 @@ const ListadoDePendientes = ({
         ref={categorias}
         callbackThreshold={0.1}
         initialSnap={0}
-        snapPoints={[0, "32%"]}
+        snapPoints={[-50, "32%"]}
         borderRadius={10}
         renderContent={renderContentCategorias}
         enabledContentTapInteraction={false}
@@ -655,7 +675,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     right: 30,
-    bottom: 50,
+    bottom: 60,
+    backgroundColor: "#4285f4",
+    borderRadius: 50,
+  },
+  fabButton2: {
+    flex: 1,
+    position: "absolute",
+    width: 50,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    right: 30,
+    bottom: 130,
     backgroundColor: "#4285f4",
     borderRadius: 50,
   },
@@ -668,18 +700,6 @@ const styles = StyleSheet.create({
   },
   margenInferior: {
     marginBottom: 36,
-  },
-  fabButton2: {
-    flex: 1,
-    position: "absolute",
-    width: 50,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    right: 30,
-    bottom: 120,
-    backgroundColor: "#4285f4",
-    borderRadius: 50,
   },
   itemContainer: {
     width: "90%",

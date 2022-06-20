@@ -1,5 +1,12 @@
 import React, { useState, createRef } from "react";
-import { View, StyleSheet, TouchableOpacity, Image, Alert } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Alert,
+  Dimensions,
+} from "react-native";
 import BottomBar from "../components/BottomBar";
 import { connect } from "react-redux";
 import Perfil from "./Perfil";
@@ -71,7 +78,7 @@ const Home = ({ redux, wipeRedux }) => {
             <>
               <Mapa mapRef={mapRef} coords={coords} />
               <TouchableOpacity
-                style={styles.userLocationButton}
+                style={styles.fabButton2}
                 onPress={() => {
                   backToUserLocation();
                 }}
@@ -101,7 +108,6 @@ const Home = ({ redux, wipeRedux }) => {
 
         {/* BottomBar */}
         <BottomBar
-          style={styles.bottomBar}
           showPerfilModal={showPerfilModal}
           setShowPerfilModal={setShowPerfilModal}
           showHome={showHome}
@@ -125,14 +131,10 @@ const styles = StyleSheet.create({
   container: {
     height: "100%",
   },
-
   body: {
-    height: "92.2%",
+    height: "92%",
   },
-  centeredView: {
-    flex: 1,
-    marginHorizontal: "10%",
-  },
+
   fabButton: {
     flex: 1,
     position: "absolute",
@@ -141,11 +143,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     right: 30,
-    bottom: 50,
+    bottom: 60,
     backgroundColor: "#4285f4",
     borderRadius: 50,
   },
-  userLocationButton: {
+  fabButton2: {
     flex: 1,
     position: "absolute",
     width: 50,
@@ -153,7 +155,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     right: 30,
-    bottom: 120,
+    bottom: 130,
     backgroundColor: "#4285f4",
     borderRadius: 50,
   },

@@ -173,10 +173,9 @@ const DetallePendiente = ({
 
 const styles = StyleSheet.create({
   container: {
-    height: "81.3%",
+    minHeight: "79%",
     backgroundColor: "lightgrey",
     borderRadius: 10,
-    marginTop: "2.7%",
   },
   body: {
     height: "50%",
@@ -190,18 +189,7 @@ const styles = StyleSheet.create({
     marginVertical: "2%",
     marginStart: "1%",
   },
-  fabButton2: {
-    flex: 1,
-    position: "absolute",
-    width: 50,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    right: 10.5,
-    bottom: 88.5,
-    backgroundColor: "#4285f4",
-    borderRadius: 50,
-  },
+
   footer: {
     width: "90%",
     flexDirection: "row",

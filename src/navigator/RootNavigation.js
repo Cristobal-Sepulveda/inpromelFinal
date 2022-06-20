@@ -96,7 +96,11 @@ const RootNavigation = () => {
           </Stack.Navigator>
         )}
       </NavigationContainer>
-      <StatusBar backgroundColor="#000000" style="light" />
+      <StatusBar
+        backgroundColor="#000000"
+        style="light"
+        barStyle="light-content"
+      />
     </AuthContext.Provider>
   );
 };

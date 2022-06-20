@@ -75,7 +75,7 @@ const Graficos = ({ selectPendientes }) => {
   }, []);
 
   return (
-    <>
+    <View>
       {/* Cabecera */}
       <View
         style={{
@@ -103,7 +103,13 @@ const Graficos = ({ selectPendientes }) => {
       </View>
 
       {/* Body */}
-      <Text style={{ alignSelf: "center", marginVertical: 20, fontSize: 20 }}>
+      <Text
+        style={{
+          alignSelf: "center",
+          marginVertical: 20,
+          fontSize: 20,
+        }}
+      >
         Elije el gráfico que deseas visualizar
       </Text>
       <SwitchGraficos
@@ -217,7 +223,7 @@ const Graficos = ({ selectPendientes }) => {
           </View>
         </>
       )}
-    </>
+    </View>
   );
 };
 
