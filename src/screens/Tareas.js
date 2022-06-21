@@ -59,9 +59,9 @@ const Tareas = ({ isBottomSheetFullOpen, redux }) => {
   };
 
   const sendNotification = (token) => {
-    console.log(redux.pendientes);
+    console.log(redux.pendientes.length);
     const aux = redux.pendientes.length;
-    if (redux.pendientes.length !== 0) {
+    if (aux > 1) {
       fetch("https://exp.host/--/api/v2/push/send", {
         method: "POST",
         headers: {
@@ -77,8 +77,28 @@ const Tareas = ({ isBottomSheetFullOpen, redux }) => {
           _displayInForeground: true,
         }),
       });
+      return;
+    }
+    if (aux === 1) {
+      fetch("https://exp.host/--/api/v2/push/send", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Accept-encoding": "gzip, deflate",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to: token,
+          title: "Inpromel",
+          body: "Tu pendiente ha sido notificado.",
+          data: { data: "goes here" },
+          _displayInForeground: true,
+        }),
+      });
+      return;
     } else {
       setShowSnackBar(true);
+      return;
     }
   };
 

@@ -195,6 +195,7 @@ const ListadoDePendientes = ({
   };
 
   const porCategorias = async (categoria) => {
+    console.log(categoria);
     const aux = await select_pendientes();
     const pendientes = aux.rows._array;
     setFlatListItems([]);
@@ -211,7 +212,6 @@ const ListadoDePendientes = ({
 
   /* FAB BUTTON ACTION */
   const volverAHome = () => {
-    deletePendientes();
     setShowHome(!showHome);
   };
 
@@ -243,7 +243,7 @@ const ListadoDePendientes = ({
               status={topicoChecked === "Urgente" ? "checked" : "unchecked"}
               onPress={() => {
                 setTopicoChecked("Urgente");
-                porCategorias(topicoChecked);
+                porCategorias("Urgente");
               }}
               color="#4285f4"
             />
@@ -262,7 +262,7 @@ const ListadoDePendientes = ({
               status={topicoChecked === "Planificada" ? "checked" : "unchecked"}
               onPress={() => {
                 setTopicoChecked("Planificada");
-                porCategorias(topicoChecked);
+                porCategorias("Planificada");
               }}
               color="#4285f4"
             />
@@ -275,7 +275,7 @@ const ListadoDePendientes = ({
               status={topicoChecked === "No Urgente" ? "checked" : "unchecked"}
               onPress={() => {
                 setTopicoChecked("No Urgente");
-                porCategorias(topicoChecked);
+                porCategorias("No Urgente");
               }}
               color="#4285f4"
             />
@@ -470,6 +470,7 @@ const ListadoDePendientes = ({
             style={{
               borderRadius: 10,
               minHeight: "77.5%",
+              maxHeight: "77.5%",
               backgroundColor: "lightgrey",
             }}
           >
@@ -557,7 +558,7 @@ const ListadoDePendientes = ({
               }}
             />
             {/*FLATLIST */}
-            <SafeAreaView>
+            <SafeAreaView style={{ flex: 1 }}>
               <FlatList
                 style={{
                   borderBottomRightRadius: 10,
