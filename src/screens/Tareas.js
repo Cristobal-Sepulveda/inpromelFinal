@@ -3,6 +3,10 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Graficos from "../components/Graficos";
+import { connect } from "react-redux";
+import * as Types from "../store/actions/types";
+import { Snackbar } from "react-native-paper";
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -11,11 +15,16 @@ Notifications.setNotificationHandler({
   }),
 });
 
-const Tareas = ({ isBottomSheetFullOpen }) => {
+const Tareas = ({ isBottomSheetFullOpen, redux }) => {
   const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
+  const [showSnackBar, setShowSnackBar] = useState(false);
+
+  const onDismissSnackBar = () => {
+    setShowSnackBar(false);
+  };
 
   const registerForPushNotificationsAsync = async () => {
     let token;
@@ -50,21 +59,27 @@ const Tareas = ({ isBottomSheetFullOpen }) => {
   };
 
   const sendNotification = (token) => {
-    fetch("https://exp.host/--/api/v2/push/send", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Accept-encoding": "gzip, deflate",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        to: token,
-        title: "InpromelApp",
-        body: "Task task task task",
-        data: { data: "goes here" },
-        _displayInForeground: true,
-      }),
-    });
+    console.log(redux.pendientes);
+    const aux = redux.pendientes.length;
+    if (redux.pendientes.length !== 0) {
+      fetch("https://exp.host/--/api/v2/push/send", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Accept-encoding": "gzip, deflate",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to: token,
+          title: "Inpromel",
+          body: "Tus " + aux + " pendientes han sido notificados.",
+          data: { data: "goes here" },
+          _displayInForeground: true,
+        }),
+      });
+    } else {
+      setShowSnackBar(true);
+    }
   };
 
   useEffect(() => {
@@ -124,11 +139,8 @@ const Tareas = ({ isBottomSheetFullOpen }) => {
             />
           </View>
 
-          <Text style={{ alignSelf: "center", marginTop: 20, fontSize: 20 }}>
-            Envia tus Pendientes
-          </Text>
           <TouchableOpacity
-            style={styles.button}
+            style={{ ...styles.button, marginTop: "12%" }}
             onPress={() => sendNotification(expoPushToken)}
           >
             <Text style={{ color: "white", textAlign: "center" }}>
@@ -137,6 +149,14 @@ const Tareas = ({ isBottomSheetFullOpen }) => {
           </TouchableOpacity>
         </>
       )}
+      <Snackbar
+        visible={showSnackBar}
+        onDismiss={onDismissSnackBar}
+        duration={2000}
+        style={styles.snackBar}
+      >
+        No Tienes Pendientes para notificar
+      </Snackbar>
     </View>
   );
 };
@@ -151,6 +171,14 @@ const styles = StyleSheet.create({
     marginTop: "5%",
     alignSelf: "center",
   },
+  snackBar: {
+    bottom: -12,
+    alignSelf: "center",
+    width: "73.7%",
+    backgroundColor: "#696969",
+    borderRadius: 30,
+    paddingHorizontal: 10,
+  },
   lineSheets: {
     borderTopColor: "#E5E5E5",
     borderTopWidth: 6,
@@ -158,4 +186,25 @@ const styles = StyleSheet.create({
     width: "25%",
   },
 });
-export default Tareas;
+
+const mapStateToProps = (state) => {
+  return { redux: state };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  insertLocation: (location) =>
+    dispatch({
+      type: Types.INSERT_LOCATION,
+      payload: {
+        location,
+      },
+    }),
+  insertPendiente: (titulo, fecha, topico, tarea) =>
+    dispatch({
+      type: Types.INSERT_PENDIENTE,
+      payload: { titulo, fecha, topico, tarea },
+    }),
+});
+
+const connectComponent = connect(mapStateToProps, mapDispatchToProps);
+export default connectComponent(Tareas);

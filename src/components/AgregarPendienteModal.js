@@ -19,6 +19,7 @@ import DetallePendiente from "./DetallePendiente";
 
 const AgregarPendienteModal = ({
   insertPendiente,
+  redux,
   showAgregarPendienteModal,
   setShowAgregarPendienteModal,
   syncFlatList,
@@ -61,12 +62,13 @@ const AgregarPendienteModal = ({
       topico: topicoChecked,
       tarea: descripcion,
     });
-    // insertPendiente(
-    //   titulo,
-    //   date[0].toLocaleDateString(),
-    //   topicoChecked,
-    //   descripcion
-    // );
+    insertPendiente(
+      titulo,
+      date[0].toLocaleDateString(),
+      topicoChecked,
+      descripcion
+    );
+    console.log(redux.pendientes);
     syncFlatList();
   };
 
@@ -96,7 +98,6 @@ const AgregarPendienteModal = ({
   };
 
   const callbackRef = (node) => {
-    console.log("Attached node: ", node);
     if (node) {
       node.focus();
     }
@@ -330,7 +331,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  return state;
+  return { redux: state };
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -338,6 +339,11 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch({
       type: Types.INSERT_PENDIENTE,
       payload: { titulo, fecha, topico, tarea },
+    }),
+  selectPendientes: () =>
+    dispatch({
+      type: Types.SELECT_PENDIENTES,
+      payload: {},
     }),
 });
 

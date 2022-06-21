@@ -7,13 +7,14 @@ import {
   Text,
   StyleSheet,
 } from "react-native";
-import { connect } from "react-redux";
 import { getLocationPermissions, getCurrentLocation } from "../utils/location";
 import { delay } from "../utils/funciones";
+import { connect } from "react-redux";
 import * as Types from "../store/actions/types";
 import CircularDownloadProgress from "../components/CircularDownloadProgress";
+import { select_pendientes } from "../model";
 
-const Welcome = ({ navigation, props, insertLocation }) => {
+const Welcome = ({ navigation, redux, insertLocation, insertPendiente }) => {
   const [coords, setCoords] = useState([]);
   const [todoCargado, setTodoCargado] = useState(false);
 
@@ -60,9 +61,22 @@ const Welcome = ({ navigation, props, insertLocation }) => {
       );
     }
   };
+  const obteniendoPendientes = async () => {
+    const aux = await select_pendientes();
+    const pendientesEnDb = aux.rows._array;
+    for (let i = 0; i < pendientesEnDb.length; i++) {
+      insertPendiente(
+        pendientesEnDb[i].titulo,
+        pendientesEnDb[i].fecha,
+        pendientesEnDb[i].topico,
+        pendientesEnDb[i].tarea
+      );
+    }
+  };
 
   useEffect(() => {
     obteniendoCoordenadas();
+    obteniendoPendientes();
   }, []);
 
   return (
@@ -142,6 +156,11 @@ const mapDispatchToProps = (dispatch) => ({
       payload: {
         location,
       },
+    }),
+  insertPendiente: (titulo, fecha, topico, tarea) =>
+    dispatch({
+      type: Types.INSERT_PENDIENTE,
+      payload: { titulo, fecha, topico, tarea },
     }),
 });
 
