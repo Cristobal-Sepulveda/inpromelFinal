@@ -342,6 +342,7 @@ const ListadoDePendientes = ({
           width: "90%",
           marginStart: "auto",
           marginEnd: "auto",
+          minHeight: Math.round(Dimensions.get("window").height) - 63,
         }}
       >
         {/* Header */}
@@ -470,7 +471,6 @@ const ListadoDePendientes = ({
             style={{
               borderRadius: 10,
               minHeight: "77.5%",
-              maxHeight: "77.5%",
               backgroundColor: "lightgrey",
             }}
           >

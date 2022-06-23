@@ -72,7 +72,7 @@ const DetallePendiente = ({
             fontSize: 25,
             marginTop: "6%",
             color: "#4285f4",
-            alignSelf: "center",
+            marginStart: "0.5%",
           }}
           defaultValue={detallePendiente.titulo}
           placeholderTextColor="black"
@@ -104,7 +104,7 @@ const DetallePendiente = ({
           />
         </View>
         {/* Topico */}
-        <View style={{ ...styles.row }}>
+        <View style={{ ...styles.row, width: "22%" }}>
           <Image source={require("../../assets/icons/topic.png")} />
           <CustomRadioBox
             topicoName={"Urgente"}
@@ -173,7 +173,7 @@ const DetallePendiente = ({
 
 const styles = StyleSheet.create({
   container: {
-    minHeight: "79%",
+    minHeight: "77.5%",
     backgroundColor: "lightgrey",
     borderRadius: 10,
   },
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     marginEnd: "auto",
   },
   row: {
-    width: "80%",
+    width: "71%",
     flexDirection: "row",
     marginVertical: "2%",
     marginStart: "1%",

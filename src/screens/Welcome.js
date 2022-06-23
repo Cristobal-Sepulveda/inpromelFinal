@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import { getLocationPermissions, getCurrentLocation } from "../utils/location";
 import { delay } from "../utils/funciones";
@@ -13,6 +14,7 @@ import { connect } from "react-redux";
 import * as Types from "../store/actions/types";
 import CircularDownloadProgress from "../components/CircularDownloadProgress";
 import { select_pendientes } from "../model";
+import * as Progress from "react-native-progress";
 
 const Welcome = ({ navigation, redux, insertLocation, insertPendiente }) => {
   const [coords, setCoords] = useState([]);
@@ -99,9 +101,20 @@ const Welcome = ({ navigation, redux, insertLocation, insertPendiente }) => {
           <Text style={styles.buttonsText}>Entrar</Text>
         </TouchableOpacity>
       ) : (
-        <View style={styles.circularProgress}>
-          <CircularDownloadProgress style={styles.circularProgress} />
-        </View>
+        <TouchableOpacity
+          style={styles.buttons}
+          onPress={() => {
+            navegandoAHome();
+          }}
+          disabled={true}
+        >
+          {/* <Text style={styles.buttonsText}>Cargando</Text> */}
+          <ActivityIndicator
+            size="large"
+            color="#ffffff"
+            style={{ paddingVertical: "3.9%" }}
+          />
+        </TouchableOpacity>
       )}
     </View>
   );
@@ -117,16 +130,17 @@ const styles = StyleSheet.create({
   buttons: {
     position: "absolute",
     backgroundColor: "#4285f4",
-    height: 40,
+    height: 60,
     borderRadius: 5,
-    width: "60%",
-    top: "60%",
+    width: "74.5%",
+    top: "70.2%",
   },
   buttonsText: {
     color: "white",
     textAlign: "center",
     fontSize: 16,
-    marginTop: 9,
+    height: "100%",
+    textAlignVertical: "center",
   },
   fondoDeLogin: {
     flex: 0,
@@ -142,7 +156,7 @@ const styles = StyleSheet.create({
   },
   circularProgress: {
     position: "absolute",
-    top: "45%",
+    top: "55%",
   },
 });
 const mapStateToProps = (state) => {

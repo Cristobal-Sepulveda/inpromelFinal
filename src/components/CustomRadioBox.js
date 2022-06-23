@@ -20,7 +20,7 @@ const CustomRadioBox = ({ topicoChecked, setTopicoChecked, topicoName }) => {
 };
 
 const styles = StyleSheet.create({
-  textLabel: { paddingTop: 8, fontSize: 13 },
+  textLabel: { paddingTop: 8, fontSize: 12 },
 });
 
 export default CustomRadioBox;
