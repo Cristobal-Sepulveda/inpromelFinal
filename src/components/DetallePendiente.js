@@ -72,7 +72,7 @@ const DetallePendiente = ({
             fontSize: 25,
             marginTop: "6%",
             color: "#4285f4",
-            marginStart: "0.5%",
+            alignSelf: "center",
           }}
           defaultValue={detallePendiente.titulo}
           placeholderTextColor="black"
@@ -81,18 +81,12 @@ const DetallePendiente = ({
           maxLength={100}
         />
         {/* Descripcion */}
-        <View style={styles.row}>
-          <Image
-            style={{
-              marginTop: "4%",
-            }}
-            source={require("../../assets/icons/edit.png")}
-          />
+        <View style={{ ...styles.row, marginTop: "10%" }}>
+          <Image source={require("../../assets/icons/edit.png")} />
           <TextInput
             style={{
               fontSize: 15,
               paddingLeft: 10,
-              marginTop: 10,
               marginStart: "2%",
               width: "100%",
             }}
@@ -188,6 +182,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginVertical: "2%",
     marginStart: "1%",
+    alignItems: "center",
   },
 
   footer: {

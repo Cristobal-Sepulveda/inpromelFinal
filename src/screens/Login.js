@@ -59,6 +59,7 @@ const Login = ({ redux, insertSession, wipeRedux }) => {
           return;
         }
         Alert.alert("Error: ", e.message);
+        console.log("Error: ", e.message);
       });
   };
 

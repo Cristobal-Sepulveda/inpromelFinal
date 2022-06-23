@@ -35,7 +35,6 @@ const ListadoDePendientes = ({
   const [tituloAGuardar, setTituloAGuardar] = useState("");
   const [tareaAGuardar, setTareaAGuardar] = useState("");
   const [topicoAGuardar, setTopicoAGuardar] = useState("");
-
   const [flatListItems, setFlatListItems] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [detallePendiente, setDetallePendiente] = useState([]);
@@ -48,6 +47,7 @@ const ListadoDePendientes = ({
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(new Date());
   const [dateClickeado, setDateClickeado] = useState(false);
+  let switchEliminarActivo = false;
   // const pendientesList = useSelector((state) => {
   //   const auxArray = [];
   //   for (let i = 0; i < state.pendientes.length; i++) {
@@ -81,6 +81,14 @@ const ListadoDePendientes = ({
   useEffect(() => {
     cargarPendientesDesdeDB();
   }, []);
+
+  useEffect(() => {
+    console.log("%%%%%%%%%%%%%%%%%%%%%%%", detallePendiente);
+    if (switchEliminarActivo) {
+      delete_pendiente(detallePendiente.id_pendiente);
+      switchEliminarActivo = false;
+    }
+  }, [detallePendiente]);
 
   const editarPendiente = async () => {
     const aux = detallePendiente;
@@ -157,13 +165,24 @@ const ListadoDePendientes = ({
 
   const borrarPendiente = async () => {
     setFlatListItems([]);
-    delete_pendiente(detallePendiente.id_pendiente);
-    setShowDetallePendiente(!showDetallePendiente);
-    const pendientes = await select_pendientes();
-    const aux = pendientes.rows._array;
-    for (let i = 0; i < aux.length; i++) {
-      setFlatListItems((prevData) => [...prevData, JSON.stringify(aux[i])]);
+    console.log("@@@@@@@", detallePendiente);
+    try {
+      delete_pendiente(detallePendiente.id_pendiente);
+      const pendientes = await select_pendientes();
+      const aux = pendientes.rows._array;
+      console.log(aux);
+      for (let i = 0; i < aux.length; i++) {
+        setFlatListItems((prevData) => [...prevData, JSON.stringify(aux[i])]);
+      }
+    } catch (e) {
+      Alert.alert(
+        "Error: ",
+        e,
+        "\nComuniquese con el administrador de la base de datos."
+      );
+      console.log("Error: ", e);
     }
+    setShowDetallePendiente(false);
   };
 
   const alertaBorrar = () => {
@@ -172,6 +191,7 @@ const ListadoDePendientes = ({
       {
         text: "Confirmar",
         onPress: () => {
+          switchEliminarActivo = true;
           borrarPendiente();
         },
       },
@@ -297,7 +317,7 @@ const ListadoDePendientes = ({
         }}
       >
         {/* COLUMNA 1 */}
-        {aux.topico === "Urgente" ? (
+        {/* {aux.topico === "Urgente" ? (
           <View style={{ width: "20%" }}>
             <View
               style={{ ...styles.pendientePriority, backgroundColor: "red" }}
@@ -317,10 +337,10 @@ const ListadoDePendientes = ({
           </View>
         ) : (
           <></>
-        )}
+        )} */}
 
         {/* Columna 2 */}
-        <View style={{ width: "30%" }}>
+        <View style={{ marginStart: "10%", width: "30%" }}>
           <View style={{ flexDirection: "row" }}>
             <Text>Titulo: </Text>
             <Text>{aux.titulo}</Text>
@@ -329,6 +349,25 @@ const ListadoDePendientes = ({
             <Text>Fecha: </Text>
             <Text>{new Date(aux.fecha).toLocaleDateString()}</Text>
           </View>
+          <View style={{ flexDirection: "row" }}>
+            <Text>Tipo: </Text>
+            <Text>{aux.topico}</Text>
+          </View>
+        </View>
+
+        {/* Columna 3 */}
+        <View style={{ marginTop: "5%", marginEnd: "10%" }}>
+          <TouchableOpacity
+            onPress={() => {
+              setDetallePendiente(aux);
+              alertaBorrar();
+            }}
+          >
+            <Image
+              style={{ width: 20, height: 20 }}
+              source={require("../../assets/icons/borrar.png")}
+            />
+          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     );
@@ -710,6 +749,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     flexDirection: "row",
     paddingVertical: 15,
+    justifyContent: "space-between",
   },
 });
 

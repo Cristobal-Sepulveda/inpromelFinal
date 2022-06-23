@@ -1,15 +1,17 @@
 //TODO_FIREBASE_AUTH: PASO 1: crear el objeto fireBaseConfig*/
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyBv0eymHEfNMBzhGOX_YKOknguiju-VX4c",
+  apiKey: "AIzaSyAYLsthZlMbQQ_2N_pfUd1JDOWXH7CMtpg",
 
-  authDomain: "inpromelproduccion.firebaseapp.com",
+  authDomain: "inpromel-2d552.firebaseapp.com",
 
-  projectId: "inpromelproduccion",
+  projectId: "inpromel-2d552",
 
-  storageBucket: "inpromelproduccion.appspot.com",
+  storageBucket: "inpromel-2d552.appspot.com",
 
-  messagingSenderId: "112495915435",
+  messagingSenderId: "433151729035",
 
-  appId: "1:112495915435:web:d77d609a1f3aa2dcc6e2ee",
+  appId: "1:433151729035:web:af8c281dd0811777b2638e",
+
+  measurementId: "G-JSHPM7Q9ZN",
 };
