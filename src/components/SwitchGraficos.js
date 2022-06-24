@@ -35,7 +35,7 @@ const SwitchGraficos = ({ setGraficoEnBarra, graficoEnBarra }) => {
             label: "Gráfico de Barras",
             value: true,
           },
-          { label: "Gráfico de Lineal", value: false },
+          { label: "Gráfico Lineal", value: false },
         ]}
         testID="gender-switch-selector"
         accessibilityLabel="gender-switch-selector"

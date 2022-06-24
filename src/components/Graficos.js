@@ -110,7 +110,7 @@ const Graficos = ({ selectPendientes }) => {
           fontSize: 20,
         }}
       >
-        Elije el gráfico que deseas visualizar
+        Elige el gráfico que deseas visualizar
       </Text>
       <SwitchGraficos
         graficoEnBarra={graficoEnBarra}

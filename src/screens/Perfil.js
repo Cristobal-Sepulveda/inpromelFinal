@@ -168,7 +168,7 @@ const Perfil = ({ showPerfilModal, setShowPerfilModal, setIsFocusedHome }) => {
           }}
         >
           <TouchableOpacity style={{ marginStart: "5.5%" }}>
-            <Text style={{ fontSize: 13 }}>Politica de privacidad</Text>
+            <Text style={{ fontSize: 13 }}>Política de privacidad</Text>
           </TouchableOpacity>
           <View
             style={{

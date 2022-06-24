@@ -136,8 +136,8 @@ android {
         applicationId 'com.impromel.impromelApp'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 12
-        versionName "1.1.2"
+        versionCode 10
+        versionName "1.1.0"
     }
     splits {
         abi {

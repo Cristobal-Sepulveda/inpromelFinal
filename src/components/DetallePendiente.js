@@ -8,15 +8,20 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import CustomRadioBox from "./CustomRadioBox";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { connect, useSelector } from "react-redux";
 import * as Types from "../store/actions/types";
+import CambiarValorModal from "../components/CambiarValorModal";
 
 const DetallePendiente = ({
   redux,
+  tareaAGuardar,
+  tituloAGuardar,
   detallePendiente,
+  setDetallePendiente,
   setTituloAGuardar,
   setTareaAGuardar,
   setTopicoAGuardar,
@@ -28,6 +33,9 @@ const DetallePendiente = ({
   const [show, setShow] = useState(false);
   const [dateClickeado, setDateClickeado] = useState(false);
   const [valorFechaEnLayout, setValorFechaEnLayout] = useState("");
+  const [showCambiarValorModal, setShowCambiarValorModal] = useState(false);
+  const [esElTitulo, setEsElTitulo] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setTituloAGuardar(detallePendiente.titulo);
@@ -36,6 +44,7 @@ const DetallePendiente = ({
     setDate(new Date(detallePendiente.fecha));
     insertNuevaFecha(detallePendiente.fecha);
     setValorFechaEnLayout(redux.nueva_fecha);
+    setIsLoading(false);
   }, []);
 
   const onChange = (event, selectedDate) => {
@@ -62,104 +71,142 @@ const DetallePendiente = ({
 
   return (
     <View style={styles.container}>
-      {/* HEADER */}
-      {/* NO HAY HEADER */}
-      {/* BODY*/}
-      <View style={styles.body}>
-        {/* Titulo */}
-        <TextInput
-          style={{
-            fontSize: 25,
-            marginTop: "6%",
-            color: "#4285f4",
-            alignSelf: "center",
-          }}
-          defaultValue={detallePendiente.titulo}
-          placeholderTextColor="black"
-          onChangeText={setTituloAGuardar}
-          multiline={true}
-          maxLength={100}
-        />
-        {/* Descripcion */}
-        <View style={{ ...styles.row, marginTop: "10%" }}>
-          <Image source={require("../../assets/icons/edit.png")} />
-          <TextInput
-            style={{
-              fontSize: 15,
-              paddingLeft: 10,
-              marginStart: "2%",
-              width: "100%",
-            }}
-            defaultValue={detallePendiente.tarea}
-            placeholderTextColor="black"
-            onChangeText={setTareaAGuardar}
-            multiline={true}
-            maxLength={100}
-          />
+      {isLoading ? (
+        <View style={{ marginTop: "80%", alignContent: "center" }}>
+          <ActivityIndicator size="large" color="#0000ff" />
         </View>
-        {/* Topico */}
-        <View style={{ ...styles.row, width: "22%" }}>
-          <Image source={require("../../assets/icons/topic.png")} />
-          <CustomRadioBox
-            topicoName={"Urgente"}
-            topicoChecked={topicoAGuardar}
-            setTopicoChecked={setTopicoAGuardar}
-          />
-          <CustomRadioBox
-            topicoName={"Planificada"}
-            topicoChecked={topicoAGuardar}
-            setTopicoChecked={setTopicoAGuardar}
-          />
-          <CustomRadioBox
-            topicoName={"No Urgente"}
-            topicoChecked={topicoAGuardar}
-            setTopicoChecked={setTopicoAGuardar}
-          />
-        </View>
-
-        {/* Fecha */}
-        <View style={styles.row}>
-          <Image source={require("../../assets/icons/calendar.png")} />
-          <TouchableOpacity
-            style={{ marginStart: "2.5%" }}
-            onPress={() => {
-              showDatepicker();
-            }}
-          >
-            <Text
-              style={{
-                color: "grey",
-                borderWidth: 1,
-                borderColor: "grey",
-                borderRadius: 20,
-                paddingVertical: 5,
-                paddingHorizontal: 10,
+      ) : (
+        <>
+          {/* HEADER */}
+          {/* NO HAY HEADER */}
+          {/* BODY*/}
+          <View style={styles.body}>
+            {/* Titulo */}
+            <TouchableOpacity
+              onPress={() => {
+                setEsElTitulo(true);
+                setShowCambiarValorModal(true);
               }}
             >
-              {valorFechaEnLayout}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        {/* Botones para ver nueva_fecha de redux */}
-        {/* <View>
-          <Button
-            title="ver nueva_fecha"
-            onPress={() => {
-              verNuevaFecha();
-            }}
-          />
-        </View> */}
-      </View>
+              <Text
+                style={{
+                  fontSize: 25,
+                  marginTop: "6%",
+                  color: "#4285f4",
+                  alignSelf: "center",
+                }}
+              >
+                {tituloAGuardar}
+              </Text>
+            </TouchableOpacity>
+            {/* Topico */}
+            <View style={{ ...styles.row, width: "22%", marginTop: "10%" }}>
+              <Image
+                style={{ marginEnd: 1 }}
+                source={require("../../assets/icons/topic.png")}
+              />
+              <CustomRadioBox
+                topicoName={"Urgente"}
+                topicoChecked={topicoAGuardar}
+                setTopicoChecked={setTopicoAGuardar}
+              />
+              <CustomRadioBox
+                topicoName={"Planificada"}
+                topicoChecked={topicoAGuardar}
+                setTopicoChecked={setTopicoAGuardar}
+              />
+              <CustomRadioBox
+                topicoName={"No Urgente"}
+                topicoChecked={topicoAGuardar}
+                setTopicoChecked={setTopicoAGuardar}
+              />
+            </View>
+            {/* Fecha */}
+            <View style={styles.row}>
+              <Image source={require("../../assets/icons/calendar.png")} />
+              <TouchableOpacity
+                style={{ marginStart: "3.5%" }}
+                onPress={() => {
+                  showDatepicker();
+                }}
+              >
+                <Text
+                  style={{
+                    color: "black",
+                    borderWidth: 1.5,
+                    borderColor: "black",
+                    borderRadius: 20,
+                    paddingVertical: 5,
+                    paddingHorizontal: 10,
+                  }}
+                >
+                  {valorFechaEnLayout}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {/* Descripcion */}
+            <View
+              style={{
+                width: "71%",
+                flexDirection: "row",
+                marginVertical: "2%",
+                marginStart: "1%",
+              }}
+            >
+              <Image
+                style={{ marginVertical: "3.5%" }}
+                source={require("../../assets/icons/edit.png")}
+              />
+              <TouchableOpacity
+                style={{
+                  paddingVertical: 9,
+                  paddingHorizontal: 12,
+                  marginStart: "3.75%",
+                  width: "95%",
+                  maxHeight: "525%",
+                  borderWidth: 1.5,
+                  borderColor: "black",
+                }}
+                onPress={() => {
+                  setEsElTitulo(false);
+                  setShowCambiarValorModal(true);
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 15,
+                    color: "black",
+                  }}
+                >
+                  {tareaAGuardar}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
 
-      {/* DateTimePicker */}
-      {show && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode={mode}
-          is24Hour={true}
-          onChange={onChange}
-        />
+          {/* DateTimePicker */}
+          {show && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={date}
+              mode={mode}
+              is24Hour={true}
+              onChange={onChange}
+            />
+          )}
+          <CambiarValorModal
+            esElTitulo={esElTitulo}
+            setEsElTitulo={setEsElTitulo}
+            showCambiarValorModal={showCambiarValorModal}
+            setShowCambiarValorModal={setShowCambiarValorModal}
+            detallePendiente={detallePendiente}
+            setDetallePendiente={setDetallePendiente}
+            tareaAGuardar={tareaAGuardar}
+            setTareaAGuardar={setTareaAGuardar}
+            setTituloAGuardar={setTituloAGuardar}
+            tituloAGuardar={tituloAGuardar}
+          />
+        </>
       )}
     </View>
   );
@@ -168,8 +215,9 @@ const DetallePendiente = ({
 const styles = StyleSheet.create({
   container: {
     minHeight: "77.5%",
-    backgroundColor: "lightgrey",
     borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "black",
   },
   body: {
     height: "50%",

@@ -36,7 +36,7 @@ const ListadoDePendientes = ({
   const [tareaAGuardar, setTareaAGuardar] = useState("");
   const [topicoAGuardar, setTopicoAGuardar] = useState("");
   const [flatListItems, setFlatListItems] = useState([]);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(true);
   const [detallePendiente, setDetallePendiente] = useState([]);
   const [showAgregarPendienteModal, setShowAgregarPendienteModal] =
     useState(false);
@@ -47,7 +47,6 @@ const ListadoDePendientes = ({
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(new Date());
   const [dateClickeado, setDateClickeado] = useState(false);
-  let switchEliminarActivo = false;
   // const pendientesList = useSelector((state) => {
   //   const auxArray = [];
   //   for (let i = 0; i < state.pendientes.length; i++) {
@@ -81,14 +80,6 @@ const ListadoDePendientes = ({
   useEffect(() => {
     cargarPendientesDesdeDB();
   }, []);
-
-  useEffect(() => {
-    console.log("%%%%%%%%%%%%%%%%%%%%%%%", detallePendiente);
-    if (switchEliminarActivo) {
-      delete_pendiente(detallePendiente.id_pendiente);
-      switchEliminarActivo = false;
-    }
-  }, [detallePendiente]);
 
   const editarPendiente = async () => {
     const aux = detallePendiente;
@@ -146,6 +137,7 @@ const ListadoDePendientes = ({
         JSON.stringify(pendientes[i]),
       ]);
     }
+    setIsRefreshing(false);
   };
 
   const onChange = (event, selectedDate) => {
@@ -186,12 +178,11 @@ const ListadoDePendientes = ({
   };
 
   const alertaBorrar = () => {
-    Alert.alert("Aviso", "¿Estas seguro que quieres borrar este pendiente?", [
+    Alert.alert("Aviso", "¿Estás seguro que quieres borrar este pendiente?", [
       { text: "Cancelar", onPress: () => {} },
       {
         text: "Confirmar",
         onPress: () => {
-          switchEliminarActivo = true;
           borrarPendiente();
         },
       },
@@ -208,10 +199,27 @@ const ListadoDePendientes = ({
     }
   };
 
-  const eliminarPendientes = async () => {
+  const eliminarPendientesAux = async () => {
     setFlatListItems([]);
-    deletePendientes();
     await drop_pendientes();
+  };
+  const eliminarPendientes = () => {
+    if (flatListItems.length === 0) {
+      return;
+    }
+    Alert.alert(
+      "Aviso",
+      "¿Estás seguro que quieres borrar todos los pendientes?",
+      [
+        { text: "Cancelar", onPress: () => {} },
+        {
+          text: "Confirmar",
+          onPress: () => {
+            eliminarPendientesAux();
+          },
+        },
+      ]
+    );
   };
 
   const porCategorias = async (categoria) => {
@@ -239,7 +247,6 @@ const ListadoDePendientes = ({
   const syncFlatList = async () => {
     setIsRefreshing(true);
     cargarPendientesDesdeDB();
-    setIsRefreshing(false);
   };
 
   const renderContentCategorias = () => {
@@ -255,7 +262,7 @@ const ListadoDePendientes = ({
 
         {/* RADIOBUTTONS */}
 
-        <View style={{ marginStart: "5%", marginTop: "5%" }}>
+        <View style={{ marginStart: "3.5%", marginTop: "5%" }}>
           {/* RADIO_BUTTON URGENTE */}
           <View style={{ flexDirection: "row" }}>
             <RadioButton
@@ -340,7 +347,7 @@ const ListadoDePendientes = ({
         )} */}
 
         {/* Columna 2 */}
-        <View style={{ marginStart: "10%", width: "30%" }}>
+        <View style={{ marginStart: "8%", width: "30%" }}>
           <View style={{ flexDirection: "row" }}>
             <Text>Titulo: </Text>
             <Text>{aux.titulo}</Text>
@@ -356,7 +363,7 @@ const ListadoDePendientes = ({
         </View>
 
         {/* Columna 3 */}
-        <View style={{ marginTop: "5%", marginEnd: "10%" }}>
+        {/* <View style={{ marginTop: "5%", marginEnd: "10%" }}>
           <TouchableOpacity
             onPress={() => {
               setDetallePendiente(aux);
@@ -368,7 +375,7 @@ const ListadoDePendientes = ({
               source={require("../../assets/icons/borrar.png")}
             />
           </TouchableOpacity>
-        </View>
+        </View> */}
       </TouchableOpacity>
     );
   };
@@ -421,7 +428,11 @@ const ListadoDePendientes = ({
                 Detalle del Pendiente
               </Text>
               <TouchableOpacity
-                style={{ marginEnd: "5%", alignSelf: "center" }}
+                style={{
+                  marginEnd: "3%",
+                  alignSelf: "center",
+                  marginTop: "0.5%",
+                }}
                 onPress={() => {
                   alertaBorrar();
                 }}
@@ -441,17 +452,18 @@ const ListadoDePendientes = ({
                   fontWeight: "400",
                   color: "white",
                   marginStart: "10%",
+
                   fontSize: 16,
                 }}
               >
                 Listado de Pendientes
               </Text>
               <TouchableOpacity
-                style={{ alignSelf: "center" }}
+                style={{ alignSelf: "center", marginTop: "0.75%" }}
                 onPress={() => {
                   Alert.alert(
                     "Aviso",
-                    "Para ingresar un pendiente, haga click en el boton +",
+                    "Para ingresar un pendiente, presione el botón +",
                     [
                       {
                         text: "Cerrar",
@@ -462,7 +474,7 @@ const ListadoDePendientes = ({
                         onPress: () => {
                           Alert.alert(
                             "Aviso",
-                            "Para ver en detalle un pendiente, haz click en el",
+                            "Si presionas sobre un pendiente podrás verlo en detalle e incluso, podrás modificarlo.",
                             [
                               {
                                 text: "Cerrar",
@@ -479,8 +491,8 @@ const ListadoDePendientes = ({
                 <Image
                   source={require("../../assets/icons/info.png")}
                   style={{
-                    height: 112 * 0.25,
-                    width: 112 * 0.25,
+                    height: 100 * 0.25,
+                    width: 100 * 0.25,
                     alignSelf: "center",
                     marginEnd: "5%",
                   }}
@@ -500,7 +512,9 @@ const ListadoDePendientes = ({
             flatListItems={flatListItems}
             setFlatListItems={setFlatListItems}
             alertaEditar={alertaEditar}
+            tituloAGuardar={tituloAGuardar}
             setTituloAGuardar={setTituloAGuardar}
+            tareaAGuardar={tareaAGuardar}
             setTareaAGuardar={setTareaAGuardar}
             setTopicoAGuardar={setTopicoAGuardar}
             topicoAGuardar={topicoAGuardar}
@@ -526,7 +540,7 @@ const ListadoDePendientes = ({
               <TouchableOpacity
                 style={{
                   backgroundColor: "#4285f4",
-                  width: "21%",
+                  width: "22%",
                   marginStart: "8%",
                   borderRadius: 5,
                 }}
@@ -542,13 +556,13 @@ const ListadoDePendientes = ({
                     verTodos();
                   }}
                 >
-                  Ver Todos
+                  Pendientes
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={{
                   backgroundColor: "#4285f4",
-                  width: "20%",
+                  width: "24%",
                   borderRadius: 5,
                 }}
                 onPress={() => {
@@ -563,7 +577,7 @@ const ListadoDePendientes = ({
                     fontSize: 13,
                   }}
                 >
-                  Eliminar Todo
+                  Eliminar Pendientes
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -678,7 +692,7 @@ const ListadoDePendientes = ({
         ref={categorias}
         callbackThreshold={0.1}
         initialSnap={0}
-        snapPoints={[-50, "32%"]}
+        snapPoints={[-50, "35%"]}
         borderRadius={10}
         renderContent={renderContentCategorias}
         enabledContentTapInteraction={false}

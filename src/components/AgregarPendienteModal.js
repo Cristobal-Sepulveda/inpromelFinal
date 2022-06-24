@@ -156,7 +156,7 @@ const AgregarPendienteModal = ({
                 style={{
                   marginStart: "3%",
                   marginTop: "2%",
-                  color: "grey",
+                  color: "black",
                 }}
               >
                 Elija Categoría

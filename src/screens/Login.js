@@ -51,11 +51,11 @@ const Login = ({ redux, insertSession, wipeRedux }) => {
       })
       .catch((e) => {
         if (e.message === "Firebase: Error (auth/invalid-email).") {
-          Alert.alert("Error", "El mail que ingresó no es valido.");
+          Alert.alert("Error", "El mail que ingresó no es válido.");
           return;
         }
         if (e.message === "Firebase: Error (auth/user-not-found).") {
-          Alert.alert("Error", "El usuario y/o contraseña no son validos.");
+          Alert.alert("Error", "El usuario y/o contraseña no son válidos.");
           return;
         }
         Alert.alert("Error: ", e.message);
